@@ -1,20 +1,96 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %}Главная{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
-
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'E:/Wordpress/openserv/OSPanel/domains/logistic/src/Controller/HomeController.php'|file_link(0) }}">src/Controller/HomeController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'E:/Wordpress/openserv/OSPanel/domains/logistic/templates/home/index.html.twig'|file_link(0) }}">templates/home/index.html.twig</a></code></li>
-    </ul>
-</div>
+    <!-- Main row -->
+    <div class="row">
+        <!-- Left col -->
+        <div class="col-md-12">
+            <!-- TABLE: LATEST ORDERS -->
+            <div class="card">
+                <div class="card-header border-transparent">
+                    <h3 class="card-title">Мои заявки</h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table m-0">
+                            <thead>
+                            <tr>
+                                <th>Код заявки</th>
+                                <th>Дата погрузки/отгрузки</th>
+                                <th>Наименование груза, тара, вес</th>
+                                <th>Организация</th>
+                                <th>Статус</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td><a href="pages/examples/invoice.html">2744</a></td>
+                                <td>11.05.2020</td>
+                                <td>Инструмент, 10 т (тонна)</td>
+                                <td>Организация</td>
+                                <td><span class="badge badge-success">Shipped</span></td>
+                            </tr>
+                            <tr>
+                                <td><a href="pages/examples/invoice.html">2744</a></td>
+                                <td>11.05.2020</td>
+                                <td>Инструмент, 10 т (тонна)</td>
+                                <td>Организация</td>
+                                <td><span class="badge badge-danger">Shipped</span></td>
+                            </tr>
+                            <tr>
+                                <td><a href="pages/examples/invoice.html">2744</a></td>
+                                <td>11.05.2020</td>
+                                <td>Инструмент, 10 т (тонна)</td>
+                                <td>Организация</td>
+                                <td><span class="badge badge-danger">Shipped</span></td>
+                            </tr>
+                            <tr>
+                                <td><a href="pages/examples/invoice.html">2744</a></td>
+                                <td>11.05.2020</td>
+                                <td>Инструмент, 10 т (тонна)</td>
+                                <td>Организация</td>
+                                <td><span class="badge badge-info">Shipped</span></td>
+                            </tr>
+                            <tr>
+                                <td><a href="pages/examples/invoice.html">2744</a></td>
+                                <td>11.05.2020</td>
+                                <td>Инструмент, 10 т (тонна)</td>
+                                <td>Организация</td>
+                                <td><span class="badge badge-warning">Shipped</span></td>
+                            </tr>
+                            <tr>
+                                <td><a href="pages/examples/invoice.html">2744</a></td>
+                                <td>11.05.2020</td>
+                                <td>Инструмент, 10 т (тонна)</td>
+                                <td>Организация</td>
+                                <td><span class="badge badge-success">Shipped</span></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.table-responsive -->
+                </div>
+                <!-- /.card-body -->
+                <div class="card-footer clearfix">
+                    <ul class="pagination pagination-sm m-0 float-right">
+                        <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
+                    </ul>
+                    <div class="mb-3 clearfix"></div>
+                    <a href="javascript:void(0)" class="btn btn-sm btn-info float-left">Добавить заявку</a>
+                    <a href="javascript:void(0)" class="btn btn-sm btn-secondary float-right">Все заявки</a>
+                </div>
+                <!-- /.card-footer -->
+            </div>
+            <!-- /.card -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
 {% endblock %}
