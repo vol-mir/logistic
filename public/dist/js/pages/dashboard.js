@@ -62,31 +62,6 @@ $(function () {
     'GB': 320, //Great Britain
     'RU': 3000 //Russia
   }
-  // World map by jvectormap
-  $('#world-map').vectorMap({
-    map              : 'usa_en',
-    backgroundColor  : 'transparent',
-    regionStyle      : {
-      initial: {
-        fill            : 'rgba(255, 255, 255, 0.7)',
-        'fill-opacity'  : 1,
-        stroke          : 'rgba(0,0,0,.2)',
-        'stroke-width'  : 1,
-        'stroke-opacity': 1
-      }
-    },
-    series           : {
-      regions: [{
-        values           : visitorsData,
-        scale            : ['#ffffff', '#0154ad'],
-        normalizeFunction: 'polynomial'
-      }]
-    },
-    onRegionLabelShow: function (e, el, code) {
-      if (typeof visitorsData[code] != 'undefined')
-        el.html(el.html() + ': ' + visitorsData[code] + ' new visitors')
-    }
-  })
 
   // Sparkline charts
   var sparkline1 = new Sparkline($("#sparkline-1")[0], {width: 80, height: 50, lineColor: '#92c1dc', endColor: '#ebf4f9'});
