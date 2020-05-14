@@ -116,6 +116,11 @@ class Driver
         return $this;
     }
 
+    public function getFullName(): ?string
+    {
+        return $this->last_name.' '.$this->first_name.' '.$this->middle_name;
+    }
+
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->created_at;

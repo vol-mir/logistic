@@ -17,7 +17,7 @@
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
-                    <table id="example1" class="table table-bordered table-striped table-hover">
+                    <table id="drivers" class="table table-bordered table-striped table-hover">
                         <thead>
                         <tr>
                             <th>ФИО</th>
@@ -26,14 +26,6 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td><a href="javascript:void(0)" class="float-left">Иванов Иван Иванович</a></td>
-                            <td>+375-29-453-32-33</td>
-                            <td>
-                                <a href="javascript:void(0)" class="btn btn-sm btn-danger float-left">Удалить</a>
-                            </td>
-                        </tr>
-
                         </tbody>
                         <tfoot>
                         <tr>
@@ -68,17 +60,29 @@
 
     <script>
         $(function () {
-            $("#example1").DataTable({
+            $("#drivers").DataTable({
+                "columnDefs": [
+                    // These are the column name variables that will be sent to the server
+                    { "name": "fullName", "targets": 0 },
+                    { "name": "phone",   "targets": 1 },
+                    { "name": "control",  "targets": 2, "orderable": false, "searchable": false },
+                ],
+                "ajax": {
+                    "url": "{{ path('driver_list_datatables') }}",
+                    "type": "POST"
+                },
+                "processing": true,
+                "serverSide": true,
                 "responsive": true,
                 "autoWidth": false,
+                "paging" : true,
+                "info" : true,
+                "searching": true,
+                "pageLength": 10,
+                "order": [[0, 'asc']],
                 "language": {
                     "url": "{{ asset('dist/json/dataTables.ru.lang.json') }}"
-                },
-                "aoColumnDefs": [{
-                    "bSortable": false,
-                    "searchable": false,
-                    "aTargets": [-1]
-                }]
+                }
             });
         });
     </script>
