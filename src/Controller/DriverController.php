@@ -4,18 +4,22 @@ namespace App\Controller;
 
 use App\Entity\Driver;
 use Doctrine\ORM\EntityManagerInterface;
-use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class DriverController extends AbstractController
 {
     /**
+     * Index page
+     *
      * @Route("/drivers", name="drivers")
+     *
+     * @return Response
      */
-    public function index()
+    public function index() : Response
     {
         return $this->render('driver/index.html.twig', [
             'controller_name' => 'DriverController',
@@ -23,13 +27,18 @@ class DriverController extends AbstractController
     }
 
     /**
+     * Data for datatables
+     *
      * @Route("/driver/list/datatables", name="driver_list_datatables")
+     *
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     *
+     * @return JsonResponse
      */
-    public function listDatatableAction(Request $request, LoggerInterface $logger, EntityManagerInterface $em)
+    public function listDatatableAction(Request $request, EntityManagerInterface $em) : JsonResponse
     {
         // Get the parameters from DataTable Ajax Call
-        // $logger->info(json_encode($search));
-
         if ($request->getMethod() == 'POST') {
             $draw = intval($request->request->get('draw'));
             $start = $request->request->get('start');
@@ -72,7 +81,7 @@ class DriverController extends AbstractController
 
         $i = 0;
 
-        foreach ($objects as $key => $town)
+        foreach ($objects as $key => $driver)
         {
             $response .= '["';
 
@@ -87,19 +96,19 @@ class DriverController extends AbstractController
                 {
                     case 'fullName':
                         {
-                            $responseTemp = "<a href='#' class='float-left'>".$town->getFullName()."</a>";
+                            $responseTemp = "<a href='#' class='float-left'>".$driver->getFullName()."</a>";
                             break;
                         }
 
                     case 'phone':
                         {
-                            $responseTemp = $town->getPhone();
+                            $responseTemp = $driver->getPhone();
                             break;
                         }
 
                     case 'control':
                         {
-                            $responseTemp = "<a href='#' class='btn btn-sm btn-danger float-left'>Удалить</a>";
+                            $responseTemp = "<button type='button' class='btn btn-sm btn-danger float-left modal-delete-dialog' data-toggle='modal' data-id='".$driver->getId()."'>Удалить</button>";
                             break;
                         }
                 }
@@ -125,5 +134,26 @@ class DriverController extends AbstractController
         $returnResponse->setJson($response);
 
         return $returnResponse;
+    }
+
+    /**
+     * Delete driver
+     *
+     * @Route("/driver/{id}/delete", name="driver.delete", methods="DELETE", requirements={"id" = "\d+"})
+     *
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @param Driver $driver
+     *
+     * @return JsonResponse
+     */
+    public function delete(Request $request, EntityManagerInterface $em, Driver $driver) : JsonResponse
+    {
+        if ($this->isCsrfTokenValid('delete-item', $request->request->get('_token'))) {
+            $em->remove($driver);
+            $em->flush();
+        }
+
+        return new JsonResponse(['message' => 'Successfully delete driver']);
     }
 }
