@@ -13,7 +13,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <a href="javascript:void(0)" class="btn btn-sm btn-success float-left">Добавить</a>
+                    <a href="javascript:void(0)" class="btn btn-sm btn-success float-left">{{ 'title.add'|trans }}</a>
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
@@ -38,7 +38,7 @@
                 </div>
                 <!-- /.card-body -->
                 <div class="card-footer">
-                    <a href="javascript:void(0)" class="btn btn-sm btn-success float-left">Добавить</a>
+                    <a href="javascript:void(0)" class="btn btn-sm btn-success float-left">{{ 'title.add'|trans }}</a>
                 </div>
                 <!-- /.card-footer -->
             </div>
@@ -81,6 +81,9 @@
     <script src="{{ asset('plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
     <script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
 
+    <!-- Toastr -->
+    <script src="{{ asset('plugins/toastr/toastr.min.js') }}"></script>
+
     <script>
         $(function () {
             let table = $("#drivers").DataTable({
@@ -91,7 +94,7 @@
                     { "name": "control",  "targets": 2, "orderable": false, "searchable": false },
                 ],
                 "ajax": {
-                    "url": "{{ path('driver_list_datatables') }}",
+                    "url": "{{ path('datatables.drivers') }}",
                     "type": "POST"
                 },
                 "processing": true,
@@ -126,6 +129,7 @@
                     success: function (data) {
                         //Handle your JSON data to update the DOM
                         table.ajax.reload(null, false);
+                        toastr.success(data.message)
                     }
                 });
 

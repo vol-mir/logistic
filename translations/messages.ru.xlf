@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="ru" target-language="ru" datatype="plaintext" original="file.ext">
+    <header>
+      <tool tool-id="symfony" tool-name="Symfony"/>
+    </header>
+    <body>
+      <trans-unit id="title.add" resname="title.add">
+        <source>title.add</source>
+        <target>Добавить</target>
+      </trans-unit>
+      <trans-unit id="title.delete" resname="title.delete">
+        <source>title.delete</source>
+        <target>Удалить</target>
+      </trans-unit>
+
+      <trans-unit id="item.deleted_successfully">
+        <source>item.deleted_successfully</source>
+        <target>Запись успешно удалена!</target>
+      </trans-unit>
+
+      <trans-unit id="menu.homepage">
+        <source>menu.drivers</source>
+        <target>Водители</target>
+      </trans-unit>
+
+    </body>
+  </file>
+</xliff>

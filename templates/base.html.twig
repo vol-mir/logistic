@@ -22,6 +22,8 @@
     <link rel="stylesheet" href="{{ asset('plugins/daterangepicker/daterangepicker.css') }}">
     <!-- summernote -->
     <link rel="stylesheet" href="{{ asset('plugins/summernote/summernote-bs4.css') }}">
+    <!-- Toastr -->
+    <link rel="stylesheet" href="{{ asset('plugins/toastr/toastr.min.css') }}">
     <!-- Google Font: Source Sans Pro -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 
@@ -94,10 +96,10 @@
                     </li>
 
                     <li class="nav-item">
-                        <a href="{{ path('drivers') }}" class="nav-link">
+                        <a href="{{ path('driver.index') }}" class="nav-link">
                             <i class="fas fa-circle nav-icon"></i>
                             <p>
-                                Водители
+                                {{ 'menu.drivers'|trans }}
                             </p>
                         </a>
                     </li>

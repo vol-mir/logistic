@@ -9,34 +9,33 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class DriverController extends AbstractController
 {
     /**
      * Index page
      *
-     * @Route("/drivers", name="drivers")
+     * @Route("/drivers", name="driver.index")
      *
      * @return Response
      */
     public function index() : Response
     {
-        return $this->render('driver/index.html.twig', [
-            'controller_name' => 'DriverController',
-        ]);
+        return $this->render('driver/index.html.twig');
     }
 
     /**
      * Data for datatables
      *
-     * @Route("/driver/list/datatables", name="driver_list_datatables")
+     * @Route("/driver/list/datatables", name="datatables.drivers")
      *
      * @param Request $request
      * @param EntityManagerInterface $em
      *
      * @return JsonResponse
      */
-    public function listDatatableAction(Request $request, EntityManagerInterface $em) : JsonResponse
+    public function listDatatableAction(Request $request, EntityManagerInterface $em, TranslatorInterface $translator) : JsonResponse
     {
         // Get the parameters from DataTable Ajax Call
         if ($request->getMethod() == 'POST') {
@@ -108,7 +107,7 @@ class DriverController extends AbstractController
 
                     case 'control':
                         {
-                            $responseTemp = "<button type='button' class='btn btn-sm btn-danger float-left modal-delete-dialog' data-toggle='modal' data-id='".$driver->getId()."'>Удалить</button>";
+                            $responseTemp = "<button type='button' class='btn btn-sm btn-danger float-left modal-delete-dialog' data-toggle='modal' data-id='".$driver->getId()."'>".$translator->trans('title.delete')."</button>";
                             break;
                         }
                 }
@@ -147,13 +146,13 @@ class DriverController extends AbstractController
      *
      * @return JsonResponse
      */
-    public function delete(Request $request, EntityManagerInterface $em, Driver $driver) : JsonResponse
+    public function delete(Request $request, EntityManagerInterface $em, Driver $driver, TranslatorInterface $translator) : JsonResponse
     {
         if ($this->isCsrfTokenValid('delete-item', $request->request->get('_token'))) {
             $em->remove($driver);
             $em->flush();
         }
 
-        return new JsonResponse(['message' => 'Successfully delete driver']);
+        return new JsonResponse(['message' => $translator->trans('item.deleted_successfully')]);
     }
 }
