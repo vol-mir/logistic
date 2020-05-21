@@ -13,7 +13,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <a href="javascript:void(0)" class="btn btn-sm btn-success float-left">{{ 'title.add'|trans }}</a>
+                    {% include 'driver/_controls.html.twig' %}
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
@@ -38,7 +38,7 @@
                 </div>
                 <!-- /.card-body -->
                 <div class="card-footer">
-                    <a href="javascript:void(0)" class="btn btn-sm btn-success float-left">{{ 'title.add'|trans }}</a>
+                    {% include 'driver/_controls.html.twig' %}
                 </div>
                 <!-- /.card-footer -->
             </div>
@@ -94,9 +94,10 @@
                     { "name": "control",  "targets": 2, "orderable": false, "searchable": false },
                 ],
                 "ajax": {
-                    "url": "{{ path('datatables.drivers') }}",
+                    "url": "{{ path('driver_datatables') }}",
                     "type": "POST"
                 },
+                "stateSave": true,
                 "processing": true,
                 "serverSide": true,
                 "responsive": true,
@@ -118,19 +119,17 @@
 
             $("#modal-delete").on("click", "#btn-modal-delete", function() {
 
-                let url = "{{path('driver.delete', { 'id': 0 }) }}";
+                let url = "{{path('driver_delete', { 'id': 0 }) }}";
                 url = url.replace("0", $(this).attr('data-confirm-delete-id'));
 
                 $.ajax({
                     type: 'post',
                     url: url,
                     data: { '_method':'delete','_token':'{{ csrf_token('delete-item') }}' },
-                    dataType: 'json',
-                    success: function (data) {
-                        //Handle your JSON data to update the DOM
-                        table.ajax.reload(null, false);
-                        toastr.success(data.message)
-                    }
+                    dataType: 'json'
+                }).done(function(data) {
+                    table.ajax.reload(null, false);
+                    toastr.success(data.message);
                 });
 
                 $('#btn-modal-delete').attr("data-confirm-delete-id", null);

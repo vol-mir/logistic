@@ -1,0 +1,36 @@
+<div class="card-body">
+
+    {% if not form.vars.valid %}
+        <ul class="list-unstyled">
+            {# Loop through every form item #}
+            {% for child in form.children %}
+                {# Display the errors of the form item #}
+                {%for error in child.vars.errors%}
+                    <li class="text-danger small">{{ child.vars.label|trans }} - {{error.message}}</li>
+                {%endfor%}
+            {%endfor%}
+        </ul>
+    {%endif%}
+
+    {{ form_row(form._token) }}
+
+    <div class="form-group">
+        {{ form_label(form.last_name) }}
+        {{ form_widget(form.last_name) }}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.first_name) }}
+        {{ form_widget(form.first_name) }}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.middle_name) }}
+        {{ form_widget(form.middle_name) }}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.phone) }}
+        {{ form_widget(form.phone) }}
+        <small class="text-secondary">{{ form_help(form.phone) }}</small>
+    </div>
+</div>
+<!-- /.card-body -->
+

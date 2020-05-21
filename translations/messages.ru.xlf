@@ -5,23 +5,75 @@
       <tool tool-id="symfony" tool-name="Symfony"/>
     </header>
     <body>
-      <trans-unit id="title.add" resname="title.add">
-        <source>title.add</source>
-        <target>Добавить</target>
+      <trans-unit id="title.save">
+        <source>title.save</source>
+        <target>Сохранить</target>
       </trans-unit>
-      <trans-unit id="title.delete" resname="title.delete">
+      <trans-unit id="label.save_and_create_new">
+        <source>label.save_and_create_new</source>
+        <target>Сохранить и создать новую</target>
+      </trans-unit>
+      <trans-unit id="title.delete">
         <source>title.delete</source>
         <target>Удалить</target>
+      </trans-unit>
+      <trans-unit id="title.cancel">
+        <source>title.cancel</source>
+        <target>Отмена</target>
+      </trans-unit>
+      <trans-unit id="title.add">
+        <source>title.add</source>
+        <target>Добавить</target>
       </trans-unit>
 
       <trans-unit id="item.deleted_successfully">
         <source>item.deleted_successfully</source>
         <target>Запись успешно удалена!</target>
       </trans-unit>
+      <trans-unit id="item.created_successfully">
+        <source>item.created_successfully</source>
+        <target>Запись успешно добавлена!</target>
+      </trans-unit>
+      <trans-unit id="item.edited_successfully">
+        <source>item.edited_successfully</source>
+        <target>Запись успешно изменена!</target>
+      </trans-unit>
 
-      <trans-unit id="menu.homepage">
+      <trans-unit id="menu.drivers">
         <source>menu.drivers</source>
         <target>Водители</target>
+      </trans-unit>
+
+      <trans-unit id="label.first_name">
+        <source>label.first_name</source>
+        <target>Имя</target>
+      </trans-unit>
+      <trans-unit id="label.last_name">
+        <source>label.last_name</source>
+        <target>Фамилия</target>
+      </trans-unit>
+      <trans-unit id="label.middle_name">
+        <source>label.middle_name</source>
+        <target>Отчество</target>
+      </trans-unit>
+      <trans-unit id="label.phone">
+        <source>label.phone</source>
+        <target>Телефон</target>
+      </trans-unit>
+
+      <trans-unit id="help.phone">
+        <source>help.phone</source>
+        <target>Например: МТС +37533-555-55-55, Vel + 37529-555-56-66</target>
+      </trans-unit>
+
+      <trans-unit id="message.validation.required">
+        <source>message.validation.required</source>
+        <target>Введите данные, поле не должно быть пустым</target>
+      </trans-unit>
+
+      <trans-unit id="message.validation.too_long_content">
+        <source>message.validation.too_long_content</source>
+        <target>Запись слишком длинная (максимум %limit% символов).</target>
       </trans-unit>
 
     </body>

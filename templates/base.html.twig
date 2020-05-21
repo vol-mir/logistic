@@ -57,7 +57,7 @@
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
         <!-- Brand Logo -->
         <a href="{{ path('home') }}" class="brand-link">
-            <img src="dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
+            <img src="{{ asset('dist/img/LogisticLogo.png') }}" alt="Logistic Logo" class="brand-image img-circle elevation-3"
                  style="opacity: .8">
             <span class="brand-text font-weight-light">Логистика</span>
         </a>
@@ -76,7 +76,7 @@
                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
                     <li class="nav-item">
-                        <a href="{{ path('home') }}" class="nav-link active">
+                        <a href="{{ path('home') }}" class="nav-link {% if app.request.get('_route') == 'home' %} active {% endif %}">
                             <i class="nav-icon fas fa-tachometer-alt"></i>
                             <p>
                                 Главная
@@ -87,7 +87,7 @@
                     <li class="nav-header">СПРАВОЧНИКИ</li>
 
                     <li class="nav-item">
-                        <a href="#" class="nav-link">
+                        <a href="" class="nav-link">
                             <i class="fas fa-circle nav-icon"></i>
                             <p>
                                 Организации
@@ -96,7 +96,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a href="{{ path('driver.index') }}" class="nav-link">
+                        <a href="{{ path('driver_index') }}" class="nav-link {% if app.request.get('_route') == 'driver_index' %} active {% endif %}">
                             <i class="fas fa-circle nav-icon"></i>
                             <p>
                                 {{ 'menu.drivers'|trans }}
@@ -105,7 +105,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a href="#" class="nav-link">
+                        <a href="" class="nav-link">
                             <i class="fas fa-circle nav-icon"></i>
                             <p>
                                 Транспорт
@@ -116,7 +116,7 @@
                     <li class="nav-header">ЖУРНАЛЫ</li>
 
                     <li class="nav-item">
-                        <a href="#" class="nav-link">
+                        <a href="" class="nav-link">
                             <i class="fas fa-book nav-icon"></i>
                             <p>
                                 Заявки на транспорт
@@ -129,7 +129,7 @@
                     <li class="nav-header">АДМИНИСТРИРОВАНИЕ</li>
 
                     <li class="nav-item has-treeview">
-                        <a href="#" class="nav-link">
+                        <a href="" class="nav-link">
                             <i class="nav-icon fas fa-users"></i>
                             <p>
                                 Управление
@@ -138,13 +138,13 @@
                         </a>
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
-                                <a href="#" class="nav-link">
+                                <a href="" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Пользователи</p>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="#" class="nav-link">
+                                <a href="" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Роли</p>
                                 </a>
@@ -175,6 +175,7 @@
         <!-- Main content -->
         <section class="content">
             <div class="container-fluid">
+                {% include 'default/_flashes.html.twig' %}
                 {% block body %}{% endblock %}
             </div><!-- /.container-fluid -->
         </section>

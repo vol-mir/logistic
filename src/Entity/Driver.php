@@ -132,19 +132,19 @@ class Driver
     }
 
     /**
-     * @ORM\PrePersist()
+     * @ORM\PrePersist
      */
     public function prePersist()
     {
-        $this->createdAt = new \DateTime();
-        $this->updatedAt = new \DateTime();
+        $this->created_at = new \DateTime();
+        $this->updated_at = new \DateTime();
     }
 
     /**
-     * @ORM\PreUpdate()
+     * @ORM\PreUpdate
      */
     public function preUpdate()
     {
-        $this->updatedAt = new \DateTime();
+        $this->updated_at = new \DateTime();
     }
 }

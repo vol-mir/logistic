@@ -1,0 +1,108 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Редактирование водителя{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-12">
+            <!-- jquery validation -->
+            <div class="card card-default">
+                <!-- form start -->
+                <form id="driverForm" action="{{ path('driver_edit', {'id': driver.id}) }}" method="POST">
+                    {% include 'driver/_form.html.twig' with {'form': form} only %}
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-primary">{{ 'title.save'|trans }}</button>
+                        <a href="{{ path('driver_index') }}" class="btn btn-default float-right">{{ 'title.cancel'|trans }}</a>
+                    </div>
+                </form>
+            </div>
+            <!-- /.card -->
+        </div>
+    </div>
+    <!-- /.row -->
+
+{% endblock %}
+
+
+{% block javascripts %}
+    <!-- jquery-validation -->
+    <script src="{{ asset('plugins/jquery-validation/jquery.validate.min.js') }}"></script>
+    <script src="{{ asset('plugins/jquery-validation/additional-methods.min.js') }}"></script>
+
+    <!-- Toastr -->
+    <script src="{{ asset('plugins/toastr/toastr.min.js') }}"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $('#driverForm').submit(function (e) {
+                //e.preventDefault();
+                let form = $(this);
+                if (!form.valid()) return;
+
+                /*
+                $.ajax({
+                    type: form.attr('method'),
+                    url: form.attr('action'),
+                    data: form.serialize()
+                }).done(function(data) {
+                    // Optionally alert the user of an success here...
+                }).fail(function(data) {
+                    // Optionally alert the user of an error here...
+                });*/
+
+            });
+
+            $('#driverForm').validate({
+                rules: {
+                    'driver[last_name]': {
+                        required: true,
+                        maxlength: 190
+                    },
+                    'driver[first_name]': {
+                        required: true,
+                        maxlength: 190
+                    },
+                    'driver[middle_name]': {
+                        required: true,
+                        maxlength: 190
+                    },
+                    'driver[phone]': {
+                        required: true,
+                        maxlength: 190
+                    },
+                },
+                messages: {
+                    'driver[last_name]': {
+                        required: "{{ 'message.validation.required'|trans }}",
+                        maxlength: "{{ 'message.validation.too_long_content'|trans({ '%limit%': 190 }) }}"
+                    },
+                    'driver[first_name]': {
+                        required: "{{ 'message.validation.required'|trans }}",
+                        minlength: "{{ 'message.validation.too_long_content'|trans({ '%limit%': 190 }) }}"
+                    },
+                    'driver[middle_name]': {
+                        required: "{{ 'message.validation.required'|trans }}",
+                        minlength: "{{ 'message.validation.too_long_content'|trans({ '%limit%': 190 }) }}"
+                    },
+                    'driver[phone]': {
+                        required: "{{ 'message.validation.required'|trans }}",
+                        minlength: "{{ 'message.validation.too_long_content'|trans({ '%limit%': 190 }) }}"
+                    },
+                },
+                errorElement: 'div',
+                errorPlacement: function (error, element) {
+                    error.addClass('invalid-feedback');
+                    element.closest('.form-group').append(error);
+                },
+                highlight: function (element, errorClass, validClass) {
+                    $(element).addClass('is-invalid');
+                },
+                unhighlight: function (element, errorClass, validClass) {
+                    $(element).removeClass('is-invalid');
+                }
+            });
+        });
+    </script>
+
+{% endblock %}
