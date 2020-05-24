@@ -43,6 +43,10 @@
         <source>menu.drivers</source>
         <target>Водители</target>
       </trans-unit>
+      <trans-unit id="menu.transport">
+        <source>menu.transport</source>
+        <target>Транспорт</target>
+      </trans-unit>
 
       <trans-unit id="label.first_name">
         <source>label.first_name</source>
@@ -60,21 +64,82 @@
         <source>label.phone</source>
         <target>Телефон</target>
       </trans-unit>
+      <trans-unit id="label.marka">
+        <source>label.marka</source>
+        <target>Марка</target>
+      </trans-unit>
+      <trans-unit id="label.model">
+        <source>label.model</source>
+        <target>Модель</target>
+      </trans-unit>
+      <trans-unit id="label.number">
+        <source>label.number</source>
+        <target>Гос. номер</target>
+      </trans-unit>
+      <trans-unit id="label.kind">
+        <source>label.kind</source>
+        <target>Вид</target>
+      </trans-unit>
+      <trans-unit id="label.carrying">
+        <source>label.carrying</source>
+        <target>Грузоподъемность</target>
+      </trans-unit>
 
       <trans-unit id="help.phone">
         <source>help.phone</source>
         <target>Например: МТС +37533-555-55-55, Vel + 37529-555-56-66</target>
+      </trans-unit>
+      <trans-unit id="help.carrying">
+        <source>help.carrying</source>
+        <target>*Указывается в тоннах. По умолчанию 0.</target>
       </trans-unit>
 
       <trans-unit id="message.validation.required">
         <source>message.validation.required</source>
         <target>Введите данные, поле не должно быть пустым</target>
       </trans-unit>
-
+      <trans-unit id="message.validation.number">
+        <source>message.validation.number</source>
+        <target>Поле должно содержать число</target>
+      </trans-unit>
       <trans-unit id="message.validation.too_long_content">
         <source>message.validation.too_long_content</source>
         <target>Запись слишком длинная (максимум %limit% символов).</target>
       </trans-unit>
+
+      <trans-unit id="kind.van">
+        <source>kind.van</source>
+        <target>Фургон</target>
+      </trans-unit>
+      <trans-unit id="kind.onboard_open">
+        <source>kind.onboard_open</source>
+        <target>Бортовой (открытый)</target>
+      </trans-unit>
+      <trans-unit id="kind.pickup">
+        <source>kind.pickup</source>
+        <target>Пикап</target>
+      </trans-unit>
+      <trans-unit id="kind.onboard_awning">
+        <source>kind.onboard_awning</source>
+        <target>Бортовой тент</target>
+      </trans-unit>
+      <trans-unit id="kind.trailer_onboard_awning">
+        <source>kind.trailer_onboard_awning</source>
+        <target>Прицеп бортовой тент</target>
+      </trans-unit>
+      <trans-unit id="kind.tractor_unit">
+        <source>kind.tractor_unit</source>
+        <target>Седельный тягач</target>
+      </trans-unit>
+      <trans-unit id="kind.semitrailer_awning">
+        <source>kind.semitrailer_awning</source>
+        <target>Полуприцеп тентованный</target>
+      </trans-unit>
+      <trans-unit id="kind.semitrailer_onboard_open">
+        <source>kind.semitrailer_onboard_open</source>
+        <target>Полуприцеп бортовой (открытый)</target>
+      </trans-unit>
+
 
     </body>
   </file>

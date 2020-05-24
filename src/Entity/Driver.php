@@ -24,28 +24,28 @@ class Driver
     /**
      * @var string
      *
-     * @ORM\Column(type="string", length=190, nullable=true)
+     * @ORM\Column(type="string", length=190, nullable=false)
      */
     private $first_name;
 
     /**
      * @var string
      *
-     * @ORM\Column(type="string", length=190, nullable=true)
+     * @ORM\Column(type="string", length=190, nullable=false)
      */
     private $last_name;
 
     /**
      * @var string
      *
-     * @ORM\Column(type="string", length=190, nullable=true)
+     * @ORM\Column(type="string", length=190, nullable=false)
      */
     private $middle_name;
 
     /**
      * @var string
      *
-     * @ORM\Column(type="string", length=190, nullable=true)
+     * @ORM\Column(type="string", length=190, nullable=false)
      */
     private $phone;
 

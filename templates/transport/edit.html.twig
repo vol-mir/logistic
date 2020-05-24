@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Добавление водителя{% endblock %}
+{% block title %}Редактирование транспорта{% endblock %}
 
 {% block body %}
     <div class="row">
@@ -8,12 +8,11 @@
             <!-- jquery validation -->
             <div class="card card-default">
                 <!-- form start -->
-                <form id="driverForm" action="{{ path('driver_new') }}" method="POST">
-                    {% include 'driver/_form.html.twig' with {'form': form} only %}
+                <form id="transportForm" action="{{ path('transport_edit', {'id': transport.id}) }}" method="POST">
+                    {% include 'transport/_form.html.twig' with {'form': form} only %}
                     <div class="card-footer">
                         <button type="submit" class="btn btn-primary">{{ 'title.save'|trans }}</button>
-                        {{ form_widget(form.saveAndCreateNew, {label: 'label.save_and_create_new', attr: {class: 'btn btn-primary'}}) }}
-                        <a href="{{ path('driver_index') }}" class="btn btn-default float-right">{{ 'title.cancel'|trans }}</a>
+                        <a href="{{ path('transport_index') }}" class="btn btn-default float-right">{{ 'title.cancel'|trans }}</a>
                     </div>
                 </form>
             </div>
@@ -33,41 +32,47 @@
     <script type="text/javascript">
         $(document).ready(function () {
 
-            $('#driverForm').validate({
+            $('#transportForm').validate({
                 rules: {
-                    'driver[last_name]': {
+                    'transport[number]': {
                         required: true,
                         maxlength: 190
                     },
-                    'driver[first_name]': {
+                    'transport[marka]': {
                         required: true,
                         maxlength: 190
                     },
-                    'driver[middle_name]': {
+                    'transport[model]': {
                         required: true,
                         maxlength: 190
                     },
-                    'driver[phone]': {
+                    'transport[kind]': {
+                        required: true
+                    },
+                    'transport[carrying]': {
                         required: true,
-                        maxlength: 190
+                        number: true
                     },
                 },
                 messages: {
-                    'driver[last_name]': {
+                    'transport[number]': {
                         required: "{{ 'message.validation.required'|trans }}",
                         maxlength: "{{ 'message.validation.too_long_content'|trans({ '%limit%': 190 }) }}"
                     },
-                    'driver[first_name]': {
+                    'transport[marka]': {
                         required: "{{ 'message.validation.required'|trans }}",
                         maxlength: "{{ 'message.validation.too_long_content'|trans({ '%limit%': 190 }) }}"
                     },
-                    'driver[middle_name]': {
+                    'transport[model]': {
                         required: "{{ 'message.validation.required'|trans }}",
                         maxlength: "{{ 'message.validation.too_long_content'|trans({ '%limit%': 190 }) }}"
                     },
-                    'driver[phone]': {
+                    'transport[kind]': {
+                        required: "{{ 'message.validation.required'|trans }}"
+                    },
+                    'transport[carrying]': {
                         required: "{{ 'message.validation.required'|trans }}",
-                        maxlength: "{{ 'message.validation.too_long_content'|trans({ '%limit%': 190 }) }}"
+                        number: "{{ 'message.validation.number'|trans }}"
                     },
                 },
                 errorElement: 'div',

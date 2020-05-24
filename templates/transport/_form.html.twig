@@ -1,0 +1,68 @@
+<div class="card-body">
+
+    {{ form_row(form._token) }}
+
+    <div class="form-group">
+        {{ form_label(form.number) }}
+        {{ form_widget(form.number) }}
+
+        {% if form.number.vars['errors']|length > 0 %}
+            <ul class="list-unstyled">
+                {% for error in form.number.vars['errors'] %}
+                    <li class="text-danger small">{{ error.message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.marka) }}
+        {{ form_widget(form.marka) }}
+
+        {% if form.marka.vars['errors']|length > 0 %}
+            <ul class="list-unstyled">
+                {% for error in form.marka.vars['errors'] %}
+                    <li class="text-danger small">{{ error.message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.model) }}
+        {{ form_widget(form.model) }}
+
+        {% if form.model.vars['errors']|length > 0 %}
+            <ul class="list-unstyled">
+                {% for error in form.model.vars['errors'] %}
+                    <li class="text-danger small">{{ error.message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.kind) }}
+        {{ form_widget(form.kind) }}
+
+        {% if form.kind.vars['errors']|length > 0 %}
+            <ul class="list-unstyled">
+                {% for error in form.kind.vars['errors'] %}
+                    <li class="text-danger small">{{ error.message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.carrying) }}
+        {{ form_widget(form.carrying, {'type' : 'number'}) }}
+        <small class="text-secondary">{{ form_help(form.carrying) }}</small>
+
+        {% if form.carrying.vars['errors']|length > 0 %}
+            <ul class="list-unstyled">
+                {% for error in form.carrying.vars['errors'] %}
+                    <li class="text-danger small">{{ error.message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+</div>
+<!-- /.card-body -->
+

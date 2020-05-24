@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\Entity\Driver;
-use App\Form\DriverType;
+use App\Entity\Transport;
+use App\Form\TransportType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,26 +13,27 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class DriverController extends AbstractController
+class TransportController extends AbstractController
 {
     /**
      * Index page
      *
-     * @Route("/drivers",  methods="GET", name="driver_index")
+     * @Route("/transports",  methods="GET", name="transport_index")
      *
      * @return Response
      */
     public function index() : Response
     {
-        return $this->render('driver/index.html.twig');
+        return $this->render('transport/index.html.twig');
     }
 
     /**
      * Data for datatables
      *
-     * @Route("/driver/datatables", methods="POST", name="driver_datatables")
+     * @Route("/transport/datatables", methods="POST", name="transport_datatables")
      *
      * @param Request $request
+     * @param EntityManagerInterface $em
      *
      * @return JsonResponse
      */
@@ -62,12 +63,12 @@ class DriverController extends AbstractController
         $otherConditions = "array or whatever is needed";
 
         $em = $this->getDoctrine()->getManager();
-        $results = $em->getRepository(Driver::class)->getRequiredDTData($start, $length, $orders, $search, $columns, $otherConditions = null);
+        $results = $em->getRepository(Transport::class)->getRequiredDTData($start, $length, $orders, $search, $columns, $otherConditions = null);
 
         // Returned objects are of type Town
         $objects = $results["results"];
         // Get total number of objects
-        $total_objects_count = $em->getRepository(Driver::class)->countDriver();
+        $total_objects_count = $em->getRepository(Transport::class)->countTransport();
         // Get total number of results
         $selected_objects_count = count($objects);
         // Get total number of filtered data
@@ -82,7 +83,7 @@ class DriverController extends AbstractController
 
         $i = 0;
 
-        foreach ($objects as $key => $driver)
+        foreach ($objects as $key => $transport)
         {
             $response .= '["';
 
@@ -95,21 +96,27 @@ class DriverController extends AbstractController
 
                 switch($column['name'])
                 {
-                    case 'fullName':
+                    case 'number':
                         {
-                            $responseTemp = "<a href='".$this->generateUrl('driver_edit', ['id' => $driver->getId()])."' class='float-left'>".$driver->getFullName()."</a>";
+                            $responseTemp = "<a href='".$this->generateUrl('transport_edit', ['id' => $transport->getId()])."' class='float-left'>".$transport->getNumber()."</a>";
                             break;
                         }
 
-                    case 'phone':
+                    case 'marka':
                         {
-                            $responseTemp = $driver->getPhone();
+                            $responseTemp = $transport->getMarka();
+                            break;
+                        }
+
+                    case 'model':
+                        {
+                            $responseTemp = $transport->getModel();
                             break;
                         }
 
                     case 'control':
                         {
-                            $responseTemp = "<div class='btn-group btn-group-sm'><a href='".$this->generateUrl('driver_edit', ['id' => $driver->getId()])."' class='btn btn-info'><i class='fas fa-eye'></i></a><button type='button' class='btn btn-sm btn-danger float-left modal-delete-dialog' data-toggle='modal' data-id='".$driver->getId()."'><i class='fas fa-trash'></i></button></div>";
+                            $responseTemp = "<div class='btn-group btn-group-sm'><a href='".$this->generateUrl('transport_edit', ['id' => $transport->getId()])."' class='btn btn-info'><i class='fas fa-eye'></i></a><button type='button' class='btn btn-sm btn-danger float-left modal-delete-dialog' data-toggle='modal' data-id='".$transport->getId()."'><i class='fas fa-trash'></i></button></div>";
                             break;
                         }
                 }
@@ -138,9 +145,9 @@ class DriverController extends AbstractController
     }
 
     /**
-     * Creates a new driver entity.
+     * Creates a new transport entity.
      *
-     * @Route("/driver/new", methods="GET|POST", name="driver_new")
+     * @Route("/transport/new", methods="GET|POST", name="transport_new")
      *
      * @param Request $request
      * @param TranslatorInterface $translator
@@ -149,74 +156,74 @@ class DriverController extends AbstractController
      */
     public function new(Request $request, TranslatorInterface $translator) : Response
     {
-        $driver = new Driver();
-        $form = $this->createForm(DriverType::class, $driver)->add('saveAndCreateNew', SubmitType::class);
+        $transport = new Transport();
+        $form = $this->createForm(TransportType::class, $transport)->add('saveAndCreateNew', SubmitType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $em->persist($driver);
+            $em->persist($transport);
             $em->flush();
 
             $this->addFlash('success', $translator->trans('item.created_successfully'));
 
             if ($form->get('saveAndCreateNew')->isClicked()) {
-                return $this->redirectToRoute('driver_new');
+                return $this->redirectToRoute('transport_new');
             }
 
-            return $this->redirectToRoute('driver_index');
+            return $this->redirectToRoute('transport_index');
         }
 
-        return $this->render('driver/new.html.twig', [
+        return $this->render('transport/new.html.twig', [
             'form' => $form->createView(),
         ]);
     }
 
     /**
-     * Edit driver
+     * Edit transport
      *
-     * @Route("/driver/{id}/edit", methods="GET|POST", name="driver_edit", requirements={"id" = "\d+"})
+     * @Route("/transport/{id}/edit", methods="GET|POST", name="transport_edit", requirements={"id" = "\d+"})
      *
      * @param Request $request
-     * @param Driver $driver
+     * @param Transport $transport
      * @param TranslatorInterface $translator
      *
      * @return Response
      */
-    public function edit(Request $request, Driver $driver, TranslatorInterface $translator) : Response
+    public function edit(Request $request, Transport $transport, TranslatorInterface $translator) : Response
     {
-        $form = $this->createForm(DriverType::class, $driver);
+        $form = $this->createForm(TransportType::class, $transport);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
             $this->addFlash('success', $translator->trans('item.edited_successfully'));
-            return $this->redirectToRoute('driver_index');
+            return $this->redirectToRoute('transport_index');
         }
 
-        return $this->render('driver/edit.html.twig', [
+        return $this->render('transport/edit.html.twig', [
             'form' => $form->createView(),
-            'driver' => $driver
+            'transport' => $transport
         ]);
     }
 
     /**
-     * Delete driver
+     * Delete transport
      *
-     * @Route("/driver/{id}/delete", methods="DELETE", name="driver_delete", requirements={"id" = "\d+"})
+     * @Route("/transport/{id}/delete", methods="DELETE", name="transport_delete", requirements={"id" = "\d+"})
      *
      * @param Request $request
-     * @param Driver $driver
+     * @param Transport $transport
      * @param TranslatorInterface $translator
      *
      * @return JsonResponse
      */
-    public function delete(Request $request, Driver $driver, TranslatorInterface $translator) : JsonResponse
+    public function delete(Request $request, Transport $transport, TranslatorInterface $translator) : JsonResponse
     {
         if ($this->isCsrfTokenValid('delete-item', $request->request->get('_token'))) {
             $em = $this->getDoctrine()->getManager();
-            $em->remove($driver);
+            $em->remove($transport);
             $em->flush();
         }
 

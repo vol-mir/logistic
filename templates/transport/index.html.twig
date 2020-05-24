@@ -1,21 +1,22 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Водители{% endblock %}
+{% block title %}Транспорт{% endblock %}
 
 {% block body %}
     <div class="row">
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    {% include 'driver/_controls.html.twig' %}
+                    {% include 'transport/_controls.html.twig' %}
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
-                    <table id="drivers" class="table table-bordered table-striped table-hover">
+                    <table id="transports" class="table table-bordered table-striped table-hover">
                         <thead>
                         <tr>
-                            <th>ФИО</th>
-                            <th>Контакты</th>
+                            <th>Гос. номер</th>
+                            <th>Марка</th>
+                            <th>Модель</th>
                             <th></th>
                         </tr>
                         </thead>
@@ -23,8 +24,9 @@
                         </tbody>
                         <tfoot>
                         <tr>
-                            <th>ФИО</th>
-                            <th>Контакты</th>
+                            <th>Гос. номер</th>
+                            <th>Марка</th>
+                            <th>Модель</th>
                             <th></th>
                         </tr>
                         </tfoot>
@@ -32,7 +34,7 @@
                 </div>
                 <!-- /.card-body -->
                 <div class="card-footer">
-                    {% include 'driver/_controls.html.twig' %}
+                    {% include 'transport/_controls.html.twig' %}
                 </div>
                 <!-- /.card-footer -->
             </div>
@@ -49,15 +51,16 @@
 {% block javascripts %}
     <script>
         $(function () {
-            let table = $("#drivers").DataTable({
+            let table = $("#transports").DataTable({
                 "columnDefs": [
                     // These are the column name variables that will be sent to the server
-                    { "name": "fullName", "targets": 0 },
-                    { "name": "phone",   "targets": 1 },
-                    { "name": "control",  "targets": 2, "orderable": false, "searchable": false },
+                    { "name": "number",   "targets": 0 },
+                    { "name": "marka", "targets": 1 },
+                    { "name": "model",   "targets": 2 },
+                    { "name": "control",  "targets": 3, "orderable": false, "searchable": false },
                 ],
                 "ajax": {
-                    "url": "{{ path('driver_datatables') }}",
+                    "url": "{{ path('transport_datatables') }}",
                     "type": "POST"
                 },
                 "stateSave": true,
@@ -75,14 +78,14 @@
                 }
             });
 
-            $("#drivers").on("click", ".modal-delete-dialog", function() {
+            $("#transports").on("click", ".modal-delete-dialog", function() {
                 $('#btn-modal-delete').attr("data-confirm-delete-id", $(this).attr('data-id'));
                 $('#modal-delete').modal('show');
             });
 
             $("#modal-delete").on("click", "#btn-modal-delete", function() {
 
-                let url = "{{path('driver_delete', { 'id': 0 }) }}";
+                let url = "{{path('transport_delete', { 'id': 0 }) }}";
                 url = url.replace("0", $(this).attr('data-confirm-delete-id'));
 
                 $.ajax({
