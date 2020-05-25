@@ -47,6 +47,10 @@
         <source>menu.transport</source>
         <target>Транспорт</target>
       </trans-unit>
+      <trans-unit id="menu.organizations">
+        <source>menu.organizations</source>
+        <target>Организации</target>
+      </trans-unit>
 
       <trans-unit id="label.first_name">
         <source>label.first_name</source>
@@ -84,6 +88,26 @@
         <source>label.carrying</source>
         <target>Грузоподъемность</target>
       </trans-unit>
+      <trans-unit id="label.registration_number">
+        <source>label.registration_number</source>
+        <target>Регистрационный номер (УНП, ИНН)</target>
+      </trans-unit>
+      <trans-unit id="label.abbreviated_name">
+        <source>label.abbreviated_name</source>
+        <target>Краткое наименование организации</target>
+      </trans-unit>
+      <trans-unit id="label.full_name">
+        <source>label.full_name</source>
+        <target>Полное наименование организации</target>
+      </trans-unit>
+      <trans-unit id="label.base_contact_person">
+        <source>label.base_contact_person</source>
+        <target>Контактное лицо на загрузке / выгрузке - телефон</target>
+      </trans-unit>
+      <trans-unit id="label.base_working_hours">
+        <source>label.base_working_hours</source>
+        <target>Время работы</target>
+      </trans-unit>
 
       <trans-unit id="help.phone">
         <source>help.phone</source>
@@ -92,6 +116,14 @@
       <trans-unit id="help.carrying">
         <source>help.carrying</source>
         <target>*Указывается в тоннах. По умолчанию 0.</target>
+      </trans-unit>
+      <trans-unit id="help.abbreviated_name">
+        <source>help.abbreviated_name</source>
+        <target>Например: Квазар Компания ООО г.Львов Украина, Пружанский льнозавод ОАО, Морион ЧУПП, БелАМ-Транс ЗАО, Белпанорама Авто ЧТУП, Белпромвест ПФК ООО, Брестский ЦУМ ОАО, Вольны Шлях ОДО, Добрушская бумажная фабрика Герой труда ОАО, ЖРЭУ Ленинского района г.Могилева КУП, СП Белюкс ЛТД ООО, Автобусный парк №1 г.Гродно ОАО, Харьковский тракторный завод ОАО Украина, АСБ Беларусбанк ОАО, Гаркавый Ю.Ю. ИП, Главное управление Министерства финансов РБ по г.Минску, Филиал обособленного литейного производства государственного предприятие ГЗЛиН, Экспериментальная база Свекловичная ГП, ANLAS SIA г.Рига Латвия</target>
+      </trans-unit>
+      <trans-unit id="help.full_name">
+        <source>help.full_name</source>
+        <target>*Используется при печати</target>
       </trans-unit>
 
       <trans-unit id="message.validation.required">

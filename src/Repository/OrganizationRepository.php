@@ -2,29 +2,29 @@
 
 namespace App\Repository;
 
-use App\Entity\Driver;
+use App\Entity\Organization;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method Driver|null find($id, $lockMode = null, $lockVersion = null)
- * @method Driver|null findOneBy(array $criteria, array $orderBy = null)
- * @method Driver[]    findAll()
- * @method Driver[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Organization|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Organization|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Organization[]    findAll()
+ * @method Organization[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class DriverRepository extends ServiceEntityRepository
+class OrganizationRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Driver::class);
+        parent::__construct($registry, Organization::class);
     }
 
     // Get the total number of elements
-    public function countDriver()
+    public function countOrganization()
     {
         return $this
-            ->createQueryBuilder('driver')
-            ->select("count(driver.id)")
+            ->createQueryBuilder('organization')
+            ->select("count(organization.id)")
             ->getQuery()
             ->getSingleScalarResult();
     }
@@ -32,11 +32,11 @@ class DriverRepository extends ServiceEntityRepository
     public function getRequiredDTData($start, $length, $orders, $search, $columns, $otherConditions)
     {
         // Create Main Query
-        $query = $this->createQueryBuilder('driver');
+        $query = $this->createQueryBuilder('organization');
 
         // Create Count Query
-        $countQuery = $this->createQueryBuilder('driver');
-        $countQuery->select('COUNT(driver)');
+        $countQuery = $this->createQueryBuilder('organization');
+        $countQuery->select('COUNT(organization)');
 
         // Other conditions than the ones sent by the Ajax call ?
         if ($otherConditions === null) {
@@ -54,10 +54,9 @@ class DriverRepository extends ServiceEntityRepository
         if ($search['value'] != '') {
             // $searchItem is what we are looking for
             $searchItem = $search['value'];
-            $searchQuery = 'driver.first_name LIKE \'%' . $searchItem . '%\'';
-            $searchQuery .= ' or driver.last_name LIKE \'%' . $searchItem . '%\'';
-            $searchQuery .= ' or driver.middle_name LIKE \'%' . $searchItem . '%\'';
-            $searchQuery .= ' or driver.phone LIKE \'%' . $searchItem . '%\'';
+            $searchQuery = 'organization.abbreviated_name LIKE \'%' . $searchItem . '%\'';
+            $searchQuery .= ' or organization.registration_number LIKE \'%' . $searchItem . '%\'';
+            $searchQuery .= ' or organization.full_name LIKE \'%' . $searchItem . '%\'';
 
             $query->andWhere($searchQuery);
             $countQuery->andWhere($searchQuery);
@@ -73,16 +72,19 @@ class DriverRepository extends ServiceEntityRepository
                 $orderColumn = null;
 
                 switch ($order['name']) {
-                    case 'fullName':
+                    case 'abbreviatedName':
                         {
-                            $query->orderBy('driver.last_name', $order['dir']);
-                            $query->addOrderBy('driver.first_name', $order['dir']);
-                            $query->addOrderBy('driver.middle_name', $order['dir']);
+                            $query->orderBy('organization.abbreviated_name', $order['dir']);
                             break;
                         }
-                    case 'phone':
+                    case 'registrationNumber':
                         {
-                            $query->orderBy('driver.phone', $order['dir']);
+                            $query->orderBy('organization.registration_number', $order['dir']);
+                            break;
+                        }
+                    case 'fullName':
+                        {
+                            $query->orderBy('organization.full_name', $order['dir']);
                             break;
                         }
                 }

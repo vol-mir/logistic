@@ -69,77 +69,62 @@ class TransportController extends AbstractController
         $objects = $results["results"];
         // Get total number of objects
         $total_objects_count = $em->getRepository(Transport::class)->countTransport();
-        // Get total number of results
-        $selected_objects_count = count($objects);
         // Get total number of filtered data
         $filtered_objects_count = $results["countResult"];
 
-        // Construct response
-        $response = '{
-            "draw": '.$draw.',
-            "recordsTotal": '.$total_objects_count.',
-            "recordsFiltered": '.$filtered_objects_count.',
-            "data": [';
-
-        $i = 0;
-
+        $data = [];
         foreach ($objects as $key => $transport)
         {
-            $response .= '["';
-
-            $j = 0;
-            $nbColumn = count($columns);
+            $dataTemp = [];
             foreach ($columns as $key => $column)
             {
-                // In all cases where something does not exist or went wrong, return -
-                $responseTemp = "-";
-
                 switch($column['name'])
                 {
                     case 'number':
                         {
-                            $responseTemp = "<a href='".$this->generateUrl('transport_edit', ['id' => $transport->getId()])."' class='float-left'>".$transport->getNumber()."</a>";
+                            $elementTemp = "<a href='".$this->generateUrl('transport_edit', ['id' => $transport->getId()])."' class='float-left'>".$transport->getNumber()."</a>";
+                            array_push($dataTemp, $elementTemp);
                             break;
                         }
 
                     case 'marka':
                         {
-                            $responseTemp = $transport->getMarka();
+                            $elementTemp = $transport->getMarka();
+                            array_push($dataTemp, $elementTemp);
                             break;
                         }
 
                     case 'model':
                         {
-                            $responseTemp = $transport->getModel();
+                            $elementTemp = $transport->getModel();
+                            array_push($dataTemp, $elementTemp);
                             break;
                         }
 
                     case 'control':
                         {
-                            $responseTemp = "<div class='btn-group btn-group-sm'><a href='".$this->generateUrl('transport_edit', ['id' => $transport->getId()])."' class='btn btn-info'><i class='fas fa-eye'></i></a><button type='button' class='btn btn-sm btn-danger float-left modal-delete-dialog' data-toggle='modal' data-id='".$transport->getId()."'><i class='fas fa-trash'></i></button></div>";
+                            $elementTemp = "<div class='btn-group btn-group-sm'><a href='".$this->generateUrl('transport_edit', ['id' => $transport->getId()])."' class='btn btn-info'><i class='fas fa-edit'></i></a><button type='button' class='btn btn-sm btn-danger float-left modal-delete-dialog' data-toggle='modal' data-id='".$transport->getId()."'><i class='fas fa-trash'></i></button></div>";
+                            array_push($dataTemp, $elementTemp);
                             break;
                         }
+
                 }
-
-                // Add the found data to the json
-                $response .= $responseTemp;
-
-                if(++$j !== $nbColumn)
-                    $response .='","';
             }
-
-            $response .= '"]';
-
-            // Not on the last item
-            if(++$i !== $selected_objects_count)
-                $response .= ',';
+            array_push($data, $dataTemp);
         }
 
-        $response .= ']}';
+        // Construct response
+        $response = [
+            'draw' => $draw,
+            'recordsTotal' => $total_objects_count,
+            'recordsFiltered' => $filtered_objects_count,
+            'data' => $data,
+        ];
+
 
         // Send all this stuff back to DataTables
         $returnResponse = new JsonResponse();
-        $returnResponse->setJson($response);
+        $returnResponse->setData($response);
 
         return $returnResponse;
     }

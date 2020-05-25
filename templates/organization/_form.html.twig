@@ -1,0 +1,70 @@
+<div class="card-body">
+
+    {{ form_row(form._token) }}
+
+    <div class="form-group">
+        {{ form_label(form.registration_number) }}
+        {{ form_widget(form.registration_number) }}
+
+        {% if form.registration_number.vars['errors']|length > 0 %}
+            <ul class="list-unstyled">
+                {% for error in form.registration_number.vars['errors'] %}
+                    <li class="text-danger small">{{ error.message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.abbreviated_name) }}
+        {{ form_widget(form.abbreviated_name) }}
+        <small class="text-secondary">{{ form_help(form.abbreviated_name) }}</small>
+
+        {% if form.abbreviated_name.vars['errors']|length > 0 %}
+            <ul class="list-unstyled">
+                {% for error in form.abbreviated_name.vars['errors'] %}
+                    <li class="text-danger small">{{ error.message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.full_name) }}
+        {{ form_widget(form.full_name) }}
+        <small class="text-secondary">{{ form_help(form.full_name) }}</small>
+
+
+        {% if form.full_name.vars['errors']|length > 0 %}
+            <ul class="list-unstyled">
+                {% for error in form.full_name.vars['errors'] %}
+                    <li class="text-danger small">{{ error.message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.base_contact_person) }}
+        {{ form_widget(form.base_contact_person) }}
+
+        {% if form.base_contact_person.vars['errors']|length > 0 %}
+            <ul class="list-unstyled">
+                {% for error in form.base_contact_person.vars['errors'] %}
+                    <li class="text-danger small">{{ error.message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.base_working_hours) }}
+        {{ form_widget(form.base_working_hours) }}
+
+        {% if form.base_working_hours.vars['errors']|length > 0 %}
+            <ul class="list-unstyled">
+                {% for error in form.base_working_hours.vars['errors'] %}
+                    <li class="text-danger small">{{ error.message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+</div>
+<!-- /.card-body -->
+
