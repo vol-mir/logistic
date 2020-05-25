@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Информация об организации{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    {% include 'organization/_controls_show.html.twig' %}
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-4">{{ 'label.registration_number'|trans }}</dt>
+                        <dd class="col-sm-8">{{ organization.registrationNumber }}</dd>
+                        <dt class="col-sm-4">{{ 'label.abbreviated_name'|trans }}</dt>
+                        <dd class="col-sm-8">{{ organization.abbreviatedName }}</dd>
+                        <dt class="col-sm-4">{{ 'label.full_name'|trans }}</dt>
+                        <dd class="col-sm-8">{{ organization.fullName }}</dd>
+
+                        {% if organization.baseContactPerson %}
+                            <dt class="col-sm-4">{{ 'label.base_contact_person'|trans }}</dt>
+                            <dd class="col-sm-8">{{ organization.baseContactPerson }}</dd>
+                        {% endif %}
+
+                        {% if organization.baseWorkingHours %}
+                            <dt class="col-sm-4">{{ 'label.base_working_hours'|trans }}</dt>
+                            <dd class="col-sm-8">{{ organization.baseWorkingHours }}</dd>
+                        {% endif %}
+                    </dl>
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+
+    {% include 'modals/delete.html.twig' %}
+{% endblock %}
+
+
+{% block javascripts %}
+
+{% endblock %}

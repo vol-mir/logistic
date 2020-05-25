@@ -81,7 +81,7 @@ class OrganizationController extends AbstractController
                 {
                     case 'abbreviatedName':
                         {
-                            $elementTemp = "<a href='".$this->generateUrl('organization_edit', ['id' => $organization->getId()])."' class='float-left'>".$organization->getAbbreviatedName()."</a>";
+                            $elementTemp = "<a href='".$this->generateUrl('organization_show', ['id' => $organization->getId()])."' class='float-left'>".$organization->getAbbreviatedName()."</a>";
                             array_push($dataTemp, $elementTemp);
                             break;
                         }
@@ -102,7 +102,7 @@ class OrganizationController extends AbstractController
 
                     case 'control':
                         {
-                            $elementTemp = "<div class='btn-group btn-group-sm'><a href='".$this->generateUrl('organization_edit', ['id' => $organization->getId()])."' class='btn btn-info'><i class='fas fa-edit'></i></a><button type='button' class='btn btn-sm btn-danger float-left modal-delete-dialog' data-toggle='modal' data-id='".$organization->getId()."'><i class='fas fa-trash'></i></button></div>";
+                            $elementTemp = "<div class='btn-group btn-group-sm'><a href='".$this->generateUrl('organization_show', ['id' => $organization->getId()])."' class='btn btn-secondary'><i class='fas fa-eye'></i></a><a href='".$this->generateUrl('organization_edit', ['id' => $organization->getId()])."' class='btn btn-info'><i class='fas fa-edit'></i></a><button type='button' class='btn btn-sm btn-danger float-left modal-delete-dialog' data-toggle='modal' data-id='".$organization->getId()."'><i class='fas fa-trash'></i></button></div>";
                             array_push($dataTemp, $elementTemp);
                             break;
                         }
@@ -162,6 +162,25 @@ class OrganizationController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
+    /**
+     * Show organization
+     *
+     * @Route("/organization/{id}", methods="GET", name="organization_show", requirements={"id" = "\d+"})
+     *
+     * @param Request $request
+     * @param Organization $organization
+     * @param TranslatorInterface $translator
+     *
+     * @return Response
+     */
+    public function show(Request $request, Organization $organization) : Response
+    {
+        return $this->render('organization/show.html.twig', [
+            'organization' => $organization
+        ]);
+    }
+
 
     /**
      * Edit organization

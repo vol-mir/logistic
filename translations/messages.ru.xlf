@@ -25,6 +25,10 @@
         <source>title.add</source>
         <target>Добавить</target>
       </trans-unit>
+      <trans-unit id="title.back">
+        <source>title.back</source>
+        <target>Назад</target>
+      </trans-unit>
 
       <trans-unit id="item.deleted_successfully">
         <source>item.deleted_successfully</source>
