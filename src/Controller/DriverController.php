@@ -59,10 +59,10 @@ class DriverController extends AbstractController
         }
 
         // Further filtering can be done in the Repository by passing necessary arguments
-        $otherConditions = "array or whatever is needed";
+        $otherConditions = null;
 
         $em = $this->getDoctrine()->getManager();
-        $results = $em->getRepository(Driver::class)->getRequiredDTData($start, $length, $orders, $search, $columns, $otherConditions = null);
+        $results = $em->getRepository(Driver::class)->getRequiredDTData($start, $length, $orders, $search, $columns, $otherConditions);
 
         // Returned objects are of type Town
         $objects = $results["results"];

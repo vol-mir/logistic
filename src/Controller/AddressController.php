@@ -2,41 +2,41 @@
 
 namespace App\Controller;
 
+use App\Entity\Address;
 use App\Entity\Organization;
-use App\Form\OrganizationType;
+use App\Form\AddressType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-
-class OrganizationController extends AbstractController
+/**
+ *
+ * Class AddressController
+ * @package App\Controller
+ *
+ * @Route("/organization/{organization_id}", requirements={"organization_id" = "\d+"});
+ * @ParamConverter("organization", options={"id" = "organization_id"})
+ */
+class AddressController extends AbstractController
 {
-    /**
-     * Index page
-     *
-     * @Route("/organizations",  methods="GET", name="organization_index")
-     *
-     * @return Response
-     */
-    public function index() : Response
-    {
-        return $this->render('organization/index.html.twig');
-    }
-
     /**
      * Data for datatables
      *
-     * @Route("/organization/datatables", methods="POST", name="organization_datatables")
+     * @Route("/address/datatables", methods="POST", name="address_datatables")
      *
+     * @param Organization $organization
      * @param Request $request
      *
      * @return JsonResponse
      */
-    public function listDatatableAction(Request $request) : JsonResponse
+    public function listDatatableAction(Request $request, Organization $organization) : JsonResponse
     {
         // Get the parameters from DataTable Ajax Call
         if ($request->getMethod() == 'POST') {
@@ -59,50 +59,45 @@ class OrganizationController extends AbstractController
         }
 
         // Further filtering can be done in the Repository by passing necessary arguments
-        $otherConditions = null;
+        $otherConditions = [
+            "t0.organization = ".$organization->getId()
+        ];
 
         $em = $this->getDoctrine()->getManager();
-        $results = $em->getRepository(Organization::class)->getRequiredDTData($start, $length, $orders, $search, $columns, $otherConditions);
+        $results = $em->getRepository(Address::class)->getRequiredDTData($start, $length, $orders, $search, $columns, $otherConditions);
 
         // Returned objects are of type Town
         $objects = $results["results"];
         // Get total number of objects
-        $total_objects_count = $em->getRepository(Organization::class)->countOrganization();
+        $total_objects_count = $em->getRepository(Address::class)->countAddress($otherConditions);
         // Get total number of filtered data
         $filtered_objects_count = $results["countResult"];
 
         $data = [];
-        foreach ($objects as $key => $organization)
+        foreach ($objects as $key => $address)
         {
             $dataTemp = [];
             foreach ($columns as $key => $column)
             {
                 switch($column['name'])
                 {
-                    case 'abbreviatedName':
+                    case 'pointName':
                         {
-                            $elementTemp = "<a href='".$this->generateUrl('organization_show', ['id' => $organization->getId()])."' class='float-left'>".$organization->getAbbreviatedName()."</a>";
+                            $elementTemp = "<a href='".$this->generateUrl('address_edit', ['organization_id' => $organization->getId(), 'id' => $address->getId()])."' class='float-left'>".$address->getPointName()."</a>";
                             array_push($dataTemp, $elementTemp);
                             break;
                         }
 
-                    case 'registrationNumber':
+                    case 'fullAddress':
                         {
-                            $elementTemp = $organization->getRegistrationNumber();
-                            array_push($dataTemp, $elementTemp);
-                            break;
-                        }
-
-                    case 'fullName':
-                        {
-                            $elementTemp = $organization->getFullName();
+                            $elementTemp = $address->getFullAddress();
                             array_push($dataTemp, $elementTemp);
                             break;
                         }
 
                     case 'control':
                         {
-                            $elementTemp = "<div class='btn-group btn-group-sm'><a href='".$this->generateUrl('organization_show', ['id' => $organization->getId()])."' class='btn btn-secondary'><i class='fas fa-eye'></i></a><a href='".$this->generateUrl('organization_edit', ['id' => $organization->getId()])."' class='btn btn-info'><i class='fas fa-edit'></i></a><button type='button' class='btn btn-sm btn-danger float-left modal-delete-dialog' data-toggle='modal' data-id='".$organization->getId()."'><i class='fas fa-trash'></i></button></div>";
+                            $elementTemp = "<div class='btn-group btn-group-sm'><a href='".$this->generateUrl('address_edit', ['organization_id' => $organization->getId(), 'id' => $address->getId()])."' class='btn btn-info'><i class='fas fa-edit'></i></a><button type='button' class='btn btn-sm btn-danger float-left modal-delete-dialog' data-toggle='modal' data-id='".$address->getId()."'><i class='fas fa-trash'></i></button></div>";
                             array_push($dataTemp, $elementTemp);
                             break;
                         }
@@ -128,107 +123,103 @@ class OrganizationController extends AbstractController
         return $returnResponse;
     }
 
+
     /**
-     * Creates a new organization entity.
+     * Creates a new address entity.
      *
-     * @Route("/organization/new", methods="GET|POST", name="organization_new")
+     * @Route("/address/new", methods="GET|POST", name="address_new")
      *
      * @param Request $request
+     * @param Organization $organization
      * @param TranslatorInterface $translator
      *
      * @return RedirectResponse|Response
      */
-    public function new(Request $request, TranslatorInterface $translator) : Response
+    public function new(Request $request, Organization $organization, TranslatorInterface $translator) : Response
     {
-        $organization = new Organization();
-        $form = $this->createForm(OrganizationType::class, $organization)->add('saveAndCreateNew', SubmitType::class);
+        $address = new Address();
+        $form = $this->createForm(AddressType::class, $address)->add('saveAndCreateNew', SubmitType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $em->persist($organization);
+            $address->setOrganization($organization);
+            $em->persist($address);
             $em->flush();
 
             $this->addFlash('success', $translator->trans('item.created_successfully'));
 
             if ($form->get('saveAndCreateNew')->isClicked()) {
-                return $this->redirectToRoute('organization_new');
+                return $this->redirectToRoute('address_new', [
+                    'organization_id' => $organization->getId(),
+                ]);
             }
 
-            return $this->redirectToRoute('organization_index');
+            return $this->redirectToRoute('organization_show', [
+                'id' => $organization->getId(),
+            ]);
         }
 
-        return $this->render('organization/new.html.twig', [
+        return $this->render('address/new.html.twig', [
             'form' => $form->createView(),
-        ]);
-    }
-
-    /**
-     * Show organization
-     *
-     * @Route("/organization/{id}", methods="GET", name="organization_show", requirements={"id" = "\d+"})
-     *
-     * @param Organization $organization
-     *
-     * @return Response
-     */
-    public function show(Organization $organization) : Response
-    {
-        return $this->render('organization/show.html.twig', [
             'organization' => $organization
         ]);
     }
 
-
     /**
-     * Edit organization
+     * Edit address
      *
-     * @Route("/organization/{id}/edit", methods="GET|POST", name="organization_edit", requirements={"id" = "\d+"})
+     * @Route("/address/{id}/edit", methods="GET|POST", name="address_edit", requirements={"id" = "\d+"})
+     * @ParamConverter("address", options={"id" = "id"})
      *
      * @param Request $request
      * @param Organization $organization
+     * @param Address $address
      * @param TranslatorInterface $translator
      *
      * @return Response
      */
-    public function edit(Request $request, Organization $organization, TranslatorInterface $translator) : Response
+    public function edit(Request $request, Organization $organization, Address $address, TranslatorInterface $translator) : Response
     {
-        $form = $this->createForm(OrganizationType::class, $organization);
+        $form = $this->createForm(AddressType::class, $address);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
             $this->addFlash('success', $translator->trans('item.edited_successfully'));
-            return $this->redirectToRoute('organization_index');
+            return $this->redirectToRoute('organization_show', [
+                'id' => $organization->getId(),
+            ]);
         }
 
-        return $this->render('organization/edit.html.twig', [
+        return $this->render('address/edit.html.twig', [
             'form' => $form->createView(),
-            'organization' => $organization
+            'organization' => $organization,
+            'address' => $address
         ]);
     }
 
     /**
-     * Delete organization
+     * Delete address
      *
-     * @Route("/organization/{id}/delete", methods="DELETE", name="organization_delete", requirements={"id" = "\d+"})
+     * @Route("/address/{id}/delete", methods="DELETE", name="address_delete", requirements={"id" = "\d+"})
+     * @ParamConverter("address", options={"id" = "id"})
      *
      * @param Request $request
-     * @param Organization $organization
+     * @param Address $address
      * @param TranslatorInterface $translator
      *
      * @return JsonResponse
      */
-    public function delete(Request $request, Organization $organization, TranslatorInterface $translator) : JsonResponse
+    public function delete(Request $request, Address $address, TranslatorInterface $translator) : JsonResponse
     {
         if ($this->isCsrfTokenValid('delete-item', $request->request->get('_token'))) {
             $em = $this->getDoctrine()->getManager();
-            $em->remove($organization);
+            $em->remove($address);
             $em->flush();
         }
 
         return new JsonResponse(['message' => $translator->trans('item.deleted_successfully')]);
     }
-
 }

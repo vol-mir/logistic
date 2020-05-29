@@ -23,20 +23,20 @@ class TransportRepository extends ServiceEntityRepository
     public function countTransport()
     {
         return $this
-            ->createQueryBuilder('transport')
-            ->select("count(transport.id)")
+            ->createQueryBuilder('t0')
+            ->select("count(t0.id)")
             ->getQuery()
             ->getSingleScalarResult();
     }
 
-    public function getRequiredDTData($start, $length, $orders, $search, $columns, $otherConditions)
+    public function getRequiredDTData($start, $length, $orders, $search, $columns, $otherConditions = null)
     {
         // Create Main Query
-        $query = $this->createQueryBuilder('transport');
+        $query = $this->createQueryBuilder('t0');
 
         // Create Count Query
-        $countQuery = $this->createQueryBuilder('transport');
-        $countQuery->select('COUNT(transport)');
+        $countQuery = $this->createQueryBuilder('t0');
+        $countQuery->select('COUNT(t0)');
 
         // Other conditions than the ones sent by the Ajax call ?
         if ($otherConditions === null) {
@@ -54,9 +54,9 @@ class TransportRepository extends ServiceEntityRepository
         if ($search['value'] != '') {
             // $searchItem is what we are looking for
             $searchItem = $search['value'];
-            $searchQuery = 'transport.number LIKE \'%' . $searchItem . '%\'';
-            $searchQuery .= ' or transport.marka LIKE \'%' . $searchItem . '%\'';
-            $searchQuery .= ' or transport.model LIKE \'%' . $searchItem . '%\'';
+            $searchQuery = 't0.number LIKE \'%' . $searchItem . '%\'';
+            $searchQuery .= ' or t0.marka LIKE \'%' . $searchItem . '%\'';
+            $searchQuery .= ' or t0.model LIKE \'%' . $searchItem . '%\'';
 
             $query->andWhere($searchQuery);
             $countQuery->andWhere($searchQuery);
@@ -74,18 +74,18 @@ class TransportRepository extends ServiceEntityRepository
                 switch ($order['name']) {
                     case 'number':
                         {
-                            $query->orderBy('transport.number', $order['dir']);
+                            $query->orderBy('t0.number', $order['dir']);
                             break;
                         }
                     case 'marka':
                         {
-                            $query->orderBy('transport.marka', $order['dir']);
+                            $query->orderBy('t0.marka', $order['dir']);
                             break;
                         }
                     case 'model':
                         {
-                            $query->orderBy('transport.model', $order['dir']);
-                            $query->orderBy('transport.model', $order['dir']);
+                            $query->orderBy('t0.model', $order['dir']);
+                            $query->orderBy('t0.model', $order['dir']);
                             break;
                         }
                 }

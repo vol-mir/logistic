@@ -1,0 +1,115 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Добавление точки{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-12">
+            <!-- jquery validation -->
+            <div class="card card-default">
+                <div class="card-header">
+                    Организация: <a href="{{ path('organization_show', {'id': organization.id }) }}">{{ organization.abbreviatedName }}</a>
+                </div>
+                <div class="card-body">
+                    <!-- form start -->
+                    <form id="addressForm" action="{{ path('address_new', {'organization_id': organization.id }) }}" method="POST">
+                        {% include 'address/_form.html.twig' with {'form': form} only %}
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-primary">{{ 'title.save'|trans }}</button>
+                            {{ form_widget(form.saveAndCreateNew, {label: 'label.save_and_create_new', attr: {class: 'btn btn-primary'}}) }}
+                            <a href="{{ path('organization_show', {'id': organization.id }) }}" class="btn btn-default float-right">{{ 'title.cancel'|trans }}</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- /.card -->
+        </div>
+    </div>
+    <!-- /.row -->
+
+{% endblock %}
+
+{% block javascripts %}
+    <!-- jquery-validation -->
+    <script src="{{ asset('plugins/jquery-validation/jquery.validate.min.js') }}"></script>
+    <script src="{{ asset('plugins/jquery-validation/additional-methods.min.js') }}"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $('#addressForm').validate({
+                ignore: ".ignore-validate",
+                rules: {
+                    'address[point_name]': {
+                        required: true,
+                        maxlength: 190
+                    },
+                    'address[postcode]': {
+                        required: true,
+                        maxlength: 190
+                    },
+                    'address[country]': {
+                        required: true,
+                        maxlength: 190
+                    },
+                    'address[region]': {
+                        required: true,
+                        maxlength: 190
+                    },
+                    'address[city]': {
+                        required: true,
+                        maxlength: 190
+                    },
+                    'address[locality]': {
+                        maxlength: 190
+                    },
+                    'address[street]': {
+                        required: true,
+                        maxlength: 190
+                    },
+                },
+                messages: {
+                    'address[point_name]': {
+                        required: "{{ 'message.validation.required'|trans }}",
+                        maxlength: "{{ 'message.validation.too_long_content'|trans({ '%limit%': 190 }) }}"
+                    },
+                    'address[postcode]': {
+                        required: "{{ 'message.validation.required'|trans }}",
+                        maxlength: "{{ 'message.validation.too_long_content'|trans({ '%limit%': 190 }) }}"
+                    },
+                    'address[country]': {
+                        required: "{{ 'message.validation.required'|trans }}",
+                        maxlength: "{{ 'message.validation.too_long_content'|trans({ '%limit%': 190 }) }}"
+                    },
+                    'address[region]': {
+                        required: "{{ 'message.validation.required'|trans }}",
+                        maxlength: "{{ 'message.validation.too_long_content'|trans({ '%limit%': 190 }) }}"
+                    },
+                    'address[city]': {
+                        required: "{{ 'message.validation.required'|trans }}",
+                        maxlength: "{{ 'message.validation.too_long_content'|trans({ '%limit%': 190 }) }}"
+                    },
+                    'address[locality]': {
+                        maxlength: "{{ 'message.validation.too_long_content'|trans({ '%limit%': 190 }) }}"
+                    },
+                    'address[street]': {
+                        required: "{{ 'message.validation.required'|trans }}",
+                        maxlength: "{{ 'message.validation.too_long_content'|trans({ '%limit%': 190 }) }}"
+                    },
+                },
+                errorElement: 'div',
+                errorPlacement: function (error, element) {
+                    error.addClass('invalid-feedback');
+                    element.closest('.form-group').append(error);
+                },
+                highlight: function (element, errorClass, validClass) {
+                    $(element).addClass('is-invalid');
+                },
+                unhighlight: function (element, errorClass, validClass) {
+                    $(element).removeClass('is-invalid');
+                }
+            });
+        });
+    </script>
+
+{% endblock %}

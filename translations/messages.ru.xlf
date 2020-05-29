@@ -112,6 +112,34 @@
         <source>label.base_working_hours</source>
         <target>Время работы</target>
       </trans-unit>
+      <trans-unit id="label.point_name">
+        <source>label.point_name</source>
+        <target>Наименование точки</target>
+      </trans-unit>
+      <trans-unit id="label.postcode">
+        <source>label.postcode</source>
+        <target>Почтовый индекс</target>
+      </trans-unit>
+      <trans-unit id="label.country">
+        <source>label.country</source>
+        <target>Страна</target>
+      </trans-unit>
+      <trans-unit id="label.region">
+        <source>label.region</source>
+        <target>Область</target>
+      </trans-unit>
+      <trans-unit id="label.city">
+        <source>label.city</source>
+        <target>Город (район)</target>
+      </trans-unit>
+      <trans-unit id="label.locality">
+        <source>label.locality</source>
+        <target>Населенный пункт</target>
+      </trans-unit>
+      <trans-unit id="label.street">
+        <source>label.street</source>
+        <target>Улица, номер дома, корпус или строение</target>
+      </trans-unit>
 
       <trans-unit id="help.phone">
         <source>help.phone</source>

@@ -23,20 +23,20 @@ class OrganizationRepository extends ServiceEntityRepository
     public function countOrganization()
     {
         return $this
-            ->createQueryBuilder('organization')
-            ->select("count(organization.id)")
+            ->createQueryBuilder('t0')
+            ->select("count(t0.id)")
             ->getQuery()
             ->getSingleScalarResult();
     }
 
-    public function getRequiredDTData($start, $length, $orders, $search, $columns, $otherConditions)
+    public function getRequiredDTData($start, $length, $orders, $search, $columns, $otherConditions = null)
     {
         // Create Main Query
-        $query = $this->createQueryBuilder('organization');
+        $query = $this->createQueryBuilder('t0');
 
         // Create Count Query
-        $countQuery = $this->createQueryBuilder('organization');
-        $countQuery->select('COUNT(organization)');
+        $countQuery = $this->createQueryBuilder('t0');
+        $countQuery->select('COUNT(t0)');
 
         // Other conditions than the ones sent by the Ajax call ?
         if ($otherConditions === null) {
@@ -54,9 +54,9 @@ class OrganizationRepository extends ServiceEntityRepository
         if ($search['value'] != '') {
             // $searchItem is what we are looking for
             $searchItem = $search['value'];
-            $searchQuery = 'organization.abbreviated_name LIKE \'%' . $searchItem . '%\'';
-            $searchQuery .= ' or organization.registration_number LIKE \'%' . $searchItem . '%\'';
-            $searchQuery .= ' or organization.full_name LIKE \'%' . $searchItem . '%\'';
+            $searchQuery = 't0.abbreviated_name LIKE \'%' . $searchItem . '%\'';
+            $searchQuery .= ' or t0.registration_number LIKE \'%' . $searchItem . '%\'';
+            $searchQuery .= ' or t0.full_name LIKE \'%' . $searchItem . '%\'';
 
             $query->andWhere($searchQuery);
             $countQuery->andWhere($searchQuery);
@@ -74,17 +74,17 @@ class OrganizationRepository extends ServiceEntityRepository
                 switch ($order['name']) {
                     case 'abbreviatedName':
                         {
-                            $query->orderBy('organization.abbreviated_name', $order['dir']);
+                            $query->orderBy('t0.abbreviated_name', $order['dir']);
                             break;
                         }
                     case 'registrationNumber':
                         {
-                            $query->orderBy('organization.registration_number', $order['dir']);
+                            $query->orderBy('t0.registration_number', $order['dir']);
                             break;
                         }
                     case 'fullName':
                         {
-                            $query->orderBy('organization.full_name', $order['dir']);
+                            $query->orderBy('t0.full_name', $order['dir']);
                             break;
                         }
                 }

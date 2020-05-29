@@ -33,7 +33,6 @@ class TransportController extends AbstractController
      * @Route("/transport/datatables", methods="POST", name="transport_datatables")
      *
      * @param Request $request
-     * @param EntityManagerInterface $em
      *
      * @return JsonResponse
      */
@@ -60,10 +59,10 @@ class TransportController extends AbstractController
         }
 
         // Further filtering can be done in the Repository by passing necessary arguments
-        $otherConditions = "array or whatever is needed";
+        $otherConditions = null;
 
         $em = $this->getDoctrine()->getManager();
-        $results = $em->getRepository(Transport::class)->getRequiredDTData($start, $length, $orders, $search, $columns, $otherConditions = null);
+        $results = $em->getRepository(Transport::class)->getRequiredDTData($start, $length, $orders, $search, $columns, $otherConditions);
 
         // Returned objects are of type Town
         $objects = $results["results"];

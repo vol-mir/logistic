@@ -23,20 +23,20 @@ class DriverRepository extends ServiceEntityRepository
     public function countDriver()
     {
         return $this
-            ->createQueryBuilder('driver')
-            ->select("count(driver.id)")
+            ->createQueryBuilder('t0')
+            ->select("count(t0.id)")
             ->getQuery()
             ->getSingleScalarResult();
     }
 
-    public function getRequiredDTData($start, $length, $orders, $search, $columns, $otherConditions)
+    public function getRequiredDTData($start, $length, $orders, $search, $columns, $otherConditions = null)
     {
         // Create Main Query
-        $query = $this->createQueryBuilder('driver');
+        $query = $this->createQueryBuilder('t0');
 
         // Create Count Query
-        $countQuery = $this->createQueryBuilder('driver');
-        $countQuery->select('COUNT(driver)');
+        $countQuery = $this->createQueryBuilder('t0');
+        $countQuery->select('COUNT(t0)');
 
         // Other conditions than the ones sent by the Ajax call ?
         if ($otherConditions === null) {
@@ -54,10 +54,10 @@ class DriverRepository extends ServiceEntityRepository
         if ($search['value'] != '') {
             // $searchItem is what we are looking for
             $searchItem = $search['value'];
-            $searchQuery = 'driver.first_name LIKE \'%' . $searchItem . '%\'';
-            $searchQuery .= ' or driver.last_name LIKE \'%' . $searchItem . '%\'';
-            $searchQuery .= ' or driver.middle_name LIKE \'%' . $searchItem . '%\'';
-            $searchQuery .= ' or driver.phone LIKE \'%' . $searchItem . '%\'';
+            $searchQuery = 't0.first_name LIKE \'%' . $searchItem . '%\'';
+            $searchQuery .= ' or t0.last_name LIKE \'%' . $searchItem . '%\'';
+            $searchQuery .= ' or t0.middle_name LIKE \'%' . $searchItem . '%\'';
+            $searchQuery .= ' or t0.phone LIKE \'%' . $searchItem . '%\'';
 
             $query->andWhere($searchQuery);
             $countQuery->andWhere($searchQuery);
@@ -75,14 +75,14 @@ class DriverRepository extends ServiceEntityRepository
                 switch ($order['name']) {
                     case 'fullName':
                         {
-                            $query->orderBy('driver.last_name', $order['dir']);
-                            $query->addOrderBy('driver.first_name', $order['dir']);
-                            $query->addOrderBy('driver.middle_name', $order['dir']);
+                            $query->orderBy('t0.last_name', $order['dir']);
+                            $query->addOrderBy('t0.first_name', $order['dir']);
+                            $query->addOrderBy('t0.middle_name', $order['dir']);
                             break;
                         }
                     case 'phone':
                         {
-                            $query->orderBy('driver.phone', $order['dir']);
+                            $query->orderBy('t0.phone', $order['dir']);
                             break;
                         }
                 }
