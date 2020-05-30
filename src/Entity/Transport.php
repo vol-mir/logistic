@@ -12,24 +12,24 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Transport
 {
-    public const VAN_KIND = 'kind.van';
-    public const ONBOARD_OPEN_KIND = 'kind.onboard_open';
-    public const PICKUP_KIND = 'kind.pickup';
-    public const ONBOARD_AWNING_KIND = 'kind.onboard_awning';
-    public const TRAILER_ONBOARD_AWNING_KIND = 'kind.trailer_onboard_awning';
-    public const TRACTOR_UNIT_KIND = 'kind.tractor_unit';
-    public const SEMITRAILER_AWNING_KIND = 'kind.semitrailer_awning';
-    public const SEMITRAILER_ONBOARD_OPEN_KIND = 'kind.semitrailer_onboard_open';
+    public const VAN_KIND = 1;
+    public const ONBOARD_OPEN_KIND = 2;
+    public const PICKUP_KIND = 3;
+    public const ONBOARD_AWNING_KIND = 4;
+    public const TRAILER_ONBOARD_AWNING_KIND = 5;
+    public const TRACTOR_UNIT_KIND = 6;
+    public const SEMITRAILER_AWNING_KIND = 7;
+    public const SEMITRAILER_ONBOARD_OPEN_KIND = 8;
 
     public const KINDS = [
-        self::VAN_KIND => 1,
-        self::ONBOARD_OPEN_KIND => 2,
-        self::PICKUP_KIND => 3,
-        self::ONBOARD_AWNING_KIND => 4,
-        self::TRAILER_ONBOARD_AWNING_KIND => 5,
-        self::TRACTOR_UNIT_KIND => 6,
-        self::SEMITRAILER_AWNING_KIND => 7,
-        self::SEMITRAILER_ONBOARD_OPEN_KIND => 8,
+        self::VAN_KIND => 'kind.van',
+        self::ONBOARD_OPEN_KIND => 'kind.onboard_open',
+        self::PICKUP_KIND => 'kind.pickup',
+        self::ONBOARD_AWNING_KIND => 'kind.onboard_awning',
+        self::TRAILER_ONBOARD_AWNING_KIND => 'kind.trailer_onboard_awning',
+        self::TRACTOR_UNIT_KIND => 'kind.tractor_unit',
+        self::SEMITRAILER_AWNING_KIND => 'kind.semitrailer_awning',
+        self::SEMITRAILER_ONBOARD_OPEN_KIND => 'kind.semitrailer_onboard_open',
     ];
 
     /**
@@ -74,7 +74,7 @@ class Transport
      *
      * @ORM\Column(type="float", nullable=false, options={"default":0})
      */
-    private $carrying;
+    private $carrying = 0;
 
     /**
      * @var \DateTime

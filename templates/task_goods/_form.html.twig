@@ -1,0 +1,113 @@
+<div class="card-body">
+
+    {{ form_row(form._token) }}
+
+    <div class="form-group">
+        {{ form_label(form.goods) }}
+        {{ form_widget(form.goods) }}
+
+        {% if form.goods.vars['errors']|length > 0 %}
+            <ul class="list-unstyled">
+                {% for error in form.goods.vars['errors'] %}
+                    <li class="text-danger small">{{ error.message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+
+    <div class="row">
+        <div class="col-sm-3">
+            <div class="form-group">
+                {{ form_label(form.weight) }}
+                {{ form_widget(form.weight, {'type' : 'number'}) }}
+
+                {% if form.weight.vars['errors']|length > 0 %}
+                    <ul class="list-unstyled">
+                        {% for error in form.weight.vars['errors'] %}
+                            <li class="text-danger small">{{ error.message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="form-group">
+                {{ form_label(form.unit) }}
+                {{ form_widget(form.unit) }}
+
+                {% if form.unit.vars['errors']|length > 0 %}
+                    <ul class="list-unstyled">
+                        {% for error in form.unit.vars['errors'] %}
+                            <li class="text-danger small">{{ error.message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="form-group">
+                {{ form_label(form.dimensions) }}
+                {{ form_widget(form.dimensions) }}
+
+                {% if form.dimensions.vars['errors']|length > 0 %}
+                    <ul class="list-unstyled">
+                        {% for error in form.dimensions.vars['errors'] %}
+                            <li class="text-danger small">{{ error.message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        {{ form_label(form.number_of_packages) }}
+        {{ form_widget(form.number_of_packages, {'type' : 'number'}) }}
+
+        {% if form.number_of_packages.vars['errors']|length > 0 %}
+            <ul class="list-unstyled">
+                {% for error in form.number_of_packages.vars['errors'] %}
+                    <li class="text-danger small">{{ error.message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.loading_nature) }}
+        {{ form_widget(form.loading_nature) }}
+
+        {% if form.loading_nature.vars['errors']|length > 0 %}
+            <ul class="list-unstyled">
+                {% for error in form.loading_nature.vars['errors'] %}
+                    <li class="text-danger small">{{ error.message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.contact_person) }}
+        {{ form_widget(form.contact_person) }}
+
+        {% if form.contact_person.vars['errors']|length > 0 %}
+            <ul class="list-unstyled">
+                {% for error in form.contact_person.vars['errors'] %}
+                    <li class="text-danger small">{{ error.message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.working_hours) }}
+        {{ form_widget(form.working_hours) }}
+
+        {% if form.working_hours.vars['errors']|length > 0 %}
+            <ul class="list-unstyled">
+                {% for error in form.working_hours.vars['errors'] %}
+                    <li class="text-danger small">{{ error.message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+</div>
+<!-- /.card-body -->
+

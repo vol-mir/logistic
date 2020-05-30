@@ -55,6 +55,10 @@
         <source>menu.organizations</source>
         <target>Организации</target>
       </trans-unit>
+      <trans-unit id="menu.tasks_goods">
+        <source>menu.tasks_goods</source>
+        <target>Заявки на транспорт</target>
+      </trans-unit>
 
       <trans-unit id="label.first_name">
         <source>label.first_name</source>
@@ -140,6 +144,38 @@
         <source>label.street</source>
         <target>Улица, номер дома, корпус или строение</target>
       </trans-unit>
+      <trans-unit id="label.goods">
+        <source>label.goods</source>
+        <target>Наименование груза, тара</target>
+      </trans-unit>
+      <trans-unit id="label.number_of_packages">
+        <source>label.number_of_packages</source>
+        <target>Количество грузовых мест</target>
+      </trans-unit>
+      <trans-unit id="label.contact_person">
+        <source>label.contact_person</source>
+        <target>Контактное лицо на загрузке / выгрузке - телефон</target>
+      </trans-unit>
+      <trans-unit id="label.working_hours">
+        <source>label.working_hours</source>
+        <target>Время работы</target>
+      </trans-unit>
+      <trans-unit id="label.loading_nature">
+        <source>label.loading_nature</source>
+        <target>Характер погрузки / выгрузки</target>
+      </trans-unit>
+      <trans-unit id="label.weight">
+        <source>label.weight</source>
+        <target>Вес</target>
+      </trans-unit>
+      <trans-unit id="label.unit">
+        <source>label.unit</source>
+        <target>Ед.изм.</target>
+      </trans-unit>
+      <trans-unit id="label.dimensions">
+        <source>label.dimensions</source>
+        <target>Размеры (ДхШхВ) / объем</target>
+      </trans-unit>
 
       <trans-unit id="help.phone">
         <source>help.phone</source>
@@ -204,6 +240,65 @@
         <target>Полуприцеп бортовой (открытый)</target>
       </trans-unit>
 
+      <trans-unit id="unit.ton">
+        <source>unit.ton</source>
+        <target>т (тонна)</target>
+      </trans-unit>
+      <trans-unit id="unit.kilogram">
+        <source>unit.kilogram</source>
+        <target>кг (килограмм)</target>
+      </trans-unit>
+      <trans-unit id="unit.gramme">
+        <source>unit.gramme</source>
+        <target>г (грамм)</target>
+      </trans-unit>
+      <trans-unit id="unit.liter">
+        <source>unit.liter</source>
+        <target>л (литр)</target>
+      </trans-unit>
+
+      <trans-unit id="status.formed">
+        <source>status.formed</source>
+        <target>Формируется</target>
+      </trans-unit>
+      <trans-unit id="status.to_review">
+        <source>status.to_review</source>
+        <target>К рассмотрению</target>
+      </trans-unit>
+      <trans-unit id="status.performed">
+        <source>status.performed</source>
+        <target>Выполняется</target>
+      </trans-unit>
+      <trans-unit id="status.rejected">
+        <source>status.rejected</source>
+        <target>Отклонена</target>
+      </trans-unit>
+      <trans-unit id="status.done">
+        <source>status.done</source>
+        <target>Выполнена</target>
+      </trans-unit>
+      <trans-unit id="status.not_done">
+        <source>status.not_done</source>
+        <target>Не выполнена</target>
+      </trans-unit>
+
+
+      <trans-unit id="loading_natures.manual">
+        <source>loading_natures.manual</source>
+        <target>Ручная загрузка</target>
+      </trans-unit>
+      <trans-unit id="loading_natures.top">
+        <source>loading_natures.top</source>
+        <target>Верхняя загрузка</target>
+      </trans-unit>
+      <trans-unit id="loading_natures.side">
+        <source>loading_natures.side</source>
+        <target>Боковая загрузка</target>
+      </trans-unit>
+      <trans-unit id="loading_natures.rear">
+        <source>loading_natures.rear</source>
+        <target>Задняя загрузка</target>
+      </trans-unit>
 
     </body>
   </file>

@@ -119,12 +119,11 @@
                     <li class="nav-header">ЖУРНАЛЫ</li>
 
                     <li class="nav-item">
-                        <a href="" class="nav-link">
+                        <a href="{{ path('task_goods_index') }}" class="nav-link {% if app.request.get('_route') == 'task_goods_index' %} active {% endif %}" class="nav-link">
+
                             <i class="fas fa-book nav-icon"></i>
                             <p>
-                                Заявки на транспорт
-                                {# <i class="fas fa-angle-left right"></i> #}
-                                {# <span class="badge badge-info right">6</span> #}
+                                {{ 'menu.tasks_goods'|trans }}
                             </p>
                         </a>
                     </li>

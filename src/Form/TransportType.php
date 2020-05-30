@@ -58,7 +58,7 @@ class TransportType extends AbstractType
                 ]
             ])
             ->add('kind', ChoiceType::class, [
-                'choices' => Transport::KINDS,
+                'choices' => array_flip(Transport::KINDS),
                 'label' => 'label.kind',
                 'attr' => [
                     'placeholder' => 'label.kind',
