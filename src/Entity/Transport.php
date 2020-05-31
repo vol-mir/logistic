@@ -67,7 +67,7 @@ class Transport
      *
      * @ORM\Column(type="integer", nullable=false, options={"unsigned":true, "default":1})
      */
-    private $kind;
+    private $kind = 1;
 
     /**
      * @var float

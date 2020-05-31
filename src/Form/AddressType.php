@@ -63,7 +63,6 @@ class AddressType extends AbstractType
                     'name' => 'address_region'
                 ],
                 'constraints' => [
-                    new NotBlank(),
                     new Length(['max' => 190]),
                 ]
             ])
@@ -82,10 +81,11 @@ class AddressType extends AbstractType
             ])
             ->add('locality', TextType::class, [
                 'label' => 'label.locality',
+                'required' => false,
                 'attr' => [
                     'placeholder' => 'label.locality',
                     'title' => 'label.locality',
-                    'class' => 'form-control ignore-validate',
+                    'class' => 'form-control',
                     'name' => 'address_locality'
                 ],
                 'constraints' => [

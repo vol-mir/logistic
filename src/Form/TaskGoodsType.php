@@ -26,6 +26,9 @@ class TaskGoodsType extends AbstractType
                     'title' => 'label.goods',
                     'class' => 'form-control',
                     'name' => 'task_goods_goods'
+                ],
+                'constraints' => [
+                    new NotBlank(),
                 ]
             ])
             ->add('weight', NumberType::class, [
@@ -43,6 +46,7 @@ class TaskGoodsType extends AbstractType
                 ],
                 'constraints' => [
                     new NotBlank(),
+                    new PositiveOrZero(),
                 ]
             ])
             ->add('unit', ChoiceType::class, [
@@ -56,17 +60,23 @@ class TaskGoodsType extends AbstractType
                 ],
                 'constraints' => [
                     new NotBlank(),
+                    new PositiveOrZero(),
                 ]
             ])
             ->add('dimensions', TextType::class, [
                 'label' => 'label.dimensions',
                 'help' => 'help.dimensions',
+                'required' => false,
                 'attr' => [
                     'placeholder' => 'label.dimensions',
                     'title' => 'label.dimensions',
-                    'class' => 'form-control ignore-validate',
+                    'class' => 'form-control',
                     'name' => 'task_goods_dimensions'
                 ],
+                'constraints' => [
+                    new Length(['max' => 190]),
+                ]
+
             ])
             ->add('number_of_packages', NumberType::class, [
                 'label' => 'label.number_of_packages',
@@ -97,11 +107,11 @@ class TaskGoodsType extends AbstractType
                 ],
                 'constraints' => [
                     new NotBlank(),
+                    new PositiveOrZero(),
                 ]
             ])
-            ->add('contact_person', TextType::class, [
+            ->add('contact_person', TextareaType::class, [
                 'label' => 'label.contact_person',
-                'help' => 'help.contact_person',
                 'attr' => [
                     'placeholder' => 'label.contact_person',
                     'title' => 'label.contact_person',
@@ -110,12 +120,10 @@ class TaskGoodsType extends AbstractType
                 ],
                 'constraints' => [
                     new NotBlank(),
-                    new Length(['max' => 190]),
                 ]
             ])
-            ->add('working_hours', TextType::class, [
+            ->add('working_hours', TextareaType::class, [
                 'label' => 'label.working_hours',
-                'help' => 'help.working_hours',
                 'attr' => [
                     'placeholder' => 'label.working_hours',
                     'title' => 'label.working_hours',
@@ -124,7 +132,6 @@ class TaskGoodsType extends AbstractType
                 ],
                 'constraints' => [
                     new NotBlank(),
-                    new Length(['max' => 190]),
                 ]
             ])
         ;

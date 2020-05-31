@@ -59,19 +59,21 @@ class OrganizationType extends AbstractType
             ])
             ->add('base_contact_person', TextareaType::class, [
                 'label' => 'label.base_contact_person',
+                'required' => false,
                 'attr' => [
                     'placeholder' => 'label.base_contact_person',
                     'title' => 'label.base_contact_person',
-                    'class' => 'form-control ignore-validate',
+                    'class' => 'form-control',
                     'name' => 'organization_base_contact_person'
                 ]
             ])
             ->add('base_working_hours', TextareaType::class, [
                 'label' => 'label.base_working_hours',
+                'required' => false,
                 'attr' => [
                     'placeholder' => 'label.base_working_hours',
                     'title' => 'label.base_working_hours',
-                    'class' => 'form-control ignore-validate',
+                    'class' => 'form-control',
                     'name' => 'organization_base_working_hours'
                 ]
             ])

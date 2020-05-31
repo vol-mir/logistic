@@ -68,6 +68,7 @@ class TransportType extends AbstractType
                 ],
                 'constraints' => [
                     new NotBlank(),
+                    new PositiveOrZero(),
                 ]
             ])
             ->add('carrying', NumberType::class, [

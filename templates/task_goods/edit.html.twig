@@ -46,6 +46,9 @@
                         required: true,
                         number: true
                     },
+                    'task_goods[dimensions]': {
+                        maxlength: 190
+                    },
                     'task_goods[number_of_packages]': {
                         required: true,
                         number: true
@@ -56,11 +59,9 @@
                     },
                     'task_goods[contact_person]': {
                         required: true,
-                        maxlength: 190
-                    },
+                     },
                     'task_goods[working_hours]': {
                         required: true,
-                        maxlength: 190
                     },
                 },
                 messages: {
@@ -75,6 +76,9 @@
                         required: "{{ 'message.validation.required'|trans }}",
                         number: "{{ 'message.validation.number'|trans }}"
                     },
+                    'task_goods[dimensions]': {
+                        maxlength: "{{ 'message.validation.too_long_content'|trans({ '%limit%': 190 }) }}"
+                    },
                     'task_goods[number_of_packages]': {
                         required: "{{ 'message.validation.required'|trans }}",
                         number: "{{ 'message.validation.number'|trans }}"
@@ -85,11 +89,9 @@
                     },
                     'task_goods[contact_person]': {
                         required: "{{ 'message.validation.required'|trans }}",
-                        maxlength: "{{ 'message.validation.too_long_content'|trans({ '%limit%': 190 }) }}"
-                    },
+                     },
                     'task_goods[working_hours]': {
                         required: "{{ 'message.validation.required'|trans }}",
-                        maxlength: "{{ 'message.validation.too_long_content'|trans({ '%limit%': 190 }) }}"
                     },
                 },
                 errorElement: 'div',

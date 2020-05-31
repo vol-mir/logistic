@@ -54,7 +54,6 @@
                         maxlength: 190
                     },
                     'address[region]': {
-                        required: true,
                         maxlength: 190
                     },
                     'address[city]': {
@@ -83,7 +82,6 @@
                         maxlength: "{{ 'message.validation.too_long_content'|trans({ '%limit%': 190 }) }}"
                     },
                     'address[region]': {
-                        required: "{{ 'message.validation.required'|trans }}",
                         maxlength: "{{ 'message.validation.too_long_content'|trans({ '%limit%': 190 }) }}"
                     },
                     'address[city]': {
