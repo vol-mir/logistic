@@ -184,6 +184,10 @@
         <source>label.organization</source>
         <target>Организация</target>
       </trans-unit>
+      <trans-unit id="label.note">
+        <source>label.note</source>
+        <target>Примечание</target>
+      </trans-unit>
 
       <trans-unit id="help.phone">
         <source>help.phone</source>

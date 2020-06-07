@@ -34,6 +34,16 @@ class TaskGoodsType extends AbstractType
                     new NotBlank(),
                 ]
             ])
+            ->add('note', TextareaType::class, [
+                'label' => 'label.note',
+                'required' => false,
+                'attr' => [
+                    'placeholder' => 'label.note',
+                    'title' => 'label.note',
+                    'class' => 'form-control',
+                    'name' => 'task_goods_note'
+                ]
+            ])
             ->add('weight', NumberType::class, [
                 'label' => 'label.weight',
                 'empty_data' => '0',
