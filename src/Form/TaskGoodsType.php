@@ -3,10 +3,13 @@
 namespace App\Form;
 
 use App\Entity\TaskGoods;
+use App\Entity\Organization;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -108,6 +111,26 @@ class TaskGoodsType extends AbstractType
                 'constraints' => [
                     new NotBlank(),
                     new PositiveOrZero(),
+                ]
+            ])
+            ->add('organization', EntityType::class, [
+                'class' => Organization::class,
+                'label' => 'label.organization',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('o')
+                        ->orderBy('o.abbreviated_name', 'ASC');
+                },
+                'choice_label' => 'abbreviated_name',
+                'choice_value' => 'id',
+                'attr' => [
+                    'placeholder' => 'label.organization',
+                    'title' => 'label.organization',
+                    'class' => 'form-control select2',
+                    'style' => 'width: 100%;',
+                    'name' => 'task_goods_organization'
+                ],
+                'constraints' => [
+                    new NotBlank(),
                 ]
             ])
             ->add('contact_person', TextareaType::class, [

@@ -141,6 +141,12 @@ class TaskGoods
      */
     private $updated_at;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Organization", inversedBy="tasksGoods")
+     * @ORM\JoinColumn(name="organization_id", referencedColumnName="id", nullable=false)
+     */
+    private $organization;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -280,6 +286,18 @@ class TaskGoods
     public function preUpdate()
     {
         $this->updated_at = new \DateTime();
+    }
+
+    public function getOrganization(): ?Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(?Organization $organization): self
+    {
+        $this->organization = $organization;
+
+        return $this;
     }
 
 }

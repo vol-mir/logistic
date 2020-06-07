@@ -147,6 +147,7 @@ class TaskGoodsController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($task_goods);
             $em->flush();

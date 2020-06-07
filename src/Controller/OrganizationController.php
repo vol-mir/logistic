@@ -223,12 +223,17 @@ class OrganizationController extends AbstractController
     public function delete(Request $request, Organization $organization, TranslatorInterface $translator) : JsonResponse
     {
         if ($this->isCsrfTokenValid('delete-item', $request->request->get('_token'))) {
+
+            if ($organization->getTasksGoods()->count() > 0) {
+                return new JsonResponse(['messageError' => $translator->trans('item.deleted_use')]);
+            }
+
             $em = $this->getDoctrine()->getManager();
             $em->remove($organization);
             $em->flush();
         }
 
-        return new JsonResponse(['message' => $translator->trans('item.deleted_successfully')]);
+        return new JsonResponse(['messageSuccess' => $translator->trans('item.deleted_successfully')]);
     }
 
 }

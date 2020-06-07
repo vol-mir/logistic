@@ -79,9 +79,20 @@ class Organization
      */
     private $addresses;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\TaskGoods", mappedBy="organization", cascade={"remove"})
+     */
+    private $tasksGoods;
+
     public function __construct()
     {
         $this->addresses = new ArrayCollection();
+        $this->tasksGoods = new ArrayCollection();
+    }
+
+    public function __toString()
+    {
+        return $this->abbreviated_name;
     }
 
     public function getId(): ?int
@@ -206,4 +217,36 @@ class Organization
     {
         $this->updated_at = new \DateTime();
     }
+
+    /**
+     * @return Collection|TaskGoods[]
+     */
+    public function getTasksGoods(): Collection
+    {
+        return $this->tasksGoods;
+    }
+
+    public function addTasksGood(TaskGoods $tasksGood): self
+    {
+        if (!$this->tasksGoods->contains($tasksGood)) {
+            $this->tasksGoods[] = $tasksGood;
+            $tasksGood->setOrganization($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTasksGood(TaskGoods $tasksGood): self
+    {
+        if ($this->tasksGoods->contains($tasksGood)) {
+            $this->tasksGoods->removeElement($tasksGood);
+            // set the owning side to null (unless already changed)
+            if ($tasksGood->getOrganization() === $this) {
+                $tasksGood->setOrganization(null);
+            }
+        }
+
+        return $this;
+    }
+
 }

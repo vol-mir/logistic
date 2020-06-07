@@ -42,6 +42,10 @@
         <source>item.edited_successfully</source>
         <target>Запись успешно изменена!</target>
       </trans-unit>
+      <trans-unit id="item.deleted_use">
+        <source>item.deleted_use</source>
+        <target>Запись используется, удалить невозможно!</target>
+      </trans-unit>
 
       <trans-unit id="menu.drivers">
         <source>menu.drivers</source>
@@ -175,6 +179,10 @@
       <trans-unit id="label.dimensions">
         <source>label.dimensions</source>
         <target>Размеры (ДхШхВ) / объем</target>
+      </trans-unit>
+      <trans-unit id="label.organization">
+        <source>label.organization</source>
+        <target>Организация</target>
       </trans-unit>
 
       <trans-unit id="help.phone">
