@@ -8,7 +8,7 @@
             <!-- jquery validation -->
             <div class="card card-default">
                 <!-- form start -->
-                <form id="driverForm" action="{{ path('task_goods_edit', {'id': task_goods.id}) }}" method="POST">
+                <form id="taskGoodsForm" action="{{ path('task_goods_edit', {'id': task_goods.id}) }}" method="POST">
                     {% include 'task_goods/_form.html.twig' with {'form': form} only %}
                     <div class="card-footer">
                         <button type="submit" class="btn btn-primary">{{ 'title.save'|trans }}</button>
@@ -31,6 +31,30 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
+            //Initialize Select2 Elements
+            $('.select2').select2()
+
+            $('#task_goods_organization').change(function() {
+                let organizationId = $(this).val();
+                if (!organizationId) return;
+                let url = "{{ path('organization_data_dynamic', {'id': 'organizationId'}) }}";
+                url = url.replace('organizationId', organizationId);
+                $.ajax({
+                    type: 'post',
+                    url: url,
+                    data: { '_method':'post','_token':'{{ csrf_token('dynamic-data-organization') }}' },
+                    dataType: 'json'
+                }).done(function(data) {
+
+                    if ($('#task_goods_contact_person').val().length === 0) {
+                        $('#task_goods_contact_person').val(data["baseContactPerson"]);
+                    }
+
+                    if ($('#task_goods_working_hours').val().length == 0) {
+                        $('#task_goods_working_hours').val(data["baseWorkingHours"]);
+                    }
+                });
+            });
 
             $('#taskGoodsForm').validate({
                 ignore: ".ignore-validate",

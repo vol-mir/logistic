@@ -29,13 +29,34 @@
     <!-- jquery-validation -->
     <script src="{{ asset('plugins/jquery-validation/jquery.validate.min.js') }}"></script>
     <script src="{{ asset('plugins/jquery-validation/additional-methods.min.js') }}"></script>
-    <!-- Select2 -->
-    <script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
 
     <script type="text/javascript">
         $(document).ready(function () {
+
             //Initialize Select2 Elements
             $('.select2').select2()
+
+            $('#task_goods_organization').change(function() {
+                let organizationId = $(this).val();
+                if (!organizationId) return;
+                let url = "{{ path('organization_data_dynamic', {'id': 'organizationId'}) }}";
+                url = url.replace('organizationId', organizationId);
+                $.ajax({
+                    type: 'post',
+                    url: url,
+                    data: { '_method':'post','_token':'{{ csrf_token('dynamic-data-organization') }}' },
+                    dataType: 'json'
+                }).done(function(data) {
+
+                    if ($('#task_goods_contact_person').val().length === 0) {
+                        $('#task_goods_contact_person').val(data["baseContactPerson"]);
+                    }
+
+                    if ($('#task_goods_working_hours').val().length == 0) {
+                        $('#task_goods_working_hours').val(data["baseWorkingHours"]);
+                    }
+                });
+            });
 
             $('#taskGoodsForm').validate({
                 ignore: ".ignore-validate",

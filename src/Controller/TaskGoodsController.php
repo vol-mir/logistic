@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\TaskGoods;
+use App\Entity\Organization;
 use App\Form\TaskGoodsType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 use Doctrine\ORM\EntityManagerInterface;
@@ -143,6 +144,12 @@ class TaskGoodsController extends AbstractController
     public function new(Request $request, TranslatorInterface $translator) : Response
     {
         $task_goods = new TaskGoods();
+
+        $organization = $this->getDoctrine()
+            ->getRepository(Organization::class)
+            ->find($this->getParameter('default_organization'));
+        $task_goods->setOrganization($organization);
+
         $form = $this->createForm(TaskGoodsType::class, $task_goods)->add('saveAndCreateNew', SubmitType::class);
         $form->handleRequest($request);
 

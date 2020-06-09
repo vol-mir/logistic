@@ -9,6 +9,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -143,31 +145,67 @@ class TaskGoodsType extends AbstractType
                     new NotBlank(),
                 ]
             ])
-            ->add('contact_person', TextareaType::class, [
-                'label' => 'label.contact_person',
-                'attr' => [
-                    'placeholder' => 'label.contact_person',
-                    'title' => 'label.contact_person',
-                    'class' => 'form-control',
-                    'name' => 'task_goods_contact_person'
-                ],
-                'constraints' => [
-                    new NotBlank(),
-                ]
-            ])
-            ->add('working_hours', TextareaType::class, [
-                'label' => 'label.working_hours',
-                'attr' => [
-                    'placeholder' => 'label.working_hours',
-                    'title' => 'label.working_hours',
-                    'class' => 'form-control',
-                    'name' => 'task_goods_working_hours'
-                ],
-                'constraints' => [
-                    new NotBlank(),
-                ]
-            ])
         ;
+
+
+        $builder->addEventListener(
+            FormEvents::PRE_SET_DATA,
+            function (FormEvent $event) {
+
+                $form = $event->getForm();
+                $data = $event->getData();
+
+                $organization = $data->getOrganization();
+
+                $base_contact_person = null === $data->getId() && null !== $organization ? $organization->getBaseContactPerson() : $data->getContactPerson();
+                $base_working_hours = null === $data->getId() && null !== $organization ? $organization->getBaseWorkingHours() : $data->getWorkingHours();
+
+                $form->add('contact_person', TextareaType::class, [
+                    'label' => 'label.contact_person',
+                    'data' => $base_contact_person,
+                    'attr' => [
+                        'placeholder' => 'label.contact_person',
+                        'title' => 'label.contact_person',
+                        'class' => 'form-control',
+                        'name' => 'task_goods_contact_person'
+                    ],
+                    'constraints' => [
+                        new NotBlank(),
+                    ]
+                ]);
+
+                $form->add('working_hours', TextareaType::class, [
+                    'label' => 'label.working_hours',
+                    'data' => $base_working_hours,
+                    'attr' => [
+                        'placeholder' => 'label.working_hours',
+                        'title' => 'label.working_hours',
+                        'class' => 'form-control',
+                        'name' => 'task_goods_working_hours'
+                    ],
+                    'constraints' => [
+                        new NotBlank(),
+                    ]
+                ]);
+            }
+        );
+
+        $builder->get('organization')->addEventListener(
+            FormEvents::PRE_SET_DATA,
+            function (FormEvent $event)  {
+                $form = $event->getForm();
+
+                $data = $event->getData();
+                //dd($data);
+                // It's important here to fetch $event->getForm()->getData(), as
+                // $event->getData() will get you the client data (that is, the ID)
+                //dd($event->getForm()->getData());
+
+                // since we've added the listener to the child, we'll have to pass on
+                // the parent to the callback functions!
+                //$formModifier($event->getForm()->getParent(), $sport);
+            }
+        );
     }
 
     public function configureOptions(OptionsResolver $resolver)

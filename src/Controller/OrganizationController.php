@@ -7,6 +7,7 @@ use App\Form\OrganizationType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -25,6 +26,34 @@ class OrganizationController extends AbstractController
     public function index() : Response
     {
         return $this->render('organization/index.html.twig');
+    }
+
+    /**
+     * Dynamic data for organization
+     *
+     * @Route("/organization/{id}/data", methods="POST", name="organization_data_dynamic")
+     * @ParamConverter("organization", options={"id" = "id"})
+     *
+     * @param Request $request
+     * @param Organization $organization
+     *
+     * @return JsonResponse
+     */
+    public function dataOrganizationDynamic(Request $request, Organization $organization) : JsonResponse
+    {
+        if ($request->getMethod() == 'POST' && $this->isCsrfTokenValid('dynamic-data-organization', $request->request->get('_token'))) {
+            $response = [
+                'baseContactPerson' => $organization->getBaseContactPerson(),
+                'baseWorkingHours' => $organization->getBaseWorkingHours(),
+            ];
+
+            $returnResponse = new JsonResponse();
+            $returnResponse->setData($response);
+
+            return $returnResponse;
+        } else
+            die;
+
     }
 
     /**
