@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\TaskGoods;
 use App\Entity\Organization;
 use App\Form\TaskGoodsType;
+use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -97,6 +98,13 @@ class TaskGoodsController extends AbstractController
                             break;
                         }
 
+                    case 'organization':
+                        {
+                            $elementTemp = $task_goods->getOrganization()->getAbbreviatedName().', '.$task_goods->getOrganization()->getRegistrationNumber();
+                            array_push($dataTemp, $elementTemp);
+                            break;
+                        }
+
                     case 'status':
                         {
                             $elementTemp = $translator->trans(TaskGoods::STATUSES[$task_goods->getStatus()]);
@@ -143,11 +151,14 @@ class TaskGoodsController extends AbstractController
      */
     public function new(Request $request, TranslatorInterface $translator) : Response
     {
+
         $task_goods = new TaskGoods();
+
 
         $organization = $this->getDoctrine()
             ->getRepository(Organization::class)
             ->find($this->getParameter('default_organization'));
+
         $task_goods->setOrganization($organization);
 
         $form = $this->createForm(TaskGoodsType::class, $task_goods)->add('saveAndCreateNew', SubmitType::class);
@@ -169,7 +180,7 @@ class TaskGoodsController extends AbstractController
         }
 
         return $this->render('task_goods/new.html.twig', [
-            'form' => $form->createView(),
+            'form' => $form->createView()
         ]);
     }
 

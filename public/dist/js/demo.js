@@ -423,4 +423,9 @@
     $('.product-image-thumb.active').removeClass('active');
     $(this).addClass('active');
   });
+
+  //Initialize Select2 Elements
+  $.fn.select2.defaults.set('language', 'ru');
+  $('.select2').select2();
+
 })(jQuery)

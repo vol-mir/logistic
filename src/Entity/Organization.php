@@ -75,19 +75,23 @@ class Organization
     private $updated_at;
 
     /**
+     * @var Address
+     *
      * @ORM\OneToMany(targetEntity="App\Entity\Address", mappedBy="organization", cascade={"remove"})
      */
     private $addresses;
 
     /**
+     * @var TaskGoods
+     *
      * @ORM\OneToMany(targetEntity="App\Entity\TaskGoods", mappedBy="organization", cascade={"remove"})
      */
-    private $tasksGoods;
+    private $tasks_goods;
 
     public function __construct()
     {
         $this->addresses = new ArrayCollection();
-        $this->tasksGoods = new ArrayCollection();
+        $this->tasks_goods = new ArrayCollection();
     }
 
     public function __toString()
@@ -223,26 +227,26 @@ class Organization
      */
     public function getTasksGoods(): Collection
     {
-        return $this->tasksGoods;
+        return $this->tasks_goods;
     }
 
-    public function addTasksGood(TaskGoods $tasksGood): self
+    public function addTasksGood(TaskGoods $task_goods): self
     {
-        if (!$this->tasksGoods->contains($tasksGood)) {
-            $this->tasksGoods[] = $tasksGood;
-            $tasksGood->setOrganization($this);
+        if (!$this->tasks_goods->contains($task_goods)) {
+            $this->tasks_goods[] = $task_goods;
+            $task_goods->setOrganization($this);
         }
 
         return $this;
     }
 
-    public function removeTasksGood(TaskGoods $tasksGood): self
+    public function removeTasksGood(TaskGoods $task_goods): self
     {
-        if ($this->tasksGoods->contains($tasksGood)) {
-            $this->tasksGoods->removeElement($tasksGood);
+        if ($this->tasks_goods->contains($task_goods)) {
+            $this->tasks_goods->removeElement($task_goods);
             // set the owning side to null (unless already changed)
-            if ($tasksGood->getOrganization() === $this) {
-                $tasksGood->setOrganization(null);
+            if ($task_goods->getOrganization() === $this) {
+                $task_goods->setOrganization(null);
             }
         }
 

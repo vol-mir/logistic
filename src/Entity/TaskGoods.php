@@ -142,7 +142,9 @@ class TaskGoods
     private $updated_at;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Organization", inversedBy="tasksGoods")
+     * @var Organization
+     *
+     * @ORM\ManyToOne(targetEntity="App\Entity\Organization", inversedBy="tasks_goods")
      * @ORM\JoinColumn(name="organization_id", referencedColumnName="id", nullable=false)
      */
     private $organization;
@@ -153,6 +155,23 @@ class TaskGoods
      * @ORM\Column(type="text", nullable=true)
      */
     private $note;
+
+    /**
+     * @var Address
+     *
+     * @ORM\ManyToOne(targetEntity="App\Entity\Address", inversedBy="tasks_goods_address_office")
+     * @ORM\JoinColumn(name="address_office_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
+     */
+    private $address_office;
+
+    /**
+     * @var Address
+     *
+     * @ORM\ManyToOne(targetEntity="App\Entity\Address", inversedBy="tasks_goods_address_goods_yard")
+     * @ORM\JoinColumn(name="address_goods_yard_id", referencedColumnName="id", nullable=false)
+     */
+    private $address_goods_yard;
+
 
     public function getId(): ?int
     {
@@ -319,4 +338,27 @@ class TaskGoods
         return $this;
     }
 
+    public function getAddressOffice(): ?Address
+    {
+        return $this->address_office;
+    }
+
+    public function setAddressOffice(?Address $address_office): self
+    {
+        $this->address_office = $address_office;
+
+        return $this;
+    }
+
+    public function getAddressGoodsYard(): ?Address
+    {
+        return $this->address_goods_yard;
+    }
+
+    public function setAddressGoodsYard(?Address $address_goods_yard): self
+    {
+        $this->address_goods_yard = $address_goods_yard;
+
+        return $this;
+    }
 }

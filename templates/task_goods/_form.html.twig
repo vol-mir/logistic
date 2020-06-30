@@ -110,6 +110,30 @@
         {% endif %}
     </div>
     <div class="form-group">
+        {{ form_label(form.address_office) }}
+        {{ form_widget(form.address_office) }}
+
+        {% if form.address_office.vars['errors']|length > 0 %}
+            <ul class="list-unstyled">
+                {% for error in form.address_office.vars['errors'] %}
+                    <li class="text-danger small">{{ error.message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.address_goods_yard) }}
+        {{ form_widget(form.address_goods_yard) }}
+
+        {% if form.address_goods_yard.vars['errors']|length > 0 %}
+            <ul class="list-unstyled">
+                {% for error in form.address_goods_yard.vars['errors'] %}
+                    <li class="text-danger small">{{ error.message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    <div class="form-group">
         {{ form_label(form.contact_person) }}
         {{ form_widget(form.contact_person) }}
 

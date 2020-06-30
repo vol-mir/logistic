@@ -61,7 +61,7 @@
                 </div>
                 <!-- /.card-body -->
                 <div class="card-footer">
-                    {% include 'organization/_controls.html.twig' %}
+                    {% include 'address/_controls.html.twig' with {'organization_id': organization.id} only %}
                 </div>
                 <!-- /.card-footer -->
             </div>
@@ -121,7 +121,11 @@
                     dataType: 'json'
                 }).done(function(data) {
                     table.ajax.reload(null, false);
-                    toastr.success(data.message);
+                    if (data.messageError) {
+                        toastr.error(data.messageError);
+                    } else if(data.messageSuccess) {
+                        toastr.success(data.messageSuccess);
+                    }
                 });
 
                 $('#btn-modal-delete').attr("data-confirm-delete-id", null);

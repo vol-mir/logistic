@@ -19,6 +19,24 @@ class AddressRepository extends ServiceEntityRepository
         parent::__construct($registry, Address::class);
     }
 
+    // Get addresses for organization
+    public function getAddressesOrganization(int $organizationId = null)
+    {
+        return $this->createQueryBuilder('a')
+            ->select('a')
+            ->where('a.organization = :organizationId')
+            ->orderBy('a.point_name', 'ASC')
+            ->addOrderBy('a.postcode', 'ASC')
+            ->addOrderBy('a.country', 'ASC')
+            ->addOrderBy('a.region', 'ASC')
+            ->addOrderBy('a.city', 'ASC')
+            ->addOrderBy('a.locality', 'ASC')
+            ->addOrderBy('a.street', 'ASC')
+            ->setParameter('organizationId', $organizationId)
+            ->getQuery()
+            ->getResult();
+    }
+
     // Get the total number of elements
     public function countAddress($otherConditions = null)
     {

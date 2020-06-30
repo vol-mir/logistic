@@ -16,6 +16,7 @@
                         <tr>
                             <th>Код заявки</th>
                             <th>Наименование груза, тара, вес</th>
+                            <th>Организация</th>
                             <th>Статус</th>
                             <th></th>
                         </tr>
@@ -26,6 +27,7 @@
                         <tr>
                             <th>Код заявки</th>
                             <th>Наименование груза, тара, вес</th>
+                            <th>Организация</th>
                             <th>Статус</th>
                             <th></th>
                         </tr>
@@ -56,8 +58,9 @@
                     // These are the column name variables that will be sent to the server
                     { "name": "id", "targets": 0 },
                     { "name": "goods",   "targets": 1 },
-                    { "name": "status",   "targets": 2 },
-                    { "name": "control",  "targets": 3, "orderable": false, "searchable": false },
+                    { "name": "organization",   "targets": 2 },
+                    { "name": "status",   "targets": 3 },
+                    { "name": "control",  "targets": 4, "orderable": false, "searchable": false },
                 ],
                 "ajax": {
                     "url": "{{ path('task_goods_datatables') }}",

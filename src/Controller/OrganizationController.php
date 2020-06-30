@@ -2,8 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Address;
 use App\Entity\Organization;
+use App\Entity\TaskGoods;
 use App\Form\OrganizationType;
+use App\Form\TaskGoodsType;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -12,6 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Psr\Log\LoggerInterface;
 
 
 class OrganizationController extends AbstractController
@@ -31,7 +36,7 @@ class OrganizationController extends AbstractController
     /**
      * Dynamic data for organization
      *
-     * @Route("/organization/{id}/data", methods="POST", name="organization_data_dynamic")
+     * @Route("/organization/{id}/data", methods="POST", name="organization_data_base_dynamic")
      * @ParamConverter("organization", options={"id" = "id"})
      *
      * @param Request $request
@@ -39,12 +44,23 @@ class OrganizationController extends AbstractController
      *
      * @return JsonResponse
      */
-    public function dataOrganizationDynamic(Request $request, Organization $organization) : JsonResponse
+    public function dataBaseOrganizationDynamic(Request $request, Organization $organization) : JsonResponse
     {
         if ($request->getMethod() == 'POST' && $this->isCsrfTokenValid('dynamic-data-organization', $request->request->get('_token'))) {
+
+            $em = $this->getDoctrine()->getManager();
+            $addressesOrganization = $em->getRepository(Address::class)->getAddressesOrganization($organization->getId());
+
+            $listAddressesOrganization = [];
+            foreach($addressesOrganization as $address) {
+                $temp = ['id'=>$address->getId(), 'text' => $address->getFullAddress()];
+                $listAddressesOrganization[] = $temp;
+            }
+
             $response = [
                 'baseContactPerson' => $organization->getBaseContactPerson(),
                 'baseWorkingHours' => $organization->getBaseWorkingHours(),
+                'addressesOrganization' => $listAddressesOrganization
             ];
 
             $returnResponse = new JsonResponse();

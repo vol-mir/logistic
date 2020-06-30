@@ -188,6 +188,19 @@
         <source>label.note</source>
         <target>Примечание</target>
       </trans-unit>
+      <trans-unit id="label.address_office">
+        <source>label.address_office</source>
+        <target>Адрес офиса</target>
+      </trans-unit>
+      <trans-unit id="label.address_goods_yard">
+        <source>label.address_goods_yard</source>
+        <target>Адрес погрузки (выгрузки)</target>
+      </trans-unit>
+
+      <trans-unit id="placeholder.address_office">
+        <source>placeholder.address_office</source>
+        <target>Не указан</target>
+      </trans-unit>
 
       <trans-unit id="help.phone">
         <source>help.phone</source>

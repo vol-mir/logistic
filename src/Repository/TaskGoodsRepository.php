@@ -25,6 +25,7 @@ class TaskGoodsRepository extends ServiceEntityRepository
         return $this
             ->createQueryBuilder('t0')
             ->select("count(t0.id)")
+            ->join('t0.organization', 't1')
             ->getQuery()
             ->getSingleScalarResult();
     }
@@ -37,6 +38,9 @@ class TaskGoodsRepository extends ServiceEntityRepository
         // Create Count Query
         $countQuery = $this->createQueryBuilder('t0');
         $countQuery->select('COUNT(t0)');
+
+        $query->join('t0.organization', 't1');
+        $countQuery->join('t0.organization', 't1');
 
         // Other conditions than the ones sent by the Ajax call ?
         if ($otherConditions === null) {
@@ -57,6 +61,9 @@ class TaskGoodsRepository extends ServiceEntityRepository
             $searchQuery = 't0.id LIKE \'%' . $searchItem . '%\'';
             $searchQuery .= ' or t0.goods LIKE \'%' . $searchItem . '%\'';
             $searchQuery .= ' or t0.weight LIKE \'%' . $searchItem . '%\'';
+
+            $searchQuery .= ' or t1.abbreviated_name LIKE \'%' . $searchItem . '%\'';
+            $searchQuery .= ' or t1.registration_number LIKE \'%' . $searchItem . '%\'';
 
             $query->andWhere($searchQuery);
             $countQuery->andWhere($searchQuery);
@@ -80,6 +87,11 @@ class TaskGoodsRepository extends ServiceEntityRepository
                     case 'goods':
                         {
                             $query->orderBy('t0.goods', $order['dir']);
+                            break;
+                        }
+                    case 'organization':
+                        {
+                            $query->orderBy('t1.registration_number', $order['dir']);
                             break;
                         }
                     case 'status':

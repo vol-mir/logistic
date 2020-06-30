@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\AddressRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -92,10 +94,31 @@ class Address
     private $updated_at;
 
     /**
+     * @var Organization
+     *
      * @ORM\ManyToOne(targetEntity="App\Entity\Organization", inversedBy="addresses")
      * @ORM\JoinColumn(name="organization_id", referencedColumnName="id", nullable=false)
      */
     private $organization;
+
+    /**
+     * @var TaskGoods
+     *
+     * @ORM\OneToMany(targetEntity="App\Entity\TaskGoods", mappedBy="address_office")
+     */
+    private $tasks_goods_address_office;
+
+    /**
+     * @var TaskGoods
+     *
+     * @ORM\OneToMany(targetEntity="App\Entity\TaskGoods", mappedBy="address_goods_yard")
+     */
+    private $tasks_goods_address_goods_yard;
+
+    public function __construct()
+    {
+        $this->tasks_goods_address_office = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -222,7 +245,7 @@ class Address
 
     public function getFullAddress(): ?string
     {
-        return (!empty($this->postcode)?$this->postcode.', ':'').(!empty($this->country)?$this->country.', ':'').
+        return (!empty($this->point_name)?$this->point_name.' - ':'').(!empty($this->postcode)?$this->postcode.', ':'').(!empty($this->country)?$this->country.', ':'').
             (!empty($this->region)?$this->region.', ':'').(!empty($this->city)?$this->city.', ':'').
             (!empty($this->locality)?$this->locality.', ':'').(!empty($this->street)?$this->street.'':'');
     }
@@ -243,5 +266,67 @@ class Address
     public function preUpdate()
     {
         $this->updated_at = new \DateTime();
+    }
+
+    /**
+     * @return Collection|TaskGoods[]
+     */
+    public function getTasksGoodsAddressOffice(): Collection
+    {
+        return $this->tasks_goods_address_office;
+    }
+
+    public function addTasksGoodsAddressOffice(TaskGoods $task_goods_address_office): self
+    {
+        if (!$this->tasks_goods_address_office->contains($task_goods_address_office)) {
+            $this->tasks_goods_address_office[] = $task_goods_address_office;
+            $task_goods_address_office->setAddressOffice($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTasksGoodsAddressOffice(TaskGoods $task_goods_address_office): self
+    {
+        if ($this->tasks_goods_address_office->contains($task_goods_address_office)) {
+            $this->tasks_goods_address_office->removeElement($task_goods_address_office);
+            // set the owning side to null (unless already changed)
+            if ($task_goods_address_office->getAddressOffice() === $this) {
+                $task_goods_address_office->setAddressOffice(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|TaskGoods[]
+     */
+    public function getTasksGoodsAddressGoodsYard(): Collection
+    {
+        return $this->tasks_goods_address_goods_yard;
+    }
+
+    public function addTasksGoodsAddressGoodsYard(TaskGoods $task_goods_address_goods_yard): self
+    {
+        if (!$this->tasks_goods_address_goods_yard->contains($task_goods_address_goods_yard)) {
+            $this->tasks_goods_address_goods_yard[] = $task_goods_address_goods_yard;
+            $task_goods_address_goods_yard->setAddressGoodsYard($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTasksGoodsAddressGoodsYard(TaskGoods $task_goods_address_goods_yard): self
+    {
+        if ($this->tasks_goods_address_goods_yard->contains($task_goods_address_goods_yard)) {
+            $this->tasks_goods_address_goods_yard->removeElement($task_goods_address_goods_yard);
+            // set the owning side to null (unless already changed)
+            if ($task_goods_address_goods_yard->getAddressGoodsYard() === $this) {
+                $task_goods_address_goods_yard->setAddressGoodsYard(null);
+            }
+        }
+
+        return $this;
     }
 }

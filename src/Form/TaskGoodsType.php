@@ -2,6 +2,8 @@
 
 namespace App\Form;
 
+use App\Entity\Address;
+use Psr\Log\LoggerInterface;
 use App\Entity\TaskGoods;
 use App\Entity\Organization;
 use Doctrine\ORM\EntityRepository;
@@ -18,6 +20,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\PositiveOrZero;
+use Symfony\Component\Form\FormInterface;
 
 class TaskGoodsType extends AbstractType
 {
@@ -67,6 +70,8 @@ class TaskGoodsType extends AbstractType
             ->add('unit', ChoiceType::class, [
                 'choices' => array_flip(TaskGoods::LIST_UNITS),
                 'label' => 'label.unit',
+                'required'   => false,
+                'empty_data' => '1',
                 'attr' => [
                     'placeholder' => 'label.unit',
                     'title' => 'label.unit',
@@ -114,10 +119,10 @@ class TaskGoodsType extends AbstractType
             ->add('loading_nature', ChoiceType::class, [
                 'choices' => array_flip(TaskGoods::LIST_LOADING_NATURES),
                 'label' => 'label.loading_nature',
+                'empty_data' => '1',
                 'attr' => [
-                    'placeholder' => 'label.loading_nature',
                     'title' => 'label.loading_nature',
-                    'class' => 'form-control',
+                    'class' => 'form-control select2',
                     'name' => 'task_goods_loading_nature'
                 ],
                 'constraints' => [
@@ -147,65 +152,108 @@ class TaskGoodsType extends AbstractType
             ])
         ;
 
+        $formModifier = function (FormInterface $form, Organization $organization = null, $dataContactPerson = null, $dataWorkingHours = null) {
+            $form->add('address_office', EntityType::class, [
+                'class' => Address::class,
+                'label' => 'label.address_office',
+                'required' => false,
+                'placeholder' => 'placeholder.address_office',
+                'query_builder' => function (EntityRepository $er) use ($organization) {
+                    return $er->createQueryBuilder('a')
+                        ->where('a.organization = :organization')
+                        ->orderBy('a.point_name', 'ASC')
+                        ->addOrderBy('a.postcode', 'ASC')
+                        ->addOrderBy('a.country', 'ASC')
+                        ->addOrderBy('a.region', 'ASC')
+                        ->addOrderBy('a.city', 'ASC')
+                        ->addOrderBy('a.locality', 'ASC')
+                        ->addOrderBy('a.street', 'ASC')
+                        ->setParameter('organization', $organization);
+                },
+                'choice_label' => 'full_address',
+                'choice_value' => 'id',
+                'attr' => [
+                    'title' => 'label.address_office',
+                    'class' => 'form-control select2',
+                    'style' => 'width: 100%;',
+                    'name' => 'task_goods_address_office'
+                ]
+            ]);
+
+            $form->add('address_goods_yard', EntityType::class, [
+                'class' => Address::class,
+                'label' => 'label.address_goods_yard',
+                'query_builder' => function (EntityRepository $er) use ($organization) {
+                    return $er->createQueryBuilder('a')
+                        ->where('a.organization = :organization')
+                        ->orderBy('a.point_name', 'ASC')
+                        ->addOrderBy('a.postcode', 'ASC')
+                        ->addOrderBy('a.country', 'ASC')
+                        ->addOrderBy('a.region', 'ASC')
+                        ->addOrderBy('a.city', 'ASC')
+                        ->addOrderBy('a.locality', 'ASC')
+                        ->addOrderBy('a.street', 'ASC')
+                        ->setParameter('organization', $organization);
+                },
+                'choice_label' => 'full_address',
+                'choice_value' => 'id',
+                'attr' => [
+                    'placeholder' => 'label.address_goods_yard',
+                    'title' => 'label.address_goods_yard',
+                    'class' => 'form-control select2',
+                    'style' => 'width: 100%;',
+                    'name' => 'task_goods_address_goods_yard'
+                ],
+                'constraints' => [
+                    new NotBlank(),
+                ]
+            ]);
+
+            $form->add('contact_person', TextareaType::class, [
+                'label' => 'label.contact_person',
+                'data' => $dataContactPerson ? $dataContactPerson : $organization->getBaseContactPerson(),
+                'attr' => [
+                    'placeholder' => 'label.contact_person',
+                    'title' => 'label.contact_person',
+                    'class' => 'form-control',
+                    'name' => 'task_goods_contact_person',
+                ],
+                'constraints' => [
+                    new NotBlank(),
+                ]
+            ]);
+
+            $form->add('working_hours', TextareaType::class, [
+                'label' => 'label.working_hours',
+                'data' => $dataWorkingHours ? $dataWorkingHours : $organization->getBaseWorkingHours(),
+                'attr' => [
+                    'placeholder' => 'label.working_hours',
+                    'title' => 'label.working_hours',
+                    'class' => 'form-control',
+                    'name' => 'task_goods_working_hours',
+                ],
+                'constraints' => [
+                    new NotBlank(),
+                ]
+            ]);
+        };
 
         $builder->addEventListener(
             FormEvents::PRE_SET_DATA,
-            function (FormEvent $event) {
-
-                $form = $event->getForm();
+            function (FormEvent $event) use ($formModifier) {
                 $data = $event->getData();
-
                 $organization = $data->getOrganization();
-
-                $base_contact_person = null === $data->getId() && null !== $organization ? $organization->getBaseContactPerson() : $data->getContactPerson();
-                $base_working_hours = null === $data->getId() && null !== $organization ? $organization->getBaseWorkingHours() : $data->getWorkingHours();
-
-                $form->add('contact_person', TextareaType::class, [
-                    'label' => 'label.contact_person',
-                    'data' => $base_contact_person,
-                    'attr' => [
-                        'placeholder' => 'label.contact_person',
-                        'title' => 'label.contact_person',
-                        'class' => 'form-control',
-                        'name' => 'task_goods_contact_person'
-                    ],
-                    'constraints' => [
-                        new NotBlank(),
-                    ]
-                ]);
-
-                $form->add('working_hours', TextareaType::class, [
-                    'label' => 'label.working_hours',
-                    'data' => $base_working_hours,
-                    'attr' => [
-                        'placeholder' => 'label.working_hours',
-                        'title' => 'label.working_hours',
-                        'class' => 'form-control',
-                        'name' => 'task_goods_working_hours'
-                    ],
-                    'constraints' => [
-                        new NotBlank(),
-                    ]
-                ]);
+                $formModifier($event->getForm(), $organization, $data->getContactPerson(), $data->getWorkingHours());
             }
         );
 
-        $builder->get('organization')->addEventListener(
-            FormEvents::PRE_SET_DATA,
-            function (FormEvent $event)  {
-                $form = $event->getForm();
-
-                $data = $event->getData();
-                //dd($data);
-                // It's important here to fetch $event->getForm()->getData(), as
-                // $event->getData() will get you the client data (that is, the ID)
-                //dd($event->getForm()->getData());
-
-                // since we've added the listener to the child, we'll have to pass on
-                // the parent to the callback functions!
-                //$formModifier($event->getForm()->getParent(), $sport);
+        $builder->get('organization')->addEventListener(FormEvents::POST_SUBMIT,
+            function (FormEvent $event) use ($formModifier) {
+                $organization = $event->getForm()->getData();
+                $formModifier($event->getForm()->getParent(), $organization);
             }
         );
+
     }
 
     public function configureOptions(OptionsResolver $resolver)

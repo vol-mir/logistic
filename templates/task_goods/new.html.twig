@@ -33,14 +33,11 @@
     <script type="text/javascript">
         $(document).ready(function () {
 
-            //Initialize Select2 Elements
-            $('.select2').select2()
+            let $taskGoodsOrganization = $('#task_goods_organization');
+            $taskGoodsOrganization.change(function() {
 
-            $('#task_goods_organization').change(function() {
-                let organizationId = $(this).val();
-                if (!organizationId) return;
-                let url = "{{ path('organization_data_dynamic', {'id': 'organizationId'}) }}";
-                url = url.replace('organizationId', organizationId);
+                let url = "{{ path('organization_data_base_dynamic', {'id': 'organizationId'}) }}";
+                url = url.replace('organizationId', $taskGoodsOrganization.val());
                 $.ajax({
                     type: 'post',
                     url: url,
@@ -48,13 +45,19 @@
                     dataType: 'json'
                 }).done(function(data) {
 
-                    if ($('#task_goods_contact_person').val().length === 0) {
-                        $('#task_goods_contact_person').val(data["baseContactPerson"]);
-                    }
+                    let $taskGoodsAddressOffice = $('#task_goods_address_office');
+                    $taskGoodsAddressOffice.empty().trigger("change");
+                    $taskGoodsAddressOffice.select2({ data:[
+                            {id: '', text: '{{ 'placeholder.address_office'|trans }}'}
+                    ]});
+                    $taskGoodsAddressOffice.select2({ data: data["addressesOrganization"]});
 
-                    if ($('#task_goods_working_hours').val().length == 0) {
-                        $('#task_goods_working_hours').val(data["baseWorkingHours"]);
-                    }
+                    let $taskGoodsAddressGoodsYard = $('#task_goods_address_goods_yard');
+                    $taskGoodsAddressGoodsYard.empty().trigger("change");
+                    $taskGoodsAddressGoodsYard.select2({ data: data["addressesOrganization"]});
+
+                    $('#task_goods_contact_person').val(data["baseContactPerson"]);
+                    $('#task_goods_working_hours').val(data["baseWorkingHours"]);
                 });
             });
 
@@ -82,6 +85,12 @@
                     'task_goods[loading_nature]': {
                         required: true,
                         number: true
+                    },
+                    'task_goods[organization]': {
+                        required: true,
+                    },
+                    'task_goods[address_goods_yard]': {
+                        required: true,
                     },
                     'task_goods[contact_person]': {
                         required: true,
@@ -112,6 +121,12 @@
                     'task_goods[loading_nature]': {
                         required: "{{ 'message.validation.required'|trans }}",
                         number: "{{ 'message.validation.number'|trans }}"
+                    },
+                    'task_goods[organization]': {
+                        required: "{{ 'message.validation.required'|trans }}",
+                    },
+                    'task_goods[address_goods_yard]': {
+                        required: "{{ 'message.validation.required'|trans }}",
                     },
                     'task_goods[contact_person]': {
                         required: "{{ 'message.validation.required'|trans }}",

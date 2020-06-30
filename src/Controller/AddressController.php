@@ -215,11 +215,16 @@ class AddressController extends AbstractController
     public function delete(Request $request, Address $address, TranslatorInterface $translator) : JsonResponse
     {
         if ($this->isCsrfTokenValid('delete-item', $request->request->get('_token'))) {
+
+            if ($address->getTasksGoodsAddressGoodsYard()->count() > 0) {
+                return new JsonResponse(['messageError' => $translator->trans('item.deleted_use')]);
+            }
+
             $em = $this->getDoctrine()->getManager();
             $em->remove($address);
             $em->flush();
         }
 
-        return new JsonResponse(['message' => $translator->trans('item.deleted_successfully')]);
+        return new JsonResponse(['messageSuccess' => $translator->trans('item.deleted_successfully')]);
     }
 }
