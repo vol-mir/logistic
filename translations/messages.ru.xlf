@@ -200,6 +200,14 @@
         <source>label.date_task_goods</source>
         <target>Дата погрузки/отгрузки</target>
       </trans-unit>
+      <trans-unit id="label.status">
+        <source>label.status</source>
+        <target>Статус</target>
+      </trans-unit>
+      <trans-unit id="label.report">
+        <source>label.report</source>
+        <target>Отчет</target>
+      </trans-unit>
 
       <trans-unit id="placeholder.address_office">
         <source>placeholder.address_office</source>

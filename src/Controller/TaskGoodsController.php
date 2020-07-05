@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\TaskGoods;
 use App\Entity\Organization;
+use App\Form\TaskGoodsDispatcherType;
 use App\Form\TaskGoodsType;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
@@ -112,22 +113,22 @@ class TaskGoodsController extends AbstractController
                                     $elementTemp = "<span class='badge badge-primary'>".$translator->trans(TaskGoods::STATUSES[$task_goods->getStatus()])."</span>";
                                     break;
                                 case 2:
-                                    $elementTemp = "<span class='badge badge-warning>".$translator->trans(TaskGoods::STATUSES[$task_goods->getStatus()])."</span>";
+                                    $elementTemp = "<span class='badge badge-warning'>".$translator->trans(TaskGoods::STATUSES[$task_goods->getStatus()])."</span>";
                                     break;
                                 case 3:
-                                    $elementTemp = "<span class='badge badge-light>".$translator->trans(TaskGoods::STATUSES[$task_goods->getStatus()])."</span>";
+                                    $elementTemp = "<span class='badge badge-light'>".$translator->trans(TaskGoods::STATUSES[$task_goods->getStatus()])."</span>";
                                     break;
                                 case 4:
-                                    $elementTemp = "<span class='badge badge-dark>".$translator->trans(TaskGoods::STATUSES[$task_goods->getStatus()])."</span>";
+                                    $elementTemp = "<span class='badge badge-dark'>".$translator->trans(TaskGoods::STATUSES[$task_goods->getStatus()])."</span>";
                                     break;
                                 case 5:
-                                    $elementTemp = "<span class='badge badge-success>".$translator->trans(TaskGoods::STATUSES[$task_goods->getStatus()])."</span>";
+                                    $elementTemp = "<span class='badge badge-success'>".$translator->trans(TaskGoods::STATUSES[$task_goods->getStatus()])."</span>";
                                     break;
                                 case 6:
-                                    $elementTemp = "<span class='badge badge-danger>".$translator->trans(TaskGoods::STATUSES[$task_goods->getStatus()])."</span>";
+                                    $elementTemp = "<span class='badge badge-danger'>".$translator->trans(TaskGoods::STATUSES[$task_goods->getStatus()])."</span>";
                                     break;
                                 default:
-                                    $elementTemp = "<span class='badge badge-secondary>".$translator->trans(TaskGoods::STATUSES[$task_goods->getStatus()])."</span>";
+                                    $elementTemp = "<span class='badge badge-secondary'>".$translator->trans(TaskGoods::STATUSES[$task_goods->getStatus()])."</span>";
                             }
 
                             array_push($dataTemp, $elementTemp);
@@ -136,7 +137,7 @@ class TaskGoodsController extends AbstractController
 
                     case 'control':
                         {
-                            $elementTemp = "<div class='btn-group btn-group-sm'><a href='".$this->generateUrl('task_goods_edit', ['id' => $task_goods->getId()])."' class='btn btn-info'><i class='fas fa-edit'></i></a><button type='button' class='btn btn-sm btn-danger float-left modal-delete-dialog' data-toggle='modal' data-id='".$task_goods->getId()."'><i class='fas fa-trash'></i></button></div>";
+                            $elementTemp = "<div class='btn-group btn-group-sm'><a href='".$this->generateUrl('task_goods_edit', ['id' => $task_goods->getId()])."' class='btn btn-info'><i class='fas fa-edit'></i></a><a href='".$this->generateUrl('task_goods_edit_dispatcher', ['id' => $task_goods->getId()])."' class='btn btn-secondary'><i class='fas fa-edit'></i></a><button type='button' class='btn btn-sm btn-danger float-left modal-delete-dialog' data-toggle='modal' data-id='".$task_goods->getId()."'><i class='fas fa-trash'></i></button></div>";
                             array_push($dataTemp, $elementTemp);
                             break;
                         }
@@ -231,6 +232,46 @@ class TaskGoodsController extends AbstractController
 
         return $this->render('task_goods/edit.html.twig', [
             'form' => $form->createView(),
+            'task_goods' => $task_goods
+        ]);
+    }
+
+    /**
+     * Edit task_goods for dispatcher
+     *
+     * @Route("/task/goods/{id}/edit/dispatcher", methods="GET|POST", name="task_goods_edit_dispatcher", requirements={"id" = "\d+"})
+     *
+     * @param Request $request
+     * @param TaskGoods $task_goods
+     * @param TranslatorInterface $translator
+     *
+     * @return Response
+     */
+    public function editDispatcher(Request $request, TaskGoods $task_goods, TranslatorInterface $translator) : Response
+    {
+        $form = $this->createForm(TaskGoodsType::class, $task_goods);
+        $form->handleRequest($request);
+
+        $formDispatcher = $this->createForm(TaskGoodsDispatcherType::class, $task_goods);
+        $formDispatcher->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->getDoctrine()->getManager()->flush();
+
+            $this->addFlash('success', $translator->trans('item.edited_successfully'));
+            return $this->redirectToRoute('task_goods_index');
+        }
+
+        if ($formDispatcher->isSubmitted() && $formDispatcher->isValid()) {
+            $this->getDoctrine()->getManager()->flush();
+
+            $this->addFlash('success', $translator->trans('item.edited_successfully'));
+            return $this->redirectToRoute('task_goods_index');
+        }
+
+        return $this->render('task_goods/edit_full.html.twig', [
+            'form' => $form->createView(),
+            'formDispatcher' => $formDispatcher->createView(),
             'task_goods' => $task_goods
         ]);
     }

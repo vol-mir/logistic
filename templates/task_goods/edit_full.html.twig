@@ -1,0 +1,172 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Редактирование заявки{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-6">
+            <!-- jquery validation -->
+            <div class="card card-default">
+                <!-- form start -->
+                <form id="taskGoodsForm" action="{{ path('task_goods_edit_dispatcher', {'id': task_goods.id}) }}" method="POST">
+                    {% include 'task_goods/_form.html.twig' with {'form': form} only %}
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-primary">{{ 'title.save'|trans }}</button>
+                        <a href="{{ path('task_goods_index') }}" class="btn btn-default float-right">{{ 'title.cancel'|trans }}</a>
+                    </div>
+                </form>
+            </div>
+            <!-- /.card -->
+        </div>
+        <div class="col-md-6">
+            <!-- jquery validation -->
+            <div class="card card-default">
+                <!-- form start -->
+                <form id="taskGoodsDispatcherForm" action="{{ path('task_goods_edit_dispatcher', {'id': task_goods.id}) }}" method="POST">
+                    {% include 'task_goods/_form_dispatcher.html.twig' with {'form': formDispatcher} only %}
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-primary">{{ 'title.save'|trans }}</button>
+                        <a href="{{ path('task_goods_index') }}" class="btn btn-default float-right">{{ 'title.cancel'|trans }}</a>
+                    </div>
+                </form>
+            </div>
+            <!-- /.card -->
+        </div>
+    </div>
+    <!-- /.row -->
+
+{% endblock %}
+
+
+{% block javascripts %}
+    <!-- jquery-validation -->
+    <script src="{{ asset('plugins/jquery-validation/jquery.validate.min.js') }}"></script>
+    <script src="{{ asset('plugins/jquery-validation/additional-methods.min.js') }}"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            let $taskGoodsOrganization = $('#task_goods_organization');
+            $taskGoodsOrganization.change(function() {
+
+                let url = "{{ path('organization_data_base_dynamic', {'id': 'organizationId'}) }}";
+                url = url.replace('organizationId', $taskGoodsOrganization.val());
+                $.ajax({
+                    type: 'post',
+                    url: url,
+                    data: { '_method':'post','_token':'{{ csrf_token('dynamic-data-organization') }}' },
+                    dataType: 'json'
+                }).done(function(data) {
+
+                    let $taskGoodsAddressOffice = $('#task_goods_address_office');
+                    $taskGoodsAddressOffice.empty().trigger("change");
+                    $taskGoodsAddressOffice.select2({ data:[
+                            {id: '', text: '{{ 'placeholder.address_office'|trans }}'}
+                        ]});
+                    $taskGoodsAddressOffice.select2({ data: data["addressesOrganization"]});
+
+                    let $taskGoodsAddressGoodsYard = $('#task_goods_address_goods_yard');
+                    $taskGoodsAddressGoodsYard.empty().trigger("change");
+                    $taskGoodsAddressGoodsYard.select2({ data: data["addressesOrganization"]});
+
+                    $('#task_goods_contact_person').val(data["baseContactPerson"]);
+                    $('#task_goods_working_hours').val(data["baseWorkingHours"]);
+                });
+            });
+
+            $('#taskGoodsForm').validate({
+                ignore: ".ignore-validate",
+                rules: {
+                    'task_goods[date_task_goods]': {
+                        required: true
+                    },
+                    'task_goods[goods]': {
+                        required: true,
+                    },
+                    'task_goods[weight]': {
+                        required: true,
+                        number: true
+                    },
+                    'task_goods[unit]': {
+                        required: true,
+                        number: true
+                    },
+                    'task_goods[dimensions]': {
+                        maxlength: 190
+                    },
+                    'task_goods[number_of_packages]': {
+                        required: true,
+                        number: true
+                    },
+                    'task_goods[loading_nature]': {
+                        required: true,
+                        number: true
+                    },
+                    'task_goods[organization]': {
+                        required: true,
+                    },
+                    'task_goods[address_goods_yard]': {
+                        required: true,
+                    },
+                    'task_goods[contact_person]': {
+                        required: true,
+                     },
+                    'task_goods[working_hours]': {
+                        required: true,
+                    },
+                },
+                messages: {
+                    'task_goods[date_task_goods]': {
+                        required: "{{ 'message.validation.required'|trans }}",
+                    },
+                    'task_goods[goods]': {
+                        required: "{{ 'message.validation.required'|trans }}",
+                    },
+                    'task_goods[weight]': {
+                        required: "{{ 'message.validation.required'|trans }}",
+                        number: "{{ 'message.validation.number'|trans }}"
+                    },
+                    'task_goods[unit]': {
+                        required: "{{ 'message.validation.required'|trans }}",
+                        number: "{{ 'message.validation.number'|trans }}"
+                    },
+                    'task_goods[dimensions]': {
+                        maxlength: "{{ 'message.validation.too_long_content'|trans({ '%limit%': 190 }) }}"
+                    },
+                    'task_goods[number_of_packages]': {
+                        required: "{{ 'message.validation.required'|trans }}",
+                        number: "{{ 'message.validation.number'|trans }}"
+                    },
+                    'task_goods[loading_nature]': {
+                        required: "{{ 'message.validation.required'|trans }}",
+                        number: "{{ 'message.validation.number'|trans }}"
+                    },
+                    'task_goods[organization]': {
+                        required: "{{ 'message.validation.required'|trans }}",
+                    },
+                    'task_goods[address_goods_yard]': {
+                        required: "{{ 'message.validation.required'|trans }}",
+                    },
+                    'task_goods[contact_person]': {
+                        required: "{{ 'message.validation.required'|trans }}",
+                     },
+                    'task_goods[working_hours]': {
+                        required: "{{ 'message.validation.required'|trans }}",
+                    },
+                },
+                errorElement: 'div',
+                errorPlacement: function (error, element) {
+                    error.addClass('invalid-feedback');
+                    element.closest('.form-group').append(error);
+                },
+                highlight: function (element, errorClass, validClass) {
+                    $(element).addClass('is-invalid');
+                },
+                unhighlight: function (element, errorClass, validClass) {
+                    $(element).removeClass('is-invalid');
+                }
+            });
+        });
+    </script>
+
+{% endblock %}

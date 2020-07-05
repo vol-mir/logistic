@@ -31,8 +31,8 @@ class TaskGoods
     public const TO_REVIEW = 2;
     public const PERFORMED = 3;
     public const REJECTED = 4;
-    public const DONE = 3;
-    public const NOT_DONE = 4;
+    public const DONE = 5;
+    public const NOT_DONE = 6;
 
     public const STATUSES = [
         self::FORMED => 'status.formed',
@@ -178,6 +178,13 @@ class TaskGoods
      * @ORM\Column(type="datetime", nullable=false)
      */
     private $date_task_goods;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $report;
 
     public function __construct()
     {
@@ -381,6 +388,18 @@ class TaskGoods
     public function setDateTaskGoods(\DateTimeInterface $date_task_goods): self
     {
         $this->date_task_goods = $date_task_goods;
+
+        return $this;
+    }
+
+    public function getReport(): ?string
+    {
+        return $this->report;
+    }
+
+    public function setReport(?string $report): self
+    {
+        $this->report = $report;
 
         return $this;
     }
