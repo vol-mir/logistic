@@ -3,6 +3,19 @@
     {{ form_row(form._token) }}
 
     <div class="form-group">
+        {{ form_label(form.date_task_goods) }}
+        {{ form_widget(form.date_task_goods) }}
+
+        {% if form.date_task_goods.vars['errors']|length > 0 %}
+            <ul class="list-unstyled">
+                {% for error in form.date_task_goods.vars['errors'] %}
+                    <li class="text-danger small">{{ error.message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+
+    <div class="form-group">
         {{ form_label(form.goods) }}
         {{ form_widget(form.goods) }}
 

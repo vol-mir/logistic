@@ -11,6 +11,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -19,6 +20,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\DateTime;
 use Symfony\Component\Validator\Constraints\PositiveOrZero;
 use Symfony\Component\Form\FormInterface;
 
@@ -27,6 +29,20 @@ class TaskGoodsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('date_task_goods', DateType::class, [
+                'label' => 'label.date_task_goods',
+                'widget' => 'single_text',
+                'attr' => [
+                    'placeholder' => 'label.date_task_goods',
+                    'title' => 'label.date_task_goods',
+                    'class' => 'form-control',
+                    'name' => 'date_task_goods'
+                ],
+                'constraints' => [
+                    new NotBlank(),
+                    new DateTime(),
+                ]
+            ])
             ->add('goods', TextareaType::class, [
                 'label' => 'label.goods',
                 'attr' => [

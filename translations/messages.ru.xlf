@@ -196,6 +196,10 @@
         <source>label.address_goods_yard</source>
         <target>Адрес погрузки (выгрузки)</target>
       </trans-unit>
+      <trans-unit id="label.date_task_goods">
+        <source>label.date_task_goods</source>
+        <target>Дата погрузки/отгрузки</target>
+      </trans-unit>
 
       <trans-unit id="placeholder.address_office">
         <source>placeholder.address_office</source>

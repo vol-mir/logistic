@@ -172,6 +172,17 @@ class TaskGoods
      */
     private $address_goods_yard;
 
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", nullable=false)
+     */
+    private $date_task_goods;
+
+    public function __construct()
+    {
+        $this->setDateTaskGoods(new \DateTime());
+    }
 
     public function getId(): ?int
     {
@@ -358,6 +369,18 @@ class TaskGoods
     public function setAddressGoodsYard(?Address $address_goods_yard): self
     {
         $this->address_goods_yard = $address_goods_yard;
+
+        return $this;
+    }
+
+    public function getDateTaskGoods(): ?\DateTimeInterface
+    {
+        return $this->date_task_goods;
+    }
+
+    public function setDateTaskGoods(\DateTimeInterface $date_task_goods): self
+    {
+        $this->date_task_goods = $date_task_goods;
 
         return $this;
     }

@@ -63,6 +63,9 @@
             $('#taskGoodsForm').validate({
                 ignore: ".ignore-validate",
                 rules: {
+                    'task_goods[date_task_goods]': {
+                        required: true
+                    },
                     'task_goods[goods]': {
                         required: true,
                     },
@@ -99,6 +102,9 @@
                     },
                 },
                 messages: {
+                    'task_goods[date_task_goods]': {
+                        required: "{{ 'message.validation.required'|trans }}",
+                    },
                     'task_goods[goods]': {
                         required: "{{ 'message.validation.required'|trans }}",
                     },
