@@ -139,6 +139,7 @@ class TaskGoodsType extends AbstractType
                 'attr' => [
                     'title' => 'label.loading_nature',
                     'class' => 'form-control select2',
+                    'style' => 'width: 100%;',
                     'name' => 'task_goods_loading_nature'
                 ],
                 'constraints' => [

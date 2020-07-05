@@ -107,7 +107,29 @@ class TaskGoodsController extends AbstractController
 
                     case 'status':
                         {
-                            $elementTemp = $translator->trans(TaskGoods::STATUSES[$task_goods->getStatus()]);
+                            switch ($task_goods->getStatus()) {
+                                case 1:
+                                    $elementTemp = "<span class='badge badge-primary'>".$translator->trans(TaskGoods::STATUSES[$task_goods->getStatus()])."</span>";
+                                    break;
+                                case 2:
+                                    $elementTemp = "<span class='badge badge-warning>".$translator->trans(TaskGoods::STATUSES[$task_goods->getStatus()])."</span>";
+                                    break;
+                                case 3:
+                                    $elementTemp = "<span class='badge badge-light>".$translator->trans(TaskGoods::STATUSES[$task_goods->getStatus()])."</span>";
+                                    break;
+                                case 4:
+                                    $elementTemp = "<span class='badge badge-dark>".$translator->trans(TaskGoods::STATUSES[$task_goods->getStatus()])."</span>";
+                                    break;
+                                case 5:
+                                    $elementTemp = "<span class='badge badge-success>".$translator->trans(TaskGoods::STATUSES[$task_goods->getStatus()])."</span>";
+                                    break;
+                                case 6:
+                                    $elementTemp = "<span class='badge badge-danger>".$translator->trans(TaskGoods::STATUSES[$task_goods->getStatus()])."</span>";
+                                    break;
+                                default:
+                                    $elementTemp = "<span class='badge badge-secondary>".$translator->trans(TaskGoods::STATUSES[$task_goods->getStatus()])."</span>";
+                            }
+
                             array_push($dataTemp, $elementTemp);
                             break;
                         }
