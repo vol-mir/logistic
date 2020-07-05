@@ -92,6 +92,13 @@ class TaskGoodsController extends AbstractController
                             break;
                         }
 
+                    case 'dateTaskGoods':
+                        {
+                            $elementTemp = $task_goods->getDateTaskGoods()->format('d.m.Y');;
+                            array_push($dataTemp, $elementTemp);
+                            break;
+                        }
+
                     case 'goods':
                         {
                             $elementTemp = $task_goods->getGoods().', '.$task_goods->getWeight().' '.$translator->trans(TaskGoods::LIST_UNITS[$task_goods->getUnit()]);
