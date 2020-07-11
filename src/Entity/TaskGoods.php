@@ -194,10 +194,19 @@ class TaskGoods
      */
     private $drivers;
 
+    /**
+     * @var Transport[]|ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="App\Entity\Transport", inversedBy="taskGoods", cascade={"persist"})
+     * @ORM\JoinTable(name="task_goods_transport")
+     */
+    private $transports;
+
     public function __construct()
     {
         $this->setDateTaskGoods(new \DateTime());
         $this->drivers = new ArrayCollection();
+        $this->transports = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -434,6 +443,32 @@ class TaskGoods
     {
         if ($this->drivers->contains($driver)) {
             $this->drivers->removeElement($driver);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Transport[]
+     */
+    public function getTransports(): Collection
+    {
+        return $this->transports;
+    }
+
+    public function addTransport(Transport $transport): self
+    {
+        if (!$this->transports->contains($transport)) {
+            $this->transports[] = $transport;
+        }
+
+        return $this;
+    }
+
+    public function removeTransport(Transport $transport): self
+    {
+        if ($this->transports->contains($transport)) {
+            $this->transports->removeElement($transport);
         }
 
         return $this;

@@ -144,7 +144,11 @@ class TaskGoodsController extends AbstractController
 
                     case 'control':
                         {
-                            $elementTemp = "<div class='btn-group btn-group-sm'><a href='".$this->generateUrl('task_goods_edit', ['id' => $task_goods->getId()])."' class='btn btn-info'><i class='fas fa-edit'></i></a><a href='".$this->generateUrl('task_goods_edit_full', ['id' => $task_goods->getId()])."' class='btn btn-secondary'><i class='fas fa-edit'></i></a><button type='button' class='btn btn-sm btn-danger float-left modal-delete-dialog' data-toggle='modal' data-id='".$task_goods->getId()."'><i class='fas fa-trash'></i></button></div>";
+                            $elementTemp = "<div class='btn-group btn-group-sm'>
+                                                <a href='".$this->generateUrl('task_goods_edit', ['id' => $task_goods->getId()])."' class='btn btn-info'><i class='fas fa-edit'></i></a>
+                                                <a href='".$this->generateUrl('task_goods_edit_full', ['id' => $task_goods->getId()])."' class='btn btn-outline-info'><i class='fas fa-edit'></i></a>
+                                                <button type='button' class='btn btn-sm btn-danger float-left modal-delete-dialog' data-toggle='modal' data-id='".$task_goods->getId()."'><i class='fas fa-trash'></i></button>
+                                            </div>";
                             array_push($dataTemp, $elementTemp);
                             break;
                         }

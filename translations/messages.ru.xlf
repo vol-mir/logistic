@@ -212,6 +212,10 @@
         <source>label.drivers</source>
         <target>Водители</target>
       </trans-unit>
+      <trans-unit id="label.transports">
+        <source>label.transports</source>
+        <target>Транспорт</target>
+      </trans-unit>
 
       <trans-unit id="placeholder.not_specified">
         <source>placeholder.not_specified</source>

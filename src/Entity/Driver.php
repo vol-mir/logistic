@@ -66,7 +66,9 @@ class Driver
     private $updated_at;
 
     /**
-     * @ORM\ManyToMany(targetEntity=TaskGoods::class, mappedBy="drivers")
+     * @var TaskGoods[]|ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="App\Entity\TaskGoods", mappedBy="drivers")
      */
     private $taskGoods;
 

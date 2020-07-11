@@ -6,6 +6,7 @@ use App\Entity\Address;
 use Psr\Log\LoggerInterface;
 use App\Entity\TaskGoods;
 use App\Entity\Driver;
+use App\Entity\Transport;
 use App\Entity\Organization;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
@@ -65,6 +66,28 @@ class TaskGoodsFullType extends AbstractType
                     'name' => 'task_goods_drivers'
                 ]
             ]);
+
+        $builder->add('transports', EntityType::class, [
+            'class' => Transport::class,
+            'label' => 'label.transports',
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('t')
+                    ->orderBy('t.marka', 'ASC')
+                    ->addOrderBy('t.model', 'ASC')
+                    ->addOrderBy('t.number', 'ASC') ;
+            },
+            'choice_label' => 'full_name',
+            'choice_value' => 'id',
+            'multiple' => true,
+            'required' => false,
+            'attr' => [
+                'title' => 'label.transports',
+                'class' => 'form-control select2',
+                'style' => 'width: 100%;',
+                'name' => 'task_goods_transports'
+            ]
+        ]);
+
         $builder->add('report', TextareaType::class, [
                 'label' => 'label.report',
                 'required' => false,

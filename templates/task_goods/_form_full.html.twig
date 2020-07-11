@@ -29,6 +29,19 @@
     </div>
 
     <div class="form-group">
+        {{ form_label(form.transports) }}
+        {{ form_widget(form.transports, { 'attr': {'data-placeholder': 'placeholder.not_specified'|trans} }) }}
+
+        {% if form.transports.vars['errors']|length > 0 %}
+            <ul class="list-unstyled">
+                {% for error in form.transports.vars['errors'] %}
+                    <li class="text-danger small">{{ error.message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+
+    <div class="form-group">
         {{ form_label(form.report) }}
         {{ form_widget(form.report) }}
 

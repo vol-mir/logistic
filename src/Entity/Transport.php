@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\TransportRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -90,6 +92,18 @@ class Transport
      */
     private $updated_at;
 
+    /**
+     * @var TaskGoods[]|ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="App\Entity\TaskGoods", mappedBy="transports")
+     */
+    private $taskGoods;
+
+    public function __construct()
+    {
+        $this->taskGoods = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -165,6 +179,11 @@ class Transport
         return $this->updated_at;
     }
 
+    public function getFullName()
+    {
+        return $this->marka.' '.$this->model.' '.$this->number;
+    }
+
     /**
      * @ORM\PrePersist
      */
@@ -180,6 +199,34 @@ class Transport
     public function preUpdate()
     {
         $this->updated_at = new \DateTime();
+    }
+
+    /**
+     * @return Collection|TaskGoods[]
+     */
+    public function getTaskGoods(): Collection
+    {
+        return $this->taskGoods;
+    }
+
+    public function addTaskGood(TaskGoods $taskGood): self
+    {
+        if (!$this->taskGoods->contains($taskGood)) {
+            $this->taskGoods[] = $taskGood;
+            $taskGood->addTransport($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTaskGood(TaskGoods $taskGood): self
+    {
+        if ($this->taskGoods->contains($taskGood)) {
+            $this->taskGoods->removeElement($taskGood);
+            $taskGood->removeTransport($this);
+        }
+
+        return $this;
     }
 
 }
