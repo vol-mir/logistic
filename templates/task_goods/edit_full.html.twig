@@ -8,7 +8,7 @@
             <!-- jquery validation -->
             <div class="card card-default">
                 <!-- form start -->
-                <form id="taskGoodsForm" action="{{ path('task_goods_edit_dispatcher', {'id': task_goods.id}) }}" method="POST">
+                <form id="taskGoodsForm" action="{{ path('task_goods_edit_full', {'id': task_goods.id}) }}" method="POST">
                     {% include 'task_goods/_form.html.twig' with {'form': form} only %}
                     <div class="card-footer">
                         <button type="submit" class="btn btn-primary">{{ 'title.save'|trans }}</button>
@@ -22,8 +22,8 @@
             <!-- jquery validation -->
             <div class="card card-default">
                 <!-- form start -->
-                <form id="taskGoodsDispatcherForm" action="{{ path('task_goods_edit_dispatcher', {'id': task_goods.id}) }}" method="POST">
-                    {% include 'task_goods/_form_dispatcher.html.twig' with {'form': formDispatcher} only %}
+                <form id="taskGoodsDispatcherForm" action="{{ path('task_goods_edit_full', {'id': task_goods.id}) }}" method="POST">
+                    {% include 'task_goods/_form_full.html.twig' with {'form': formFull} only %}
                     <div class="card-footer">
                         <button type="submit" class="btn btn-primary">{{ 'title.save'|trans }}</button>
                         <a href="{{ path('task_goods_index') }}" class="btn btn-default float-right">{{ 'title.cancel'|trans }}</a>

@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\TaskGoods;
 use App\Entity\Organization;
-use App\Form\TaskGoodsDispatcherType;
+use App\Form\TaskGoodsFullType;
 use App\Form\TaskGoodsType;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
@@ -144,7 +144,7 @@ class TaskGoodsController extends AbstractController
 
                     case 'control':
                         {
-                            $elementTemp = "<div class='btn-group btn-group-sm'><a href='".$this->generateUrl('task_goods_edit', ['id' => $task_goods->getId()])."' class='btn btn-info'><i class='fas fa-edit'></i></a><a href='".$this->generateUrl('task_goods_edit_dispatcher', ['id' => $task_goods->getId()])."' class='btn btn-secondary'><i class='fas fa-edit'></i></a><button type='button' class='btn btn-sm btn-danger float-left modal-delete-dialog' data-toggle='modal' data-id='".$task_goods->getId()."'><i class='fas fa-trash'></i></button></div>";
+                            $elementTemp = "<div class='btn-group btn-group-sm'><a href='".$this->generateUrl('task_goods_edit', ['id' => $task_goods->getId()])."' class='btn btn-info'><i class='fas fa-edit'></i></a><a href='".$this->generateUrl('task_goods_edit_full', ['id' => $task_goods->getId()])."' class='btn btn-secondary'><i class='fas fa-edit'></i></a><button type='button' class='btn btn-sm btn-danger float-left modal-delete-dialog' data-toggle='modal' data-id='".$task_goods->getId()."'><i class='fas fa-trash'></i></button></div>";
                             array_push($dataTemp, $elementTemp);
                             break;
                         }
@@ -244,9 +244,9 @@ class TaskGoodsController extends AbstractController
     }
 
     /**
-     * Edit task_goods for dispatcher
+     * Edit task_goods full
      *
-     * @Route("/task/goods/{id}/edit/dispatcher", methods="GET|POST", name="task_goods_edit_dispatcher", requirements={"id" = "\d+"})
+     * @Route("/task/goods/{id}/edit/full", methods="GET|POST", name="task_goods_edit_full", requirements={"id" = "\d+"})
      *
      * @param Request $request
      * @param TaskGoods $task_goods
@@ -254,13 +254,13 @@ class TaskGoodsController extends AbstractController
      *
      * @return Response
      */
-    public function editDispatcher(Request $request, TaskGoods $task_goods, TranslatorInterface $translator) : Response
+    public function editFull(Request $request, TaskGoods $task_goods, TranslatorInterface $translator) : Response
     {
         $form = $this->createForm(TaskGoodsType::class, $task_goods);
         $form->handleRequest($request);
 
-        $formDispatcher = $this->createForm(TaskGoodsDispatcherType::class, $task_goods);
-        $formDispatcher->handleRequest($request);
+        $formFull = $this->createForm(TaskGoodsFullType::class, $task_goods);
+        $formFull->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
@@ -269,7 +269,7 @@ class TaskGoodsController extends AbstractController
             return $this->redirectToRoute('task_goods_index');
         }
 
-        if ($formDispatcher->isSubmitted() && $formDispatcher->isValid()) {
+        if ($formFull->isSubmitted() && $formFull->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
             $this->addFlash('success', $translator->trans('item.edited_successfully'));
@@ -278,7 +278,7 @@ class TaskGoodsController extends AbstractController
 
         return $this->render('task_goods/edit_full.html.twig', [
             'form' => $form->createView(),
-            'formDispatcher' => $formDispatcher->createView(),
+            'formFull' => $formFull->createView(),
             'task_goods' => $task_goods
         ]);
     }

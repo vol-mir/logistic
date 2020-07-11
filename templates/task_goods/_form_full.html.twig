@@ -16,6 +16,19 @@
     </div>
 
     <div class="form-group">
+        {{ form_label(form.drivers) }}
+        {{ form_widget(form.drivers, { 'attr': {'data-placeholder': 'placeholder.not_specified'|trans} }) }}
+
+        {% if form.drivers.vars['errors']|length > 0 %}
+            <ul class="list-unstyled">
+                {% for error in form.drivers.vars['errors'] %}
+                    <li class="text-danger small">{{ error.message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+
+    <div class="form-group">
         {{ form_label(form.report) }}
         {{ form_widget(form.report) }}
 

@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\DriverRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -62,6 +64,16 @@ class Driver
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $updated_at;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=TaskGoods::class, mappedBy="drivers")
+     */
+    private $taskGoods;
+
+    public function __construct()
+    {
+        $this->taskGoods = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -146,5 +158,33 @@ class Driver
     public function preUpdate()
     {
         $this->updated_at = new \DateTime();
+    }
+
+    /**
+     * @return Collection|TaskGoods[]
+     */
+    public function getTaskGoods(): Collection
+    {
+        return $this->taskGoods;
+    }
+
+    public function addTaskGood(TaskGoods $taskGood): self
+    {
+        if (!$this->taskGoods->contains($taskGood)) {
+            $this->taskGoods[] = $taskGood;
+            $taskGood->addDriver($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTaskGood(TaskGoods $taskGood): self
+    {
+        if ($this->taskGoods->contains($taskGood)) {
+            $this->taskGoods->removeElement($taskGood);
+            $taskGood->removeDriver($this);
+        }
+
+        return $this;
     }
 }

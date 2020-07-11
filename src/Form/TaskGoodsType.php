@@ -174,7 +174,7 @@ class TaskGoodsType extends AbstractType
                 'class' => Address::class,
                 'label' => 'label.address_office',
                 'required' => false,
-                'placeholder' => 'placeholder.address_office',
+                'placeholder' => 'placeholder.not_specified',
                 'query_builder' => function (EntityRepository $er) use ($organization) {
                     return $er->createQueryBuilder('a')
                         ->where('a.organization = :organization')

@@ -208,9 +208,13 @@
         <source>label.report</source>
         <target>Отчет</target>
       </trans-unit>
+      <trans-unit id="label.drivers">
+        <source>label.drivers</source>
+        <target>Водители</target>
+      </trans-unit>
 
-      <trans-unit id="placeholder.address_office">
-        <source>placeholder.address_office</source>
+      <trans-unit id="placeholder.not_specified">
+        <source>placeholder.not_specified</source>
         <target>Не указан</target>
       </trans-unit>
 

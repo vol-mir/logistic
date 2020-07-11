@@ -186,9 +186,18 @@ class TaskGoods
      */
     private $report;
 
+    /**
+     * @var Driver[]|ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="App\Entity\Driver", inversedBy="taskGoods", cascade={"persist"})
+     * @ORM\JoinTable(name="task_goods_driver")
+     */
+    private $drivers;
+
     public function __construct()
     {
         $this->setDateTaskGoods(new \DateTime());
+        $this->drivers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -400,6 +409,32 @@ class TaskGoods
     public function setReport(?string $report): self
     {
         $this->report = $report;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Driver[]
+     */
+    public function getDrivers(): Collection
+    {
+        return $this->drivers;
+    }
+
+    public function addDriver(Driver $driver): self
+    {
+        if (!$this->drivers->contains($driver)) {
+            $this->drivers[] = $driver;
+        }
+
+        return $this;
+    }
+
+    public function removeDriver(Driver $driver): self
+    {
+        if ($this->drivers->contains($driver)) {
+            $this->drivers->removeElement($driver);
+        }
 
         return $this;
     }

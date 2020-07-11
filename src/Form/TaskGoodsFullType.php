@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Address;
 use Psr\Log\LoggerInterface;
 use App\Entity\TaskGoods;
+use App\Entity\Driver;
 use App\Entity\Organization;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
@@ -24,12 +25,11 @@ use Symfony\Component\Validator\Constraints\DateTime;
 use Symfony\Component\Validator\Constraints\PositiveOrZero;
 use Symfony\Component\Form\FormInterface;
 
-class TaskGoodsDispatcherType extends AbstractType
+class TaskGoodsFullType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('status', ChoiceType::class, [
+        $builder->add('status', ChoiceType::class, [
                 'choices' => array_flip(TaskGoods::STATUSES),
                 'label' => 'label.status',
                 'empty_data' => '1',
@@ -43,8 +43,29 @@ class TaskGoodsDispatcherType extends AbstractType
                     new NotBlank(),
                     new PositiveOrZero(),
                 ]
-            ])
-            ->add('report', TextareaType::class, [
+            ]);
+
+        $builder->add('drivers', EntityType::class, [
+                'class' => Driver::class,
+                'label' => 'label.drivers',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('d')
+                        ->orderBy('d.last_name', 'ASC')
+                        ->addOrderBy('d.first_name', 'ASC')
+                        ->addOrderBy('d.middle_name', 'ASC') ;
+                },
+                'choice_label' => 'full_name',
+                'choice_value' => 'id',
+                'multiple' => true,
+                'required' => false,
+                'attr' => [
+                    'title' => 'label.drivers',
+                    'class' => 'form-control select2',
+                    'style' => 'width: 100%;',
+                    'name' => 'task_goods_drivers'
+                ]
+            ]);
+        $builder->add('report', TextareaType::class, [
                 'label' => 'label.report',
                 'required' => false,
                 'attr' => [
@@ -53,10 +74,7 @@ class TaskGoodsDispatcherType extends AbstractType
                     'class' => 'form-control',
                     'name' => 'task_goods_report'
                 ]
-            ])
-
-        ;
-
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
