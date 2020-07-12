@@ -1,0 +1,55 @@
+<div class="row pt-2">
+    <div class="col-4">
+        <!-- Date range -->
+        <div class="form-group">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <input type="checkbox">
+                        </span>
+                </div>
+                <div class="input-group-prepend">
+                      <span class="input-group-text">
+                        <i class="far fa-calendar-alt"></i>
+                      </span>
+                </div>
+                <input type="text" class="form-control float-right" id="reservation">
+            </div>
+            <!-- /.input group -->
+        </div>
+        <!-- /.form group -->
+    </div>
+
+    <div class="col-4">
+        <div class="form-group">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <input type="checkbox">
+                        </span>
+                </div>
+                <select class="form-control select2" data-width="80%">
+                    <option selected="selected">Мои</option>
+                    <option>Отдел</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-4">
+        <div class="form-group">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <input type="checkbox">
+                        </span>
+                </div>
+                <select class="form-control select2" data-width="80%">
+                    {% for key, status in statuses %}
+                        <option value="{{ key }}">{{ status|trans }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    </div>
+</div>

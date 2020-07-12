@@ -8,6 +8,7 @@
             <div class="card">
                 <div class="card-header">
                     {% include 'task_goods/_controls.html.twig' %}
+                    {% include 'task_goods/_filter.html.twig' %}
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
@@ -55,6 +56,20 @@
 {% block javascripts %}
     <script>
         $(function () {
+            $('#reservation').daterangepicker({
+                startDate: moment().startOf('month'),
+                endDate: moment().endOf('month'),
+                locale: {
+                    format: 'DD.MM.YYYY',
+                    applyLabel: 'Принять',
+                    cancelLabel: 'Отмена',
+                    invalidDateLabel: 'Выберите дату',
+                    daysOfWeek: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
+                    monthNames: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
+                    firstDay: 1
+                },
+            });
+
             let table = $("#tasks-goods").DataTable({
                 "columnDefs": [
                     // These are the column name variables that will be sent to the server

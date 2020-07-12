@@ -29,7 +29,9 @@ class TaskGoodsController extends AbstractController
      */
     public function index() : Response
     {
-        return $this->render('task_goods/index.html.twig');
+        return $this->render('task_goods/index.html.twig', [
+            'statuses' => TaskGoods::STATUSES
+        ]);
     }
 
     /**
