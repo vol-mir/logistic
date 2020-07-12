@@ -22,8 +22,8 @@
             <!-- jquery validation -->
             <div class="card card-default">
                 <!-- form start -->
-                <form id="taskGoodsDispatcherForm" action="{{ path('task_goods_edit_full', {'id': task_goods.id}) }}" method="POST">
-                    {% include 'task_goods/_form_full.html.twig' with {'form': formFull} only %}
+                <form id="taskGoodsManagementForm" action="{{ path('task_goods_edit_full', {'id': task_goods.id}) }}" method="POST">
+                    {% include 'task_goods/_form_full.html.twig' with {'form': formManagement} only %}
                     <div class="card-footer">
                         <button type="submit" class="btn btn-primary">{{ 'title.save'|trans }}</button>
                         <a href="{{ path('task_goods_index') }}" class="btn btn-default float-right">{{ 'title.cancel'|trans }}</a>
@@ -74,6 +74,33 @@
                 });
             });
 
+            $('#taskGoodsManagementForm').validate({
+                ignore: ".ignore-validate",
+                rules: {
+                    'task_goods[status]': {
+                        required: true,
+                        number: true
+                    },
+                },
+                messages: {
+                    'task_goods[status]': {
+                        required: "{{ 'message.validation.required'|trans }}",
+                        number: "{{ 'message.validation.number'|trans }}"
+                    },
+                },
+                errorElement: 'div',
+                errorPlacement: function (error, element) {
+                    error.addClass('invalid-feedback');
+                    element.closest('.form-group').append(error);
+                },
+                highlight: function (element, errorClass, validClass) {
+                    $(element).addClass('is-invalid');
+                },
+                unhighlight: function (element, errorClass, validClass) {
+                    $(element).removeClass('is-invalid');
+                }
+            });
+
             $('#taskGoodsForm').validate({
                 ignore: ".ignore-validate",
                 rules: {
@@ -110,7 +137,7 @@
                     },
                     'task_goods[contact_person]': {
                         required: true,
-                     },
+                    },
                     'task_goods[working_hours]': {
                         required: true,
                     },
@@ -149,7 +176,7 @@
                     },
                     'task_goods[contact_person]': {
                         required: "{{ 'message.validation.required'|trans }}",
-                     },
+                    },
                     'task_goods[working_hours]': {
                         required: "{{ 'message.validation.required'|trans }}",
                     },

@@ -1,0 +1,124 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Информация о заявке{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    {% include 'task_goods/_controls_show.html.twig' %}
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-4">{{ 'label.task_goods_id'|trans }}</dt>
+                        <dd class="col-sm-8">{{ task_goods.id }}</dd>
+
+                        <dt class="col-sm-4">{{ 'label.date_task_goods'|trans }}</dt>
+                        <dd class="col-sm-8">{{ task_goods.dateTaskGoods|date("d.m.Y") }}</dd>
+
+                        <dt class="col-sm-4">{{ 'label.goods'|trans }}</dt>
+                        <dd class="col-sm-8">{{ task_goods.goods }}</dd>
+
+                        {% if task_goods.note %}
+                            <dt class="col-sm-4">{{ 'label.note'|trans }}</dt>
+                            <dd class="col-sm-8">{{ task_goods.note }}</dd>
+                        {% endif %}
+
+                        <dt class="col-sm-4">{{ 'label.weight'|trans }}</dt>
+                        <dd class="col-sm-8">{{ task_goods.weight }} {{ units[task_goods.unit]|trans }}</dd>
+
+                        {% if task_goods.dimensions %}
+                            <dt class="col-sm-4">{{ 'label.dimensions'|trans }}</dt>
+                            <dd class="col-sm-8">{{ task_goods.dimensions }}</dd>
+                        {% endif %}
+
+                        <dt class="col-sm-4">{{ 'label.number_of_packages'|trans }}</dt>
+                        <dd class="col-sm-8">{{ task_goods.numberOfPackages }}</dd>
+
+                        <dt class="col-sm-4">{{ 'label.loading_nature'|trans }}</dt>
+                        <dd class="col-sm-8">{{ loading_natures[task_goods.loadingNature]|trans }}</dd>
+
+                        <dt class="col-sm-4">{{ 'label.organization'|trans }}</dt>
+                        <dd class="col-sm-8">{{ task_goods.organization }}</dd>
+
+                        {% if task_goods.addressOffice %}
+                            <dt class="col-sm-4">{{ 'label.address_office'|trans }}</dt>
+                            <dd class="col-sm-8">{{ task_goods.addressOffice.fullAddress }}</dd>
+                        {% endif %}
+
+                        <dt class="col-sm-4">{{ 'label.address_goods_yard'|trans }}</dt>
+                        <dd class="col-sm-8">{{ task_goods.addressGoodsYard.fullAddress }}</dd>
+
+                        <dt class="col-sm-4">{{ 'label.contact_person'|trans }}</dt>
+                        <dd class="col-sm-8">{{ task_goods.contactPerson }}</dd>
+
+                        <dt class="col-sm-4">{{ 'label.working_hours'|trans }}</dt>
+                        <dd class="col-sm-8">{{ task_goods.workingHours }}</dd>
+
+                        <dt class="col-sm-4">{{ 'label.created_at'|trans }}</dt>
+                        <dd class="col-sm-8">{{ task_goods.createdAt|date("d.m.Y H:i") }}</dd>
+
+                        <dt class="col-sm-4">{{ 'label.status'|trans }}</dt>
+                        <dd class="col-sm-8">
+                            {% if task_goods.status == 1 %}
+                                <span class='badge badge-primary'>{{ statuses[task_goods.status]|trans }}</span>
+
+                            {% elseif task_goods.status == 2 %}
+                                <span class='badge badge-warning'>{{ statuses[task_goods.status]|trans }}</span>
+
+                            {% elseif task_goods.status == 3 %}
+                                <span class='badge badge-light'>{{ statuses[task_goods.status]|trans }}</span>
+
+                            {% elseif task_goods.status == 4 %}
+                                <span class='badge badge-dark'>{{ statuses[task_goods.status]|trans }}</span>
+
+                            {% elseif task_goods.status == 5 %}
+                                <span class='badge badge-success'>{{ statuses[task_goods.status]|trans }}</span>
+
+                            {% elseif task_goods.status == 6 %}
+                                <span class='badge badge-danger'>{{ statuses[task_goods.status]|trans }}</span>
+
+                            {% else %}
+                                <span class='badge badge-secondary'>{{ statuses[task_goods.status]|trans }}</span>
+
+                            {% endif %}
+
+                        </dd>
+
+                        {% if task_goods.drivers.count > 0  %}
+                            <dt class="col-sm-4 pt-2 pb-2">{{ 'label.drivers'|trans }}</dt>
+                            <dd class="col-sm-8 pt-2 pb-2">
+                                {% for v in task_goods.drivers %}
+                                    <span class='callout callout-success p-2'>{{ v.fullName }} - {{ v.phone }}</span>
+                                {% endfor %}
+                            </dd>
+                        {% endif %}
+
+                        {% if task_goods.transports.count > 0 %}
+                            <dt class="col-sm-4 pt-2 pb-2">{{ 'label.transports'|trans }}</dt>
+                            <dd class="col-sm-8 pt-2 pb-2">
+                                {% for v in task_goods.transports %}
+                                    <span class='callout callout-info p-2'>{{ v.fullName }}</span>
+                                {% endfor %}
+                            </dd>
+                        {% endif %}
+
+                        {% if task_goods.report %}
+                            <dt class="col-sm-4">{{ 'label.report'|trans }}</dt>
+                            <dd class="col-sm-8">{{ task_goods.report }}</dd>
+                        {% endif %}
+                    </dl>
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+{% endblock %}
+
+

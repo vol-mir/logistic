@@ -26,7 +26,7 @@ use Symfony\Component\Validator\Constraints\DateTime;
 use Symfony\Component\Validator\Constraints\PositiveOrZero;
 use Symfony\Component\Form\FormInterface;
 
-class TaskGoodsFullType extends AbstractType
+class TaskGoodsManagementType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {

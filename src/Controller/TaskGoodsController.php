@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\TaskGoods;
 use App\Entity\Organization;
-use App\Form\TaskGoodsFullType;
+use App\Form\TaskGoodsManagementType;
 use App\Form\TaskGoodsType;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
@@ -87,14 +87,14 @@ class TaskGoodsController extends AbstractController
                 {
                     case 'id':
                         {
-                            $elementTemp = "<a href='".$this->generateUrl('task_goods_edit', ['id' => $task_goods->getId()])."' class='float-left'>".$task_goods->getId()."</a>";
+                            $elementTemp = "<a href='".$this->generateUrl('task_goods_show', ['id' => $task_goods->getId()])."' class='float-left'>".$task_goods->getId()."</a>";
                             array_push($dataTemp, $elementTemp);
                             break;
                         }
 
                     case 'dateTaskGoods':
                         {
-                            $elementTemp = $task_goods->getDateTaskGoods()->format('d.m.Y');;
+                            $elementTemp = $task_goods->getDateTaskGoods()->format('d.m.Y');
                             array_push($dataTemp, $elementTemp);
                             break;
                         }
@@ -145,6 +145,7 @@ class TaskGoodsController extends AbstractController
                     case 'control':
                         {
                             $elementTemp = "<div class='btn-group btn-group-sm'>
+                                                <a href='".$this->generateUrl('task_goods_show', ['id' => $task_goods->getId()])."' class='btn btn-secondary'><i class='fas fa-eye'></i></a>
                                                 <a href='".$this->generateUrl('task_goods_edit', ['id' => $task_goods->getId()])."' class='btn btn-info'><i class='fas fa-edit'></i></a>
                                                 <a href='".$this->generateUrl('task_goods_edit_full', ['id' => $task_goods->getId()])."' class='btn btn-outline-info'><i class='fas fa-edit'></i></a>
                                                 <button type='button' class='btn btn-sm btn-danger float-left modal-delete-dialog' data-toggle='modal' data-id='".$task_goods->getId()."'><i class='fas fa-trash'></i></button>
@@ -263,8 +264,8 @@ class TaskGoodsController extends AbstractController
         $form = $this->createForm(TaskGoodsType::class, $task_goods);
         $form->handleRequest($request);
 
-        $formFull = $this->createForm(TaskGoodsFullType::class, $task_goods);
-        $formFull->handleRequest($request);
+        $formManagement = $this->createForm(TaskGoodsManagementType::class, $task_goods);
+        $formManagement->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
@@ -273,7 +274,7 @@ class TaskGoodsController extends AbstractController
             return $this->redirectToRoute('task_goods_index');
         }
 
-        if ($formFull->isSubmitted() && $formFull->isValid()) {
+        if ($formManagement->isSubmitted() && $formManagement->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
             $this->addFlash('success', $translator->trans('item.edited_successfully'));
@@ -282,8 +283,29 @@ class TaskGoodsController extends AbstractController
 
         return $this->render('task_goods/edit_full.html.twig', [
             'form' => $form->createView(),
-            'formFull' => $formFull->createView(),
+            'formManagement' => $formManagement->createView(),
             'task_goods' => $task_goods
+        ]);
+    }
+
+    /**
+     * Show task_goods
+     *
+     * @Route("/task/goods/{id}/show", methods="GET", name="task_goods_show", requirements={"id" = "\d+"})
+     *
+     * @param Request $request
+     * @param TaskGoods $task_goods
+     * @param TranslatorInterface $translator
+     *
+     * @return Response
+     */
+    public function show(Request $request, TaskGoods $task_goods, TranslatorInterface $translator) : Response
+    {
+        return $this->render('task_goods/show.html.twig', [
+            'task_goods' => $task_goods,
+            'units' => TaskGoods::LIST_UNITS,
+            'loading_natures'  => TaskGoods::LIST_LOADING_NATURES,
+            'statuses' => TaskGoods::STATUSES
         ]);
     }
 

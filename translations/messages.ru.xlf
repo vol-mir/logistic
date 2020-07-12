@@ -216,6 +216,14 @@
         <source>label.transports</source>
         <target>Транспорт</target>
       </trans-unit>
+      <trans-unit id="label.task_goods_id">
+        <source>label.task_goods_id</source>
+        <target>Код заявки</target>
+      </trans-unit>
+      <trans-unit id="label.created_at">
+        <source>label.created_at</source>
+        <target>Время создания</target>
+      </trans-unit>
 
       <trans-unit id="placeholder.not_specified">
         <source>placeholder.not_specified</source>
