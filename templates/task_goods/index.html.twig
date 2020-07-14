@@ -56,6 +56,10 @@
 {% block javascripts %}
     <script>
         $(function () {
+
+            let statusCheck = $('#status-check');
+            let statusSelect = $('#status-select');
+
             $('#reservation').daterangepicker({
                 startDate: moment().startOf('month'),
                 endDate: moment().endOf('month'),
@@ -99,6 +103,15 @@
                 }
             });
 
+            let state = table.state.loaded();
+            if (state) {
+                let colStatusSearch = state.columns[4].search;
+                if (colStatusSearch.search) {
+                    statusCheck.prop("checked", true);
+                    statusSelect.val(colStatusSearch.search);
+                }
+            }
+            
             $("#tasks-goods").on("click", ".modal-delete-dialog", function() {
                 $('#btn-modal-delete').attr("data-confirm-delete-id", $(this).attr('data-id'));
                 $('#modal-delete').modal('show');
@@ -122,6 +135,21 @@
                 $('#btn-modal-delete').attr("data-confirm-delete-id", null);
                 $('#modal-delete').modal('hide');
             });
+
+            statusCheck.on('change', function() {
+                if (this.checked) {
+                    table.column(4).search(statusSelect.val()).draw();
+                } else {
+                    table.column(4).search('').draw();
+                }
+            });
+
+            statusSelect.on('change', function() {
+                if (statusCheck.is(":checked")) {
+                    table.column(4).search(statusSelect.val()).draw();
+                }
+            });
+
         });
     </script>
 

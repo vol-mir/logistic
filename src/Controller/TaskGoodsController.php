@@ -44,7 +44,7 @@ class TaskGoodsController extends AbstractController
      *
      * @return JsonResponse
      */
-    public function listDatatableAction(Request $request, TranslatorInterface $translator) : JsonResponse
+    public function listDatatableAction(Request $request, TranslatorInterface $translator, LoggerInterface $logger) : JsonResponse
     {
         // Get the parameters from DataTable Ajax Call
         if ($request->getMethod() == 'POST') {

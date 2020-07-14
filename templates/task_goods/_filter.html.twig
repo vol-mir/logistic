@@ -28,7 +28,7 @@
                           <input type="checkbox">
                         </span>
                 </div>
-                <select class="form-control select2" data-width="80%">
+                <select class="form-control">
                     <option selected="selected">Мои</option>
                     <option>Отдел</option>
                 </select>
@@ -41,10 +41,10 @@
             <div class="input-group">
                 <div class="input-group-prepend">
                         <span class="input-group-text">
-                          <input type="checkbox">
+                          <input type="checkbox" id="status-check">
                         </span>
                 </div>
-                <select class="form-control select2" data-width="80%">
+                <select class="form-control" id="status-select">
                     {% for key, status in statuses %}
                         <option value="{{ key }}">{{ status|trans }}</option>
                     {% endfor %}

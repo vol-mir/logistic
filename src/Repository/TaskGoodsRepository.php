@@ -59,15 +59,33 @@ class TaskGoodsRepository extends ServiceEntityRepository
             // $searchItem is what we are looking for
             $searchItem = $search['value'];
             $searchQuery = 't0.id LIKE \'%' . $searchItem . '%\'';
-            $searchQuery = 't0.date_task_goods LIKE \'%' . $searchItem . '%\'';
+            // $searchQuery .= 't0.date_task_goods LIKE \'%' . $searchItem . '%\'';
             $searchQuery .= ' or t0.goods LIKE \'%' . $searchItem . '%\'';
             $searchQuery .= ' or t0.weight LIKE \'%' . $searchItem . '%\'';
-
             $searchQuery .= ' or t1.abbreviated_name LIKE \'%' . $searchItem . '%\'';
             $searchQuery .= ' or t1.registration_number LIKE \'%' . $searchItem . '%\'';
 
             $query->andWhere($searchQuery);
             $countQuery->andWhere($searchQuery);
+        }
+
+        foreach ($columns as $key => $column) {
+            if ($column['name'] != '') {
+                switch ($column['name']) {
+                    case 'status':
+                        {
+                            $columnSearch = $column['search'];
+                            if ($columnSearch['value'] != '') {
+                                $searchQuery = 't0.status LIKE \'%' . $columnSearch['value'] . '%\'';
+
+                                $query->andWhere($searchQuery);
+                                $countQuery->andWhere($searchQuery);
+                            }
+                            break;
+                        }
+                }
+            }
+
         }
 
         // Limit
