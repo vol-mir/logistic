@@ -59,20 +59,8 @@
 
             let statusCheck = $('#status-check');
             let statusSelect = $('#status-select');
-
-            $('#reservation').daterangepicker({
-                startDate: moment().startOf('month'),
-                endDate: moment().endOf('month'),
-                locale: {
-                    format: 'DD.MM.YYYY',
-                    applyLabel: 'Принять',
-                    cancelLabel: 'Отмена',
-                    invalidDateLabel: 'Выберите дату',
-                    daysOfWeek: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
-                    monthNames: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
-                    firstDay: 1
-                },
-            });
+            let dateCheck = $('#date-check');
+            let dateInput = $('#date-input');
 
             let table = $("#tasks-goods").DataTable({
                 "columnDefs": [
@@ -104,14 +92,40 @@
             });
 
             let state = table.state.loaded();
+
+            let startDate = moment().startOf('month');
+            let endDate = moment().endOf('month');
+
             if (state) {
                 let colStatusSearch = state.columns[4].search;
                 if (colStatusSearch.search) {
                     statusCheck.prop("checked", true);
                     statusSelect.val(colStatusSearch.search);
                 }
+
+                let colDateSearch = state.columns[1].search;
+                if (colDateSearch.search) {
+                    dateCheck.prop("checked", true);
+                    let period = JSON.parse(colDateSearch.search);
+                    startDate = new Date(Date.parse(period.startDate));
+                    endDate = new Date(Date.parse(period.endDate));
+                }
             }
-            
+
+            dateInput.daterangepicker({
+                startDate: startDate,
+                endDate: endDate,
+                locale: {
+                    format: 'DD.MM.YYYY',
+                    applyLabel: 'Принять',
+                    cancelLabel: 'Отмена',
+                    invalidDateLabel: 'Выберите дату',
+                    daysOfWeek: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
+                    monthNames: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
+                    firstDay: 1
+                },
+            });
+
             $("#tasks-goods").on("click", ".modal-delete-dialog", function() {
                 $('#btn-modal-delete').attr("data-confirm-delete-id", $(this).attr('data-id'));
                 $('#modal-delete').modal('show');
@@ -147,6 +161,30 @@
             statusSelect.on('change', function() {
                 if (statusCheck.is(":checked")) {
                     table.column(4).search(statusSelect.val()).draw();
+                }
+            });
+
+            dateCheck.on('change', function() {
+                let period = {
+                    startDate: dateInput.data('daterangepicker').startDate,
+                    endDate: dateInput.data('daterangepicker').endDate
+                };
+
+                if (this.checked) {
+                    table.column(1).search(JSON.stringify(period)).draw();
+                } else {
+                    table.column(1).search('').draw();
+                }
+            });
+
+            dateInput.on('change', function() {
+                let period = {
+                    startDate: dateInput.data('daterangepicker').startDate,
+                    endDate: dateInput.data('daterangepicker').endDate
+                };
+
+                if (dateCheck.is(":checked")) {
+                    table.column(1).search(JSON.stringify(period)).draw();
                 }
             });
 

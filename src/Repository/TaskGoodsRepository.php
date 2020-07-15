@@ -72,6 +72,29 @@ class TaskGoodsRepository extends ServiceEntityRepository
         foreach ($columns as $key => $column) {
             if ($column['name'] != '') {
                 switch ($column['name']) {
+                    case 'dateTaskGoods':
+                        {
+                            $columnSearch = $column['search'];
+                            if ($columnSearch['value'] != '') {
+
+                                $period = json_decode($columnSearch['value']);
+
+                                $startDate = ($period->startDate);
+                                $endDate = ($period->endDate);
+
+                                $query
+                                    ->andWhere('t0.date_task_goods BETWEEN :from AND :to')
+                                    ->setParameter('from', $startDate )
+                                    ->setParameter('to', $endDate);
+
+                                $countQuery
+                                    ->andWhere('t0.date_task_goods BETWEEN :from AND :to')
+                                    ->setParameter('from', $startDate )
+                                    ->setParameter('to', $endDate);
+                            }
+                            break;
+                        }
+
                     case 'status':
                         {
                             $columnSearch = $column['search'];
