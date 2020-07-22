@@ -15,11 +15,13 @@
                     <table id="tasks-goods" class="table table-bordered table-striped table-hover">
                         <thead>
                         <tr>
+                            <th class="toggle-all"><i id="select_all" name="select_invoice"></i></th>
                             <th>Код</th>
                             <th>Дата</th>
                             <th>Наименование груза, тара, вес</th>
                             <th>Организация</th>
                             <th>Статус</th>
+                            <th></th>
                             <th></th>
                         </tr>
                         </thead>
@@ -27,11 +29,13 @@
                         </tbody>
                         <tfoot>
                         <tr>
+                            <th></th>
                             <th>Код</th>
                             <th>Дата</th>
                             <th>Наименование груза, тара, вес</th>
                             <th>Организация</th>
                             <th>Статус</th>
+                            <th></th>
                             <th></th>
                         </tr>
                         </tfoot>
@@ -65,12 +69,14 @@
             let table = $("#tasks-goods").DataTable({
                 "columnDefs": [
                     // These are the column name variables that will be sent to the server
-                    { "name": "id", "targets": 0 },
-                    { "name": "dateTaskGoods", "targets": 1 },
-                    { "name": "goods",   "targets": 2 },
-                    { "name": "organization",   "targets": 3 },
-                    { "name": "status",   "targets": 4 },
-                    { "name": "control",  "targets": 5, "orderable": false, "searchable": false },
+                    { "name": "checkbox", "targets": 0, "orderable": false, "searchable": false, className: 'select-checkbox'},
+                    { "name": "id", "targets": 1 },
+                    { "name": "dateTaskGoods", "targets": 2 },
+                    { "name": "goods",   "targets": 3 },
+                    { "name": "organization",   "targets": 4 },
+                    { "name": "status",   "targets": 5 },
+                    { "name": "control",  "targets": 6, "orderable": false, "searchable": false },
+                    { "name": "yid", "visible": false, "targets": 7 },
                 ],
                 "ajax": {
                     "url": "{{ path('task_goods_datatables') }}",
@@ -85,10 +91,39 @@
                 "info" : true,
                 "searching": true,
                 "pageLength": 10,
-                "order": [[0, 'asc']],
+                "order": [[1, 'asc']],
                 "language": {
                     "url": "{{ asset('dist/json/dataTables.ru.lang.json') }}"
+                },
+                "select": {
+                    "style": "multi",
+                    "selector": "td:first-child"
+
+                },
+            }).on( 'select.dt deselect.dt',  function (evtObj) {
+                var all = table.rows().nodes().length;
+                var sel = table.rows(".selected").nodes().length;
+
+                if(all === sel){
+
+                    $(".toggle-all").closest("tr").addClass("selected");
                 }
+                else{
+
+                    $(".toggle-all").closest("tr").removeClass("selected");
+                }
+
+            } );
+
+            $('#tasks-goods').on('click', '.toggle-all', function() {
+                $(this).closest("tr").toggleClass("selected");
+                if($(this).closest("tr").hasClass("selected")){
+                    table.rows().select();
+                }
+                else {
+                    table.rows().deselect();
+                }
+
             });
 
             let state = table.state.loaded();
@@ -148,6 +183,39 @@
 
                 $('#btn-modal-delete').attr("data-confirm-delete-id", null);
                 $('#modal-delete').modal('hide');
+            });
+
+            $(".invoice").on("click", function() {
+
+                let tasksGoodsPint = table.rows(".selected").data().pluck(7).toArray();
+                let url = "{{path('task_goods_invoice') }}";
+
+                $.ajax({
+                    type: 'post',
+                    url: url,
+                    data: { '_method':'post','_token':'{{ csrf_token('task-goods-invoice') }}', 'tasksGoodsPint': tasksGoodsPint },
+                    dataType: 'json'
+                }).done(function(data) {
+                    let params  = 'width='+screen.width;
+                    params += ', height='+screen.height;
+                    params += ', top=0, left=0'
+                    params += ', fullscreen=yes';
+                    params += ', directories=no';
+                    params += ', location=no';
+                    params += ', menubar=no';
+                    params += ', resizable=no';
+                    params += ', scrollbars=no';
+                    params += ', status=no';
+                    params += ', toolbar=no';
+
+                    let printPage = window.open("", "Print", params);
+                    printPage.document.writeln(data.report);
+                    printPage.document.close();
+                    printPage.focus();
+                    printPage.print();
+                    printPage.close();
+                });
+
             });
 
             statusCheck.on('change', function() {

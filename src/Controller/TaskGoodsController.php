@@ -87,6 +87,11 @@ class TaskGoodsController extends AbstractController
             {
                 switch($column['name'])
                 {
+                    case 'checkbox':
+                        {
+                            array_push($dataTemp, "");
+                            break;
+                        }
                     case 'id':
                         {
                             $elementTemp = "<a href='".$this->generateUrl('task_goods_show', ['id' => $task_goods->getId()])."' class='float-left'>".$task_goods->getId()."</a>";
@@ -152,6 +157,12 @@ class TaskGoodsController extends AbstractController
                                                 <a href='".$this->generateUrl('task_goods_edit_full', ['id' => $task_goods->getId()])."' class='btn btn-outline-info'><i class='fas fa-edit'></i></a>
                                                 <button type='button' class='btn btn-sm btn-danger float-left modal-delete-dialog' data-toggle='modal' data-id='".$task_goods->getId()."'><i class='fas fa-trash'></i></button>
                                             </div>";
+                            array_push($dataTemp, $elementTemp);
+                            break;
+                        }
+                    case 'yid':
+                        {
+                            $elementTemp = $task_goods->getId();
                             array_push($dataTemp, $elementTemp);
                             break;
                         }
@@ -331,5 +342,29 @@ class TaskGoodsController extends AbstractController
         }
 
         return new JsonResponse(['message' => $translator->trans('item.deleted_successfully')]);
+    }
+
+    /**
+     * Invoice page
+     *
+     * @Route("/tasks/goods/invoice",  methods="POST", name="task_goods_invoice")
+     *
+     * @return Response
+     */
+    public function invoice(Request $request, LoggerInterface $logger) : Response
+    {
+        if ($this->isCsrfTokenValid('task-goods-invoice', $request->request->get('_token'))) {
+
+            $em = $this->getDoctrine()->getManager();
+            $tasks_goods = $em->getRepository(TaskGoods::class)->selectTasksGoods($request->request->get('tasksGoodsPint'));
+
+            return new JsonResponse(['report' => $this->render('task_goods/invoice.html.twig', [
+                'tasks_goods' => $tasks_goods,
+                'units' => TaskGoods::LIST_UNITS,
+                'loading_natures'  => TaskGoods::LIST_LOADING_NATURES,
+                'statuses' => TaskGoods::STATUSES
+            ])->getContent()]);
+
+        }
     }
 }

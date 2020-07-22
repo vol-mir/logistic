@@ -159,4 +159,17 @@ class TaskGoodsRepository extends ServiceEntityRepository
             "countResult" => $countResult
         );
     }
+
+
+    // Get the select tasks goods
+    public function selectTasksGoods($ids)
+    {
+        return $this
+            ->createQueryBuilder('t0')
+            ->join('t0.organization', 't1')
+            ->andWhere('t0.id IN (:ids)')
+            ->setParameter('ids', $ids)
+            ->getQuery()
+            ->getResult();
+    }
 }

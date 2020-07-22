@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style type="text/css">
+        @page {
+            size: auto;
+            margin: 10mm 10mm 15mm 10mm;
+        }
+
+        body {
+            margin:0;
+            padding:0;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+        }
+
+        .block-right {
+            display: flex;
+            justify-content: flex-end
+        }
+
+        table {
+            page-break-inside:avoid;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+
+        tr {
+            page-break-inside:avoid;
+            page-break-after:auto;
+            border: 1px solid grey;
+        }
+
+        td {
+            border: 1px solid grey;
+            padding: 2px;
+        }
+
+        .text-right{
+            text-align: right;
+        }
+
+        .text-center{
+            text-align: center;
+        }
+
+        .text-justify{
+            text-align: justify;
+        }
+
+        .column {
+            float: left;
+            width: 50%;
+        }
+
+        /* Clear floats after the columns */
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+    </style>
+
+</head>
+<body>
+<div class="invoice">
+    <div class="text-right">
+        <small>Ф 4.29-019</small>
+    </div>
+
+    <div class="block-right">
+        <div><br>_______________ Утверждаю:<br>Заместитель директора<br>И.И. Иванов</div>
+    </div>
+
+    <p>
+        <u>&nbsp;&nbsp;Отдел&nbsp;&nbsp;</u>
+        <br>{{ "now"|date("d.m.Y") }}
+    </p>
+
+    <p class="text-center">ЗАЯВКА</p>
+
+    <p class="text-justify">Прошу Вас дать указание начальнику АТЦ выделить транспорт для перевозки следующих грузов:</p>
+
+    {% for task_goods in tasks_goods %}
+        <table class="table page-break">
+            <tr>
+                <td class="font-weight-bold" colspan="8">
+                    <strong>{{ loop.index }})</strong> {{ task_goods.dateTaskGoods|date("d.m.Y") }}; код заявки: <strong>{{ task_goods.id }}</strong>; cтатус
+                    заявки: {{ statuses[task_goods.status]|trans }}
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="3">1. Наименование груза, тара</td>
+                <td colspan="5">{{ task_goods.goods }}</td>
+            </tr>
+
+            <tr>
+                <td colspan="1">2. Вес</td>
+                <td colspan="2" width="25%">{{ task_goods.weight }} {{ units[task_goods.unit]|trans }}</td>
+                <td colspan="3">3. Размеры (Д х Ш х В)/ объем</td>
+                <td colspan="2" width="25%">{{ task_goods.dimensions }}</td>
+            </tr>
+
+            <tr>
+                <td colspan="1">4. Количество грузовых мест</td>
+                <td colspan="1">{{ task_goods.numberOfPackages }}</td>
+                <td colspan="4">5. Характер погрузки / выгрузки</td>
+                <td colspan="2">{{ loading_natures[task_goods.loadingNature]|trans }}</td>
+            </tr>
+
+            <tr width="100%">
+                <td colspan="3">6. Наименование предприятия, учреждения, организации</td>
+                <td colspan="5">{{ task_goods.organization }}</td>
+            </tr>
+
+            <tr>
+                <td colspan="2">7. Адрес офиса</td>
+                <td colspan="6">
+                    {% if task_goods.addressOffice %}
+                        {{ task_goods.addressOffice.fullAddress }}
+                    {% endif %}
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="2">8. Адрес погрузки (выгрузки)</td>
+                <td colspan="6">{{ task_goods.addressGoodsYard.fullAddress }}</td>
+            </tr>
+
+            <tr>
+                <td colspan="2" width="30%">9. Контактное лицо на зугрузке / выгрузке - телефон</td>
+                <td colspan="2" width="25%">{{ task_goods.contactPerson }}</td>
+                <td colspan="2" width="20%">10. Время работы</td>
+                <td colspan="2" width="25%">{{ task_goods.workingHours}}</td>
+            </tr>
+
+            <tr>
+                <td colspan="2" width="30%">11. Исполнитель в отделе:</td>
+                <td colspan="6" width="70%"></td>
+            </tr>
+        </table>
+    {% endfor %}
+
+    <div class="row">
+        <div class="column"><p class="text-center">_____________________<br><small>(Подпись)</small></p></div>
+        <div class="column"><p class="text-center">_____________________<br><small>(Должность, ФИО)</small></p></div>
+    </div>
+
+</div>
+
+</body>
+</html>
