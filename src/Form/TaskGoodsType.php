@@ -228,7 +228,7 @@ class TaskGoodsType extends AbstractType
 
             $form->add('contact_person', TextareaType::class, [
                 'label' => 'label.contact_person',
-                'data' => $dataContactPerson ? $dataContactPerson : $organization->getBaseContactPerson(),
+                'data' => $dataContactPerson ? $dataContactPerson : ($organization ? $organization->getBaseContactPerson() : null),
                 'attr' => [
                     'placeholder' => 'label.contact_person',
                     'title' => 'label.contact_person',
@@ -242,7 +242,7 @@ class TaskGoodsType extends AbstractType
 
             $form->add('working_hours', TextareaType::class, [
                 'label' => 'label.working_hours',
-                'data' => $dataWorkingHours ? $dataWorkingHours : $organization->getBaseWorkingHours(),
+                'data' => $dataWorkingHours ? $dataWorkingHours : ($organization ? $organization->getBaseWorkingHours() : null),
                 'attr' => [
                     'placeholder' => 'label.working_hours',
                     'title' => 'label.working_hours',

@@ -29,8 +29,10 @@
                         </span>
                 </div>
                 <select class="form-control">
-                    <option selected="selected">Мои</option>
-                    <option>Отдел</option>
+                    <option value="1000" selected="selected">Мои</option>
+                    {% for key, department in departments %}
+                        <option value="{{ key }}">{{ department|trans }}</option>
+                    {% endfor %}
                 </select>
             </div>
         </div>

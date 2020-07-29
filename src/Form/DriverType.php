@@ -33,7 +33,8 @@ class DriverType extends AbstractType
                 'attr' => [
                     'placeholder' => 'label.first_name',
                     'title' => 'label.first_name',
-                    'class' => 'form-control'
+                    'class' => 'form-control',
+                    'name' => 'driver_first_name'
                 ],
                 'constraints' => [
                     new NotBlank(),
@@ -45,7 +46,8 @@ class DriverType extends AbstractType
                 'attr' => [
                     'placeholder' => 'label.middle_name',
                     'title' => 'label.middle_name',
-                    'class' => 'form-control'
+                    'class' => 'form-control',
+                    'name' => 'driver_middle_name'
                 ],
                 'constraints' => [
                     new NotBlank(),

@@ -55,9 +55,15 @@
 
         <!-- Right navbar links -->
         <ul class="navbar-nav ml-auto">
-            <li class="nav-item d-none d-sm-inline-block">
-                <a href="#" class="nav-link">Выйти</a>
-            </li>
+            {% if app.user %}
+                <li class="nav-item d-none d-sm-inline-block">
+                    <a href="{{ path('app_logout') }}" class="nav-link">Выйти</a>
+                </li>
+            {% else %}
+                <li class="nav-item d-none d-sm-inline-block">
+                    <a href="{{ path('app_login') }}" class="nav-link">Войти</a>
+                </li>
+            {% endif %}
         </ul>
     </nav>
     <!-- /.navbar -->
@@ -74,11 +80,13 @@
         <!-- Sidebar -->
         <div class="sidebar">
             <!-- Sidebar user panel (optional) -->
-            <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-                <div class="info">
-                    <a href="#" class="d-block">Иванов Иван</a>
+            {% if app.user %}
+                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                    <div class="info">
+                        <a href="#" class="d-block">{{ app.user.getFullName() }}</a>
+                    </div>
                 </div>
-            </div>
+            {% endif %}
 
             <!-- Sidebar Menu -->
             <nav class="mt-2">
@@ -93,9 +101,10 @@
                         </a>
                     </li>
 
-                    <li class="nav-header">СПРАВОЧНИКИ</li>
+                    {% if is_granted("ROLE_ADMIN") or is_granted("ROLE_DISPATCHER") or is_granted("ROLE_OPERATOR") %}
+                        <li class="nav-header">СПРАВОЧНИКИ</li>
 
-                    <li class="nav-item">
+                        <li class="nav-item">
                         <a href="{{ path('organization_index') }}" class="nav-link {% if app.request.get('_route') == 'organization_index' %} active {% endif %}" class="nav-link">
                             <i class="fas fa-circle nav-icon"></i>
                             <p>
@@ -103,28 +112,35 @@
                             </p>
                         </a>
                     </li>
+                    {% endif %}
 
-                    <li class="nav-item">
-                        <a href="{{ path('driver_index') }}" class="nav-link {% if app.request.get('_route') == 'driver_index' %} active {% endif %}">
-                            <i class="fas fa-circle nav-icon"></i>
-                            <p>
-                                {{ 'menu.drivers'|trans }}
-                            </p>
-                        </a>
-                    </li>
+                    {% if is_granted("ROLE_ADMIN") or is_granted("ROLE_DISPATCHER") %}
 
-                    <li class="nav-item">
-                        <a href="{{ path('transport_index') }}" class="nav-link {% if app.request.get('_route') == 'transport_index' %} active {% endif %}" class="nav-link">
-                            <i class="fas fa-circle nav-icon"></i>
-                            <p>
-                                {{ 'menu.transport'|trans }}
-                            </p>
-                        </a>
-                    </li>
+                        <li class="nav-item">
+                            <a href="{{ path('driver_index') }}" class="nav-link {% if app.request.get('_route') == 'driver_index' %} active {% endif %}">
+                                <i class="fas fa-circle nav-icon"></i>
+                                <p>
+                                    {{ 'menu.drivers'|trans }}
+                                </p>
+                            </a>
+                        </li>
+                    {% endif %}
 
-                    <li class="nav-header">ЖУРНАЛЫ</li>
+                    {% if is_granted("ROLE_ADMIN") or is_granted("ROLE_DISPATCHER") %}
+                        <li class="nav-item">
+                            <a href="{{ path('transport_index') }}" class="nav-link {% if app.request.get('_route') == 'transport_index' %} active {% endif %}" class="nav-link">
+                                <i class="fas fa-circle nav-icon"></i>
+                                <p>
+                                  {{ 'menu.transport'|trans }}
+                                </p>
+                            </a>
+                        </li>
+                    {% endif %}
 
-                    <li class="nav-item">
+                    {% if is_granted("ROLE_ADMIN") or is_granted("ROLE_DISPATCHER") or is_granted("ROLE_OPERATOR") %}
+                        <li class="nav-header">ЖУРНАЛЫ</li>
+
+                        <li class="nav-item">
                         <a href="{{ path('task_goods_index') }}" class="nav-link {% if app.request.get('_route') == 'task_goods_index' %} active {% endif %}" class="nav-link">
 
                             <i class="fas fa-book nav-icon"></i>
@@ -133,32 +149,23 @@
                             </p>
                         </a>
                     </li>
+                    {% endif %}
 
-                    <li class="nav-header">АДМИНИСТРИРОВАНИЕ</li>
+                    {% if is_granted("ROLE_ADMIN") %}
 
-                    <li class="nav-item has-treeview">
-                        <a href="" class="nav-link">
-                            <i class="nav-icon fas fa-users"></i>
-                            <p>
-                                Управление
-                                <i class="right fas fa-angle-left"></i>
-                            </p>
-                        </a>
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Пользователи</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Роли</p>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
+                        <li class="nav-header">АДМИНИСТРИРОВАНИЕ</li>
+
+                        <li class="nav-item">
+                            <a href="{{ path('user_index') }}" class="nav-link" class="nav-link">
+
+                                <i class="fas fa-users nav-icon"></i>
+                                <p>
+                                    {{ 'menu.users'|trans }}
+                                </p>
+                            </a>
+                        </li>
+                    {% endif %}
+
                 </ul>
             </nav>
             <!-- /.sidebar-menu -->

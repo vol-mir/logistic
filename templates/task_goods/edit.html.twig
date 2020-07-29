@@ -47,7 +47,7 @@
                     let $taskGoodsAddressOffice = $('#task_goods_address_office');
                     $taskGoodsAddressOffice.empty().trigger("change");
                     $taskGoodsAddressOffice.select2({ data:[
-                            {id: '', text: '{{ 'placeholder.address_office'|trans }}'}
+                            {id: '', text: '{{ 'placeholder.not_specified'|trans }}'}
                         ]});
                     $taskGoodsAddressOffice.select2({ data: data["addressesOrganization"]});
 

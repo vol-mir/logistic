@@ -61,6 +61,9 @@
     <script>
         $(function () {
 
+            let columnDateTaskGoods = 2;
+            let columnStatus = 5;
+
             let statusCheck = $('#status-check');
             let statusSelect = $('#status-select');
             let dateCheck = $('#date-check');
@@ -132,13 +135,13 @@
             let endDate = moment().endOf('month');
 
             if (state) {
-                let colStatusSearch = state.columns[4].search;
+                let colStatusSearch = state.columns[columnStatus].search;
                 if (colStatusSearch.search) {
                     statusCheck.prop("checked", true);
                     statusSelect.val(colStatusSearch.search);
                 }
 
-                let colDateSearch = state.columns[1].search;
+                let colDateSearch = state.columns[columnDateTaskGoods].search;
                 if (colDateSearch.search) {
                     dateCheck.prop("checked", true);
                     let period = JSON.parse(colDateSearch.search);
@@ -220,15 +223,15 @@
 
             statusCheck.on('change', function() {
                 if (this.checked) {
-                    table.column(4).search(statusSelect.val()).draw();
+                    table.column(columnStatus).search(statusSelect.val()).draw();
                 } else {
-                    table.column(4).search('').draw();
+                    table.column(columnStatus).search('').draw();
                 }
             });
 
             statusSelect.on('change', function() {
                 if (statusCheck.is(":checked")) {
-                    table.column(4).search(statusSelect.val()).draw();
+                    table.column(columnStatus).search(statusSelect.val()).draw();
                 }
             });
 
@@ -239,9 +242,9 @@
                 };
 
                 if (this.checked) {
-                    table.column(1).search(JSON.stringify(period)).draw();
+                    table.column(columnDateTaskGoods).search(JSON.stringify(period)).draw();
                 } else {
-                    table.column(1).search('').draw();
+                    table.column(columnDateTaskGoods).search('').draw();
                 }
             });
 
@@ -252,7 +255,7 @@
                 };
 
                 if (dateCheck.is(":checked")) {
-                    table.column(1).search(JSON.stringify(period)).draw();
+                    table.column(columnDateTaskGoods).search(JSON.stringify(period)).draw();
                 }
             });
 

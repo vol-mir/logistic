@@ -63,6 +63,10 @@
         <source>menu.tasks_goods</source>
         <target>Заявки на транспорт</target>
       </trans-unit>
+      <trans-unit id="menu.users">
+        <source>menu.users</source>
+        <target>Пользователи</target>
+      </trans-unit>
 
       <trans-unit id="label.first_name">
         <source>label.first_name</source>
@@ -225,6 +229,23 @@
         <target>Время создания</target>
       </trans-unit>
 
+      <trans-unit id="label.username">
+        <source>label.username</source>
+        <target>Табельный номер</target>
+      </trans-unit>
+      <trans-unit id="label.department">
+        <source>label.department</source>
+        <target>Отдел</target>
+      </trans-unit>
+      <trans-unit id="label.plain_password">
+        <source>label.plain_password</source>
+        <target>Пароль</target>
+      </trans-unit>
+      <trans-unit id="label.roles">
+        <source>label.roles</source>
+        <target>Роли</target>
+      </trans-unit>
+
       <trans-unit id="placeholder.not_specified">
         <source>placeholder.not_specified</source>
         <target>Не указан</target>
@@ -335,7 +356,6 @@
         <target>Не выполнена</target>
       </trans-unit>
 
-
       <trans-unit id="loading_natures.manual">
         <source>loading_natures.manual</source>
         <target>Ручная загрузка</target>
@@ -351,6 +371,51 @@
       <trans-unit id="loading_natures.rear">
         <source>loading_natures.rear</source>
         <target>Задняя загрузка</target>
+      </trans-unit>
+
+      <trans-unit id="department.oit">
+        <source>department.oit</source>
+        <target>ОИТ</target>
+      </trans-unit>
+      <trans-unit id="department.op">
+        <source>department.op</source>
+        <target>ОП</target>
+      </trans-unit>
+      <trans-unit id="department.om">
+        <source>department.om</source>
+        <target>ОМ</target>
+      </trans-unit>
+      <trans-unit id="department.omtsvk">
+        <source>department.omtsvk</source>
+        <target>ОМТСиВК</target>
+      </trans-unit>
+      <trans-unit id="department.ogt">
+        <source>department.ogt</source>
+        <target>ОГТ</target>
+      </trans-unit>
+      <trans-unit id="department.ogk">
+        <source>department.ogk</source>
+        <target>ОГК</target>
+      </trans-unit>
+      <trans-unit id="department.oge">
+        <source>department.oge</source>
+        <target>ОГЭ</target>
+      </trans-unit>
+      <trans-unit id="department.rsmy">
+        <source>department.rsmy</source>
+        <target>РСМУ</target>
+      </trans-unit>
+      <trans-unit id="department.atc">
+        <source>department.atc</source>
+        <target>АТЦ</target>
+      </trans-unit>
+      <trans-unit id="department.cil">
+        <source>department.cil</source>
+        <target>ЦИЛ</target>
+      </trans-unit>
+      <trans-unit id="department.ogm">
+        <source>department.ogm</source>
+        <target>ОГМ</target>
       </trans-unit>
 
     </body>

@@ -15,11 +15,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
  *
  * Class AddressController
  * @package App\Controller
+ * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_DISPATCHER') or is_granted('ROLE_OPERATOR')", statusCode=404, message="Post not found")
  *
  * @Route("/organization/{organization_id}", requirements={"organization_id" = "\d+"});
  * @ParamConverter("organization", options={"id" = "organization_id"})

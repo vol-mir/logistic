@@ -56,6 +56,7 @@ class AddressType extends AbstractType
             ])
             ->add('region', TextType::class, [
                 'label' => 'label.region',
+                'required' => false,
                 'attr' => [
                     'placeholder' => 'label.region',
                     'title' => 'label.region',

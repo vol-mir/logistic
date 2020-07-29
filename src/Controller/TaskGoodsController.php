@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\TaskGoods;
+use App\Entity\User;
 use App\Entity\Organization;
 use App\Form\TaskGoodsManagementType;
 use App\Form\TaskGoodsType;
@@ -17,7 +18,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
+/**
+ * Class TaskGoodsController
+ * @package App\Controller
+ * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_DISPATCHER') or is_granted('ROLE_OPERATOR')", statusCode=404, message="Post not found")
+ */
 class TaskGoodsController extends AbstractController
 {
     /**
@@ -27,16 +34,17 @@ class TaskGoodsController extends AbstractController
      *
      * @return Response
      */
-    public function index() : Response
+    public function index(): Response
     {
         return $this->render('task_goods/index.html.twig', [
+            'departments' => User::DEPARTMENTS,
             'statuses' => TaskGoods::STATUSES
         ]);
     }
 
     /**
      * Data for datatables
-     *
+     *;
      * @Route("/task/goods/datatables", methods="POST", name="task_goods_datatables")
      *
      * @param Request $request
@@ -44,7 +52,7 @@ class TaskGoodsController extends AbstractController
      *
      * @return JsonResponse
      */
-    public function listDatatableAction(Request $request, TranslatorInterface $translator, LoggerInterface $logger) : JsonResponse
+    public function listDatatableAction(Request $request, TranslatorInterface $translator, LoggerInterface $logger): JsonResponse
     {
         // Get the parameters from DataTable Ajax Call
         if ($request->getMethod() == 'POST') {
@@ -54,13 +62,11 @@ class TaskGoodsController extends AbstractController
             $search = $request->request->get('search');
             $orders = $request->request->get('order');
             $columns = $request->request->get('columns');
-        }
-        else // If the request is not a POST one, die hard
+        } else // If the request is not a POST one, die hard
             die;
 
         // Orders
-        foreach ($orders as $key => $order)
-        {
+        foreach ($orders as $key => $order) {
             // Orders does not contain the name of the column, but its number,
             // so add the name so we can handle it just like the $columns array
             $orders[$key]['name'] = $columns[$order['column']]['name'];
@@ -80,13 +86,10 @@ class TaskGoodsController extends AbstractController
         $filtered_objects_count = $results["countResult"];
 
         $data = [];
-        foreach ($objects as $key => $task_goods)
-        {
+        foreach ($objects as $key => $task_goods) {
             $dataTemp = [];
-            foreach ($columns as $key => $column)
-            {
-                switch($column['name'])
-                {
+            foreach ($columns as $key => $column) {
+                switch ($column['name']) {
                     case 'checkbox':
                         {
                             array_push($dataTemp, "");
@@ -94,7 +97,7 @@ class TaskGoodsController extends AbstractController
                         }
                     case 'id':
                         {
-                            $elementTemp = "<a href='".$this->generateUrl('task_goods_show', ['id' => $task_goods->getId()])."' class='float-left'>".$task_goods->getId()."</a>";
+                            $elementTemp = "<a href='" . $this->generateUrl('task_goods_show', ['id' => $task_goods->getId()]) . "' class='float-left'>" . $task_goods->getId() . "</a>";
                             array_push($dataTemp, $elementTemp);
                             break;
                         }
@@ -108,14 +111,14 @@ class TaskGoodsController extends AbstractController
 
                     case 'goods':
                         {
-                            $elementTemp = $task_goods->getGoods().', '.$task_goods->getWeight().' '.$translator->trans(TaskGoods::LIST_UNITS[$task_goods->getUnit()]);
+                            $elementTemp = $task_goods->getGoods() . ', ' . $task_goods->getWeight() . ' ' . $translator->trans(TaskGoods::LIST_UNITS[$task_goods->getUnit()]);
                             array_push($dataTemp, $elementTemp);
                             break;
                         }
 
                     case 'organization':
                         {
-                            $elementTemp = $task_goods->getOrganization()->getAbbreviatedName().', '.$task_goods->getOrganization()->getRegistrationNumber();
+                            $elementTemp = $task_goods->getOrganization()->getAbbreviatedName() . ', ' . $task_goods->getOrganization()->getRegistrationNumber();
                             array_push($dataTemp, $elementTemp);
                             break;
                         }
@@ -124,25 +127,25 @@ class TaskGoodsController extends AbstractController
                         {
                             switch ($task_goods->getStatus()) {
                                 case 1:
-                                    $elementTemp = "<span class='badge badge-primary'>".$translator->trans(TaskGoods::STATUSES[$task_goods->getStatus()])."</span>";
+                                    $elementTemp = "<span class='badge badge-primary'>" . $translator->trans(TaskGoods::STATUSES[$task_goods->getStatus()]) . "</span>";
                                     break;
                                 case 2:
-                                    $elementTemp = "<span class='badge badge-warning'>".$translator->trans(TaskGoods::STATUSES[$task_goods->getStatus()])."</span>";
+                                    $elementTemp = "<span class='badge badge-warning'>" . $translator->trans(TaskGoods::STATUSES[$task_goods->getStatus()]) . "</span>";
                                     break;
                                 case 3:
-                                    $elementTemp = "<span class='badge badge-light'>".$translator->trans(TaskGoods::STATUSES[$task_goods->getStatus()])."</span>";
+                                    $elementTemp = "<span class='badge badge-light'>" . $translator->trans(TaskGoods::STATUSES[$task_goods->getStatus()]) . "</span>";
                                     break;
                                 case 4:
-                                    $elementTemp = "<span class='badge badge-dark'>".$translator->trans(TaskGoods::STATUSES[$task_goods->getStatus()])."</span>";
+                                    $elementTemp = "<span class='badge badge-dark'>" . $translator->trans(TaskGoods::STATUSES[$task_goods->getStatus()]) . "</span>";
                                     break;
                                 case 5:
-                                    $elementTemp = "<span class='badge badge-success'>".$translator->trans(TaskGoods::STATUSES[$task_goods->getStatus()])."</span>";
+                                    $elementTemp = "<span class='badge badge-success'>" . $translator->trans(TaskGoods::STATUSES[$task_goods->getStatus()]) . "</span>";
                                     break;
                                 case 6:
-                                    $elementTemp = "<span class='badge badge-danger'>".$translator->trans(TaskGoods::STATUSES[$task_goods->getStatus()])."</span>";
+                                    $elementTemp = "<span class='badge badge-danger'>" . $translator->trans(TaskGoods::STATUSES[$task_goods->getStatus()]) . "</span>";
                                     break;
                                 default:
-                                    $elementTemp = "<span class='badge badge-secondary'>".$translator->trans(TaskGoods::STATUSES[$task_goods->getStatus()])."</span>";
+                                    $elementTemp = "<span class='badge badge-secondary'>" . $translator->trans(TaskGoods::STATUSES[$task_goods->getStatus()]) . "</span>";
                             }
 
                             array_push($dataTemp, $elementTemp);
@@ -151,12 +154,22 @@ class TaskGoodsController extends AbstractController
 
                     case 'control':
                         {
-                            $elementTemp = "<div class='btn-group btn-group-sm'>
-                                                <a href='".$this->generateUrl('task_goods_show', ['id' => $task_goods->getId()])."' class='btn btn-secondary'><i class='fas fa-eye'></i></a>
-                                                <a href='".$this->generateUrl('task_goods_edit', ['id' => $task_goods->getId()])."' class='btn btn-info'><i class='fas fa-edit'></i></a>
-                                                <a href='".$this->generateUrl('task_goods_edit_full', ['id' => $task_goods->getId()])."' class='btn btn-outline-info'><i class='fas fa-edit'></i></a>
-                                                <button type='button' class='btn btn-sm btn-danger float-left modal-delete-dialog' data-toggle='modal' data-id='".$task_goods->getId()."'><i class='fas fa-trash'></i></button>
-                                            </div>";
+                            $buttonsForEdit = " <a href='" . $this->generateUrl('task_goods_edit', ['id' => $task_goods->getId()]) . "' class='btn btn-info'><i class='fas fa-edit'></i></a>";
+
+                            if (in_array('ROLE_DISPATCHER', $this->getUser()->getRoles(), true)) {
+
+                                $buttonsForEdit = "<a href='" . $this->generateUrl('task_goods_edit_full', ['id' => $task_goods->getId()]) . "' class='btn btn-outline-info'><i class='fas fa-edit'></i></a>";
+                            }
+                            if (in_array('ROLE_ADMIN', $this->getUser()->getRoles(), true)) {
+
+                                $buttonsForEdit = "<a href='" . $this->generateUrl('task_goods_edit', ['id' => $task_goods->getId()]) . "' class='btn btn-info'><i class='fas fa-edit'></i></a>" .
+                                    "<a href='" . $this->generateUrl('task_goods_edit_full', ['id' => $task_goods->getId()]) . "' class='btn btn-outline-info'><i class='fas fa-edit'></i></a>";
+                            }
+
+                            $elementTemp = "<div class='btn-group btn-group-sm'>" .
+                                "<a href='" . $this->generateUrl('task_goods_show', ['id' => $task_goods->getId()]) . "' class='btn btn-secondary'><i class='fas fa-eye'></i></a>" . $buttonsForEdit .
+                                "<button type='button' class='btn btn-sm btn-danger float-left modal-delete-dialog' data-toggle='modal' data-id='" . $task_goods->getId() . "'><i class='fas fa-trash'></i></button>" .
+                                "</div>";
                             array_push($dataTemp, $elementTemp);
                             break;
                         }
@@ -197,7 +210,7 @@ class TaskGoodsController extends AbstractController
      *
      * @return RedirectResponse|Response
      */
-    public function new(Request $request, TranslatorInterface $translator) : Response
+    public function new(Request $request, TranslatorInterface $translator): Response
     {
 
         $task_goods = new TaskGoods();
@@ -240,10 +253,11 @@ class TaskGoodsController extends AbstractController
      * @param Request $request
      * @param TaskGoods $task_goods
      * @param TranslatorInterface $translator
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_OPERATOR')", statusCode=404, message="Post not found")
      *
      * @return Response
      */
-    public function edit(Request $request, TaskGoods $task_goods, TranslatorInterface $translator) : Response
+    public function edit(Request $request, TaskGoods $task_goods, TranslatorInterface $translator): Response
     {
         $form = $this->createForm(TaskGoodsType::class, $task_goods);
         $form->handleRequest($request);
@@ -265,14 +279,14 @@ class TaskGoodsController extends AbstractController
      * Edit task_goods full
      *
      * @Route("/task/goods/{id}/edit/full", methods="GET|POST", name="task_goods_edit_full", requirements={"id" = "\d+"})
-     *
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_DISPATCHER')", statusCode=404, message="Post not found")
      * @param Request $request
      * @param TaskGoods $task_goods
      * @param TranslatorInterface $translator
      *
      * @return Response
      */
-    public function editFull(Request $request, TaskGoods $task_goods, TranslatorInterface $translator) : Response
+    public function editFull(Request $request, TaskGoods $task_goods, TranslatorInterface $translator): Response
     {
         $form = $this->createForm(TaskGoodsType::class, $task_goods);
         $form->handleRequest($request);
@@ -312,12 +326,12 @@ class TaskGoodsController extends AbstractController
      *
      * @return Response
      */
-    public function show(Request $request, TaskGoods $task_goods, TranslatorInterface $translator) : Response
+    public function show(Request $request, TaskGoods $task_goods, TranslatorInterface $translator): Response
     {
         return $this->render('task_goods/show.html.twig', [
             'task_goods' => $task_goods,
             'units' => TaskGoods::LIST_UNITS,
-            'loading_natures'  => TaskGoods::LIST_LOADING_NATURES,
+            'loading_natures' => TaskGoods::LIST_LOADING_NATURES,
             'statuses' => TaskGoods::STATUSES
         ]);
     }
@@ -333,7 +347,7 @@ class TaskGoodsController extends AbstractController
      *
      * @return JsonResponse
      */
-    public function delete(Request $request, TaskGoods $task_goods, TranslatorInterface $translator) : JsonResponse
+    public function delete(Request $request, TaskGoods $task_goods, TranslatorInterface $translator): JsonResponse
     {
         if ($this->isCsrfTokenValid('delete-item', $request->request->get('_token'))) {
             $em = $this->getDoctrine()->getManager();
@@ -351,7 +365,7 @@ class TaskGoodsController extends AbstractController
      *
      * @return Response
      */
-    public function invoice(Request $request, LoggerInterface $logger) : Response
+    public function invoice(Request $request, LoggerInterface $logger): Response
     {
         if ($this->isCsrfTokenValid('task-goods-invoice', $request->request->get('_token'))) {
 
@@ -361,7 +375,7 @@ class TaskGoodsController extends AbstractController
             return new JsonResponse(['report' => $this->render('task_goods/invoice.html.twig', [
                 'tasks_goods' => $tasks_goods,
                 'units' => TaskGoods::LIST_UNITS,
-                'loading_natures'  => TaskGoods::LIST_LOADING_NATURES,
+                'loading_natures' => TaskGoods::LIST_LOADING_NATURES,
                 'statuses' => TaskGoods::STATUSES
             ])->getContent()]);
 

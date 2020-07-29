@@ -2,47 +2,48 @@
 
 namespace App\Controller;
 
-use App\Entity\Transport;
-use App\Form\TransportType;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\User;
+use App\Form\UserType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Psr\Log\LoggerInterface;
 
 /**
- * Class TransportController
+ * Class UserController
  * @package App\Controller
- * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_DISPATCHER')", statusCode=404, message="Post not found")
+ * @Security("is_granted('ROLE_ADMIN')", statusCode=404, message="Post not found")
  */
-class TransportController extends AbstractController
+class UserController extends AbstractController
 {
     /**
      * Index page
      *
-     * @Route("/transports",  methods="GET", name="transport_index")
+     * @Route("/users", methods="GET", name="user_index")
      *
      * @return Response
      */
     public function index() : Response
     {
-        return $this->render('transport/index.html.twig');
+        return $this->render('user/index.html.twig');
     }
 
     /**
      * Data for datatables
      *
-     * @Route("/transport/datatables", methods="POST", name="transport_datatables")
+     * @Route("/user/datatables", methods="POST", name="user_datatables")
      *
      * @param Request $request
      *
      * @return JsonResponse
      */
-    public function listDatatableAction(Request $request) : JsonResponse
+    public function listDatatableAction(Request $request, TranslatorInterface $translator) : JsonResponse
     {
         // Get the parameters from DataTable Ajax Call
         if ($request->getMethod() == 'POST') {
@@ -68,51 +69,60 @@ class TransportController extends AbstractController
         $otherConditions = null;
 
         $em = $this->getDoctrine()->getManager();
-        $results = $em->getRepository(Transport::class)->getRequiredDTData($start, $length, $orders, $search, $columns, $otherConditions);
+        $results = $em->getRepository(User::class)->getRequiredDTData($start, $length, $orders, $search, $columns, $otherConditions);
 
         // Returned objects are of type Town
         $objects = $results["results"];
         // Get total number of objects
-        $total_objects_count = $em->getRepository(Transport::class)->countTransport();
+        $total_objects_count = $em->getRepository(User::class)->countUser();
         // Get total number of filtered data
         $filtered_objects_count = $results["countResult"];
 
         $data = [];
-        foreach ($objects as $key => $transport)
+        foreach ($objects as $key => $user)
         {
             $dataTemp = [];
             foreach ($columns as $key => $column)
             {
                 switch($column['name'])
                 {
-                    case 'number':
+                    case 'fullName':
                         {
-                            $elementTemp = "<a href='".$this->generateUrl('transport_edit', ['id' => $transport->getId()])."' class='float-left'>".$transport->getNumber()."</a>";
+                            $elementTemp = "<a href='".$this->generateUrl('user_edit', ['id' => $user->getId()])."' class='float-left'>".$user->getFullName()."</a>";
                             array_push($dataTemp, $elementTemp);
                             break;
                         }
 
-                    case 'marka':
+                    case 'userName':
                         {
-                            $elementTemp = $transport->getMarka();
+                            $elementTemp = $user->getUsername();
                             array_push($dataTemp, $elementTemp);
                             break;
                         }
 
-                    case 'model':
+                    case 'department':
                         {
-                            $elementTemp = $transport->getModel();
+                            $elementTemp = $translator->trans(User::DEPARTMENTS[$user->getDepartment()]);
+                            array_push($dataTemp, $elementTemp);
+                            break;
+                        }
+
+                    case 'roles':
+                        {
+                            $elementTemp = "";
+                            foreach ($user->getRoles() as $key => $val) {
+                                $elementTemp .= "<span class='badge badge-primary'>".$val."</span> ";
+                            }
                             array_push($dataTemp, $elementTemp);
                             break;
                         }
 
                     case 'control':
                         {
-                            $elementTemp = "<div class='btn-group btn-group-sm'><a href='".$this->generateUrl('transport_edit', ['id' => $transport->getId()])."' class='btn btn-info'><i class='fas fa-edit'></i></a><button type='button' class='btn btn-sm btn-danger float-left modal-delete-dialog' data-toggle='modal' data-id='".$transport->getId()."'><i class='fas fa-trash'></i></button></div>";
+                            $elementTemp = "<div class='btn-group btn-group-sm'><a href='".$this->generateUrl('user_edit', ['id' => $user->getId()])."' class='btn btn-info'><i class='fas fa-edit'></i></a><button type='button' class='btn btn-sm btn-danger float-left modal-delete-dialog' data-toggle='modal' data-id='".$user->getId()."'><i class='fas fa-trash'></i></button></div>";
                             array_push($dataTemp, $elementTemp);
                             break;
                         }
-
                 }
             }
             array_push($data, $dataTemp);
@@ -135,85 +145,104 @@ class TransportController extends AbstractController
     }
 
     /**
-     * Creates a new transport entity.
+     * Creates a new user entity.
      *
-     * @Route("/transport/new", methods="GET|POST", name="transport_new")
+     * @Route("/user/new", methods="GET|POST", name="user_new")
      *
      * @param Request $request
      * @param TranslatorInterface $translator
      *
      * @return RedirectResponse|Response
      */
-    public function new(Request $request, TranslatorInterface $translator) : Response
+    public function new(Request $request, TranslatorInterface $translator, UserPasswordEncoderInterface $encoder, LoggerInterface $logger) : Response
     {
-        $transport = new Transport();
-        $form = $this->createForm(TransportType::class, $transport)->add('saveAndCreateNew', SubmitType::class);
+        $user = new User();
+        $form = $this->createForm(UserType::class, $user)->add('saveAndCreateNew', SubmitType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $plainPassword = $form->get('plain_password')->getData();
+            if ($plainPassword) {
+                $encoded = $encoder->encodePassword($user, $plainPassword);
+                $user->setPassword($encoded);
+            }
+
+            $arrRoles = $form->get('roles')->getData();
+            if ($arrRoles) {
+                $user->setRoles($arrRoles);
+            }
+
             $em = $this->getDoctrine()->getManager();
-            $em->persist($transport);
+            $em->persist($user);
             $em->flush();
 
             $this->addFlash('success', $translator->trans('item.created_successfully'));
 
             if ($form->get('saveAndCreateNew')->isClicked()) {
-                return $this->redirectToRoute('transport_new');
+                return $this->redirectToRoute('user_new');
             }
 
-            return $this->redirectToRoute('transport_index');
+            return $this->redirectToRoute('user_index');
         }
 
-        return $this->render('transport/new.html.twig', [
+        return $this->render('user/new.html.twig', [
             'form' => $form->createView(),
         ]);
     }
 
     /**
-     * Edit transport
-     *
-     * @Route("/transport/{id}/edit", methods="GET|POST", name="transport_edit", requirements={"id" = "\d+"})
+     * Edit user
+
+     * @Route("/user/{id}/edit", methods="GET|POST", name="user_edit", requirements={"id" = "\d+"})
      *
      * @param Request $request
-     * @param Transport $transport
+     * @param User $user
      * @param TranslatorInterface $translator
      *
      * @return Response
      */
-    public function edit(Request $request, Transport $transport, TranslatorInterface $translator) : Response
+    public function edit(Request $request, User $user, TranslatorInterface $translator, UserPasswordEncoderInterface $encoder) : Response
     {
-        $form = $this->createForm(TransportType::class, $transport);
+        $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $plainPassword = $form->get('plain_password')->getData();
+            if ($plainPassword) {
+                $encoded = $encoder->encodePassword($user, $plainPassword);
+                $user->setPassword($encoded);
+            }
+
             $this->getDoctrine()->getManager()->flush();
 
             $this->addFlash('success', $translator->trans('item.edited_successfully'));
-            return $this->redirectToRoute('transport_index');
+            return $this->redirectToRoute('user_index');
         }
 
-        return $this->render('transport/edit.html.twig', [
+        return $this->render('user/edit.html.twig', [
             'form' => $form->createView(),
-            'transport' => $transport
+            'user' => $user
         ]);
     }
 
     /**
-     * Delete transport
+     * Delete user
      *
-     * @Route("/transport/{id}/delete", methods="DELETE", name="transport_delete", requirements={"id" = "\d+"})
+     * @Route("/user/{id}/delete", methods="DELETE", name="user_delete", requirements={"id" = "\d+"})
      *
      * @param Request $request
-     * @param Transport $transport
+     * @param User $user
      * @param TranslatorInterface $translator
      *
      * @return JsonResponse
      */
-    public function delete(Request $request, Transport $transport, TranslatorInterface $translator) : JsonResponse
+    public function delete(Request $request, User $user, TranslatorInterface $translator) : JsonResponse
     {
         if ($this->isCsrfTokenValid('delete-item', $request->request->get('_token'))) {
             $em = $this->getDoctrine()->getManager();
-            $em->remove($transport);
+            $em->remove($user);
             $em->flush();
         }
 
