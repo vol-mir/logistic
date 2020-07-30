@@ -108,7 +108,7 @@ class TaskGoodsRepository extends ServiceEntityRepository
                             if ($columnUser['value'] != '') {
 
                                 if ($columnUser['value'] == 1000) {
-                                    $searchQuery = 't2.id LIKE \'%' . $authUser->getId() . '%\'';
+                                    $searchQuery = 't2.id = \'' . $authUser->getId() . '\'';
                                 } else {
                                     $searchQuery = 't2.department LIKE \'%' . $columnUser['value'] . '%\'';
                                 }
