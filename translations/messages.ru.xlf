@@ -33,6 +33,10 @@
         <source>title.go_tasks_goods</source>
         <target>Перейти к заявкам</target>
       </trans-unit>
+      <trans-unit id="title.print">
+        <source>title.print</source>
+        <target>Печать</target>
+      </trans-unit>
 
       <trans-unit id="item.deleted_successfully">
         <source>item.deleted_successfully</source>
@@ -70,6 +74,10 @@
       <trans-unit id="menu.users">
         <source>menu.users</source>
         <target>Пользователи</target>
+      </trans-unit>
+      <trans-unit id="menu.task_driver">
+        <source>menu.task_driver</source>
+        <target>Задание водителю</target>
       </trans-unit>
 
       <trans-unit id="label.first_name">

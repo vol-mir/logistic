@@ -191,8 +191,6 @@ class TaskGoodsRepository extends ServiceEntityRepository
         );
     }
 
-
-    // Get the select tasks goods
     public function selectTasksGoods($ids)
     {
         return $this
@@ -201,6 +199,25 @@ class TaskGoodsRepository extends ServiceEntityRepository
             ->join('t0.user', 't2')
             ->andWhere('t0.id IN (:ids)')
             ->setParameter('ids', $ids)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function selectTasksGoodsForDriver($period, $driver)
+    {
+        $period = json_decode($period);
+        $startDate = ($period->startDate);
+        $endDate = ($period->endDate);
+
+        return $this
+            ->createQueryBuilder('t0')
+            ->join('t0.organization', 't1')
+            ->join('t0.user', 't2')
+            ->leftJoin('t0.drivers', 't3')
+            ->andWhere("t3 IN (:driver)")->setParameter(':driver', $driver)
+            ->andWhere('t0.date_task_goods BETWEEN :from AND :to')
+            ->setParameter('from', $startDate )
+            ->setParameter('to', $endDate)
             ->getQuery()
             ->getResult();
     }

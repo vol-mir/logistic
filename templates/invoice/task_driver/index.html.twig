@@ -67,28 +67,15 @@
 </head>
 <body>
 <div class="invoice">
-    <div class="text-right">
-        <small>Ф 4.29-019</small>
-    </div>
-
     <div class="block-right">
-        <div><br>_______________ Утверждаю:<br>Заместитель директора<br>И.И. Иванов</div>
+        <div>Задание к<br>путевому листу №_______ от _________<br>Водитель: <u>{{ driver.fullName }}</u></div>
     </div>
-
-    <p>
-        <u>&nbsp;&nbsp;{{ departments[user.department]|trans }}&nbsp;&nbsp;</u>
-        <br>{{ "now"|date("d.m.Y") }}
-    </p>
-
-    <p class="text-center">ЗАЯВКА</p>
-
-    <p class="text-justify">Прошу Вас дать указание начальнику АТЦ выделить транспорт для перевозки следующих грузов:</p>
 
     {% for task_goods in tasks_goods %}
         <table class="table page-break">
             <tr>
                 <td class="font-weight-bold" colspan="8">
-                    <strong>{{ loop.index }})</strong> {{ task_goods.dateTaskGoods|date("d.m.Y") }}; код заявки: <strong>{{ task_goods.id }}</strong>; cтатус
+                    <strong>{{ loop.index }})</strong> <strong><u>{{ task_goods.dateTaskGoods|date("d.m.Y") }}</u></strong>; код заявки: <strong>{{ task_goods.id }}</strong>; cтатус
                     заявки: {{ statuses[task_goods.status]|trans }}
                 </td>
             </tr>
@@ -141,6 +128,24 @@
             <tr>
                 <td colspan="2" width="30%">11. Исполнитель в отделе:</td>
                 <td colspan="6" width="70%">{{ task_goods.user.fullName }}, {{ departments[task_goods.user.department]|trans }}</td>
+            </tr>
+
+            <tr>
+                <td colspan="2" width="30%">12.1. Водитель:</td>
+                <td colspan="6" width="70%">
+                    {% for item_driver in task_goods.drivers %}
+                        {{ item_driver.fullName }};
+                    {% endfor %}
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="2" width="30%">12.2. Транспорт:</td>
+                <td colspan="6" width="70%">
+                    {% for item_transport in task_goods.transports %}
+                        {{ item_transport.fullName }};
+                    {% endfor %}
+                </td>
             </tr>
         </table>
     {% endfor %}

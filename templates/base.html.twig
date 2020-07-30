@@ -105,7 +105,7 @@
                         <li class="nav-header">СПРАВОЧНИКИ</li>
 
                         <li class="nav-item">
-                        <a href="{{ path('organization_index') }}" class="nav-link {% if app.request.get('_route') == 'organization_index' %} active {% endif %}" class="nav-link">
+                        <a href="{{ path('organization_index') }}" class="nav-link {% if app.request.get('_route') == 'organization_index' %} active {% endif %}">
                             <i class="fas fa-circle nav-icon"></i>
                             <p>
                                 {{ 'menu.organizations'|trans }}
@@ -128,7 +128,7 @@
 
                     {% if is_granted("ROLE_ADMIN") or is_granted("ROLE_DISPATCHER") %}
                         <li class="nav-item">
-                            <a href="{{ path('transport_index') }}" class="nav-link {% if app.request.get('_route') == 'transport_index' %} active {% endif %}" class="nav-link">
+                            <a href="{{ path('transport_index') }}" class="nav-link {% if app.request.get('_route') == 'transport_index' %} active {% endif %}">
                                 <i class="fas fa-circle nav-icon"></i>
                                 <p>
                                   {{ 'menu.transport'|trans }}
@@ -141,7 +141,7 @@
                         <li class="nav-header">ЖУРНАЛЫ</li>
 
                         <li class="nav-item">
-                        <a href="{{ path('task_goods_index') }}" class="nav-link {% if app.request.get('_route') == 'task_goods_index' %} active {% endif %}" class="nav-link">
+                        <a href="{{ path('task_goods_index') }}" class="nav-link {% if app.request.get('_route') == 'task_goods_index' %} active {% endif %}">
 
                             <i class="fas fa-book nav-icon"></i>
                             <p>
@@ -151,12 +151,37 @@
                     </li>
                     {% endif %}
 
+                    {% if is_granted("ROLE_ADMIN") or is_granted("ROLE_DISPATCHER") %}
+
+                        <li class="nav-header">ОТЧЕТЫ</li>
+
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-table"></i>
+                                <p>
+                                    Отчеты
+                                    <i class="fas fa-angle-left right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="{{ path('generation_task_driver_invoice') }}" class="nav-link {% if app.request.get('_route') == 'generation_task_driver_invoice' %} active {% endif %}">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>
+                                            {{ 'menu.task_driver'|trans }}
+                                        </p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    {% endif %}
+
                     {% if is_granted("ROLE_ADMIN") %}
 
                         <li class="nav-header">АДМИНИСТРИРОВАНИЕ</li>
 
                         <li class="nav-item">
-                            <a href="{{ path('user_index') }}" class="nav-link" class="nav-link">
+                            <a href="{{ path('user_index') }}" class="nav-link {% if app.request.get('_route') == 'user_index' %} active {% endif %}">
 
                                 <i class="fas fa-users nav-icon"></i>
                                 <p>
@@ -165,6 +190,7 @@
                             </a>
                         </li>
                     {% endif %}
+
 
                 </ul>
             </nav>

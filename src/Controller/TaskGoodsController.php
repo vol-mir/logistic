@@ -390,7 +390,8 @@ class TaskGoodsController extends AbstractController
                 'units' => TaskGoods::LIST_UNITS,
                 'loading_natures' => TaskGoods::LIST_LOADING_NATURES,
                 'statuses' => TaskGoods::STATUSES,
-                'departments' => User::DEPARTMENTS
+                'departments' => User::DEPARTMENTS,
+                'user' => $this->getUser()
             ])->getContent()]);
 
         }

@@ -1,0 +1,111 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Задание водителю{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-12">
+            <div class="card card-default">
+                <!-- form start -->
+
+                <form role="form">
+                    <div class="card-body">
+
+                        <div class="form-group">
+                            <label for="date-input">Период</label>
+                            <input type="text" class="form-control float-right" id="date-input">
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="date-input">Водитель</label>
+                            <select class="form-control" id="driver-select">
+                                {% for driver in drivers %}
+                                    <option value="{{ driver.id }}">{{ driver.fullName }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="card-footer">
+                    <button type="button" class="btn btn-default invoice"><i class='fas fa-print'></i> {{ 'title.print'|trans }}</button>
+                </div>
+            </div>
+            <!-- /.card -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+{% endblock %}
+
+
+{% block javascripts %}
+    <script>
+        $(function () {
+
+            let dateInput = $('#date-input');
+            let userSelect = $('#driver-select');
+
+            let startDate = moment().startOf('month');
+            let endDate = moment().endOf('month');
+
+            dateInput.daterangepicker({
+                startDate: startDate,
+                endDate: endDate,
+                locale: {
+                    format: 'DD.MM.YYYY',
+                    applyLabel: 'Принять',
+                    cancelLabel: 'Отмена',
+                    invalidDateLabel: 'Выберите дату',
+                    daysOfWeek: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
+                    monthNames: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
+                    firstDay: 1
+                },
+            });
+
+
+            $(".invoice").on("click", function() {
+
+                let period = {
+                    startDate: dateInput.data('daterangepicker').startDate,
+                    endDate: dateInput.data('daterangepicker').endDate
+                };
+
+                let driver = userSelect.val();
+
+                let url = "{{path('task_driver_invoice') }}";
+
+                $.ajax({
+                    type: 'post',
+                    url: url,
+                    data: { '_method':'post','_token':'{{ csrf_token('task_driver_invoice') }}', 'period': JSON.stringify(period), 'driver': driver },
+                    dataType: 'json'
+                }).done(function(data) {
+                    let params  = 'width='+screen.width;
+                    params += ', height='+screen.height;
+                    params += ', top=0, left=0'
+                    params += ', fullscreen=yes';
+                    params += ', directories=no';
+                    params += ', location=no';
+                    params += ', menubar=no';
+                    params += ', resizable=no';
+                    params += ', scrollbars=no';
+                    params += ', status=no';
+                    params += ', toolbar=no';
+
+                    let printPage = window.open("", "Print", params);
+                    printPage.document.writeln(data.report);
+                    printPage.document.close();
+                    printPage.focus();
+                    printPage.print();
+                    printPage.close();
+                });
+
+            });
+
+        });
+    </script>
+
+{% endblock %}
+
