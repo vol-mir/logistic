@@ -500,4 +500,11 @@ class TaskGoods
     {
         return $user && $user->getId() == $this->getUser()->getId();
     }
+
+    public function isOpen()
+    {
+        return $this->getStatus() == 1;
+    }
+
+
 }

@@ -170,6 +170,10 @@ class TaskGoodsController extends AbstractController
                                 $buttonsForEdit = "";
                                 $buttonsForDelete = "";
                             }
+                            if (in_array('ROLE_OPERATOR', $this->getUser()->getRoles(), true) && $task_goods->isAuthor($this->getUser()) && !$task_goods->isOpen()) {
+                                $buttonsForEdit = "";
+                                $buttonsForDelete = "";
+                            }
                             if (in_array('ROLE_DISPATCHER', $this->getUser()->getRoles(), true)) {
 
                                 $buttonsForEdit = "<a href='" . $this->generateUrl('task_goods_edit_full', ['id' => $task_goods->getId()]) . "' class='btn btn-outline-info'><i class='fas fa-edit'></i></a>";
@@ -265,7 +269,7 @@ class TaskGoodsController extends AbstractController
      * @param Request $request
      * @param TaskGoods $task_goods
      * @param TranslatorInterface $translator
-     * @Security("is_granted('ROLE_ADMIN') or (is_granted('ROLE_OPERATOR') and task_goods.isAuthor(user))", statusCode=404, message="Post not found")
+     * @Security("is_granted('ROLE_ADMIN') or (is_granted('ROLE_OPERATOR') and task_goods.isAuthor(user) and task_goods.isOpen())", statusCode=404, message="Post not found")
      *
      * @return Response
      */
@@ -352,7 +356,7 @@ class TaskGoodsController extends AbstractController
      * Delete task_goods
      *
      * @Route("/task/goods/{id}/delete", methods="DELETE", name="task_goods_delete", requirements={"id" = "\d+"})
-     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_DISPATCHER') or (is_granted('ROLE_OPERATOR') and task_goods.isAuthor(user))", statusCode=404, message="Post not found")
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_DISPATCHER') or (is_granted('ROLE_OPERATOR') and task_goods.isAuthor(user) and task_goods.isOpen())", statusCode=404, message="Post not found")
      *
      * @param Request $request
      * @param TaskGoods $task_goods
