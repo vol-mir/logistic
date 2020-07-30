@@ -29,6 +29,10 @@
         <source>title.back</source>
         <target>Назад</target>
       </trans-unit>
+      <trans-unit id="title.go_tasks_goods">
+        <source>title.go_tasks_goods</source>
+        <target>Перейти к заявкам</target>
+      </trans-unit>
 
       <trans-unit id="item.deleted_successfully">
         <source>item.deleted_successfully</source>

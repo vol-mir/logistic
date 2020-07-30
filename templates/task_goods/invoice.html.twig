@@ -140,7 +140,7 @@
 
             <tr>
                 <td colspan="2" width="30%">11. Исполнитель в отделе:</td>
-                <td colspan="6" width="70%"></td>
+                <td colspan="6" width="70%">{{ task_goods.user.fullName }}, {{ departments[task_goods.user.department]|trans }}</td>
             </tr>
         </table>
     {% endfor %}
