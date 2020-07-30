@@ -495,4 +495,9 @@ class TaskGoods
 
         return $this;
     }
+
+    public function isAuthor(User $user = null)
+    {
+        return $user && $user->getId() == $this->getUser()->getId();
+    }
 }
