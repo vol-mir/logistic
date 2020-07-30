@@ -18,7 +18,7 @@
                             <th class="toggle-all"><i id="select_all" name="select_invoice"></i></th>
                             <th>Код</th>
                             <th>Дата</th>
-                            <th>Наименование груза, тара, вес</th>
+                            <th>Наименование груза, тара, вес, примечание</th>
                             <th>Организация</th>
                             <th>Сотрудник, отдел</th>
                             <th>Статус</th>
@@ -33,7 +33,7 @@
                             <th></th>
                             <th>Код</th>
                             <th>Дата</th>
-                            <th>Наименование груза, тара, вес</th>
+                            <th>Наименование груза, тара, вес, примечание</th>
                             <th>Организация</th>
                             <th>Сотрудник, отдел</th>
                             <th>Статус</th>
@@ -56,6 +56,7 @@
     <!-- /.row -->
 
     {% include 'modals/delete.html.twig' %}
+    {% include 'modals/review.html.twig' %}
 {% endblock %}
 
 
@@ -182,6 +183,11 @@
                 $('#modal-delete').modal('show');
             });
 
+            $("#tasks-goods").on("click", ".modal-review-dialog", function() {
+                $('#btn-modal-review').attr("data-confirm-review-id", $(this).attr('data-id'));
+                $('#modal-review').modal('show');
+            });
+
             $("#modal-delete").on("click", "#btn-modal-delete", function() {
 
                 let url = "{{path('task_goods_delete', { 'id': 0 }) }}";
@@ -199,6 +205,25 @@
 
                 $('#btn-modal-delete').attr("data-confirm-delete-id", null);
                 $('#modal-delete').modal('hide');
+            });
+
+            $("#modal-review").on("click", "#btn-modal-review", function() {
+
+                let url = "{{path('task_goods_review', { 'id': 0 }) }}";
+                url = url.replace("0", $(this).attr('data-confirm-review-id'));
+
+                $.ajax({
+                    type: 'post',
+                    url: url,
+                    data: { '_method':'put','_token':'{{ csrf_token('review-item') }}' },
+                    dataType: 'json'
+                }).done(function(data) {
+                    table.ajax.reload(null, false);
+                    toastr.success(data.message);
+                });
+
+                $('#btn-modal-review').attr("data-confirm-review-id", null);
+                $('#modal-review').modal('hide');
             });
 
             $(".invoice").on("click", function() {

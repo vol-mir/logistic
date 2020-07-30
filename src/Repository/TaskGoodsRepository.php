@@ -198,6 +198,7 @@ class TaskGoodsRepository extends ServiceEntityRepository
             ->join('t0.organization', 't1')
             ->join('t0.user', 't2')
             ->andWhere('t0.id IN (:ids)')
+            ->andWhere('t0.status = 2')
             ->setParameter('ids', $ids)
             ->getQuery()
             ->getResult();
@@ -214,6 +215,7 @@ class TaskGoodsRepository extends ServiceEntityRepository
             ->join('t0.organization', 't1')
             ->join('t0.user', 't2')
             ->leftJoin('t0.drivers', 't3')
+            ->andWhere('t0.status = 3')
             ->andWhere("t3 IN (:driver)")->setParameter(':driver', $driver)
             ->andWhere('t0.date_task_goods BETWEEN :from AND :to')
             ->setParameter('from', $startDate )

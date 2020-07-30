@@ -36,6 +36,11 @@ class TaskGoods
     public const DONE = 5;
     public const NOT_DONE = 6;
 
+    public const BEGIN_STATUSES = [
+        self::FORMED => 'status.formed',
+        self::TO_REVIEW => 'status.to_review',
+    ];
+
     public const STATUSES = [
         self::FORMED => 'status.formed',
         self::TO_REVIEW => 'status.to_review',
@@ -349,7 +354,7 @@ class TaskGoods
     {
         $this->created_at = new \DateTime();
         $this->updated_at = new \DateTime();
-        $this->status = 1;
+        // $this->status = 1;
     }
 
     /**

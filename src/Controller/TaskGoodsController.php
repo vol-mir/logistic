@@ -114,6 +114,9 @@ class TaskGoodsController extends AbstractController
                     case 'goods':
                         {
                             $elementTemp = $task_goods->getGoods() . ', ' . $task_goods->getWeight() . ' ' . $translator->trans(TaskGoods::LIST_UNITS[$task_goods->getUnit()]);
+                            if ($task_goods->getNote()) {
+                                $elementTemp .= ", " . $task_goods->getNote();
+                            }
                             array_push($dataTemp, $elementTemp);
                             break;
                         }
@@ -166,6 +169,8 @@ class TaskGoodsController extends AbstractController
                             $buttonsForEdit = "<a href='" . $this->generateUrl('task_goods_edit', ['id' => $task_goods->getId()]) . "' class='btn btn-info'><i class='fas fa-edit'></i></a>";
                             $buttonsForDelete = "<button type='button' class='btn btn-sm btn-danger float-left modal-delete-dialog' data-toggle='modal' data-id='" . $task_goods->getId() . "'><i class='fas fa-trash'></i></button>";
 
+                            $buttonsForReview = "";
+
                             if (in_array('ROLE_OPERATOR', $this->getUser()->getRoles(), true) && !$task_goods->isAuthor($this->getUser())) {
                                 $buttonsForEdit = "";
                                 $buttonsForDelete = "";
@@ -174,6 +179,14 @@ class TaskGoodsController extends AbstractController
                                 $buttonsForEdit = "";
                                 $buttonsForDelete = "";
                             }
+                            if (   (in_array('ROLE_OPERATOR', $this->getUser()->getRoles(), true) && $task_goods->isAuthor($this->getUser()) ||
+                                    in_array('ROLE_DISPATCHER', $this->getUser()->getRoles(), true) ||
+                                    in_array('ROLE_ADMIN', $this->getUser()->getRoles(), true)) &&
+                                    $task_goods->getStatus() == 1
+                            ) {
+                                $buttonsForReview = "<button type='button' class='btn btn-sm btn-warning float-left modal-review-dialog' data-toggle='modal' data-id='" . $task_goods->getId() . "'><i class='fas fa-check'></i></button>";
+                            }
+
                             if (in_array('ROLE_DISPATCHER', $this->getUser()->getRoles(), true)) {
 
                                 $buttonsForEdit = "<a href='" . $this->generateUrl('task_goods_edit_full', ['id' => $task_goods->getId()]) . "' class='btn btn-outline-info'><i class='fas fa-edit'></i></a>";
@@ -185,7 +198,7 @@ class TaskGoodsController extends AbstractController
                             }
 
                             $elementTemp = "<div class='btn-group btn-group-sm'>" .
-                                "<a href='" . $this->generateUrl('task_goods_show', ['id' => $task_goods->getId()]) . "' class='btn btn-secondary'><i class='fas fa-eye'></i></a>" . $buttonsForEdit . $buttonsForDelete . "</div>";
+                                "<a href='" . $this->generateUrl('task_goods_show', ['id' => $task_goods->getId()]) . "' class='btn btn-secondary'><i class='fas fa-eye'></i></a>" . $buttonsForReview . $buttonsForEdit . $buttonsForDelete . "</div>";
                             array_push($dataTemp, $elementTemp);
                             break;
                         }
@@ -373,6 +386,30 @@ class TaskGoodsController extends AbstractController
         }
 
         return new JsonResponse(['message' => $translator->trans('item.deleted_successfully')]);
+    }
+
+    /**
+     * Review task_goods
+     *
+     * @Route("/task/goods/{id}/review", methods="PUT", name="task_goods_review", requirements={"id" = "\d+"})
+     * @Security("(is_granted('ROLE_ADMIN') or is_granted('ROLE_DISPATCHER') or (is_granted('ROLE_OPERATOR') and task_goods.isAuthor(user))) and task_goods.isOpen()", statusCode=404, message="Post not found")
+     *
+     * @param Request $request
+     * @param TaskGoods $task_goods
+     * @param TranslatorInterface $translator
+     *
+     * @return JsonResponse
+     */
+    public function review(Request $request, TaskGoods $task_goods, TranslatorInterface $translator): JsonResponse
+    {
+        if ($this->isCsrfTokenValid('review-item', $request->request->get('_token'))) {
+            $em = $this->getDoctrine()->getManager();
+            $task_goods->setStatus(2);
+            $em->persist($task_goods);
+            $em->flush();
+        }
+
+        return new JsonResponse(['message' => $translator->trans('item.edited_successfully')]);
     }
 
     /**

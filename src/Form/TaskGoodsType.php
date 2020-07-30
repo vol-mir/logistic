@@ -271,6 +271,21 @@ class TaskGoodsType extends AbstractType
             }
         );
 
+        $builder->add('status', ChoiceType::class, [
+            'choices' => array_flip(TaskGoods::BEGIN_STATUSES),
+            'label' => 'label.status',
+            'empty_data' => '1',
+            'attr' => [
+                'title' => 'label.status',
+                'class' => 'form-control select2',
+                'style' => 'width: 100%;',
+                'name' => 'task_goods_status'
+            ],
+            'constraints' => [
+                new NotBlank(),
+                new PositiveOrZero(),
+            ]
+        ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
