@@ -117,6 +117,18 @@ class User implements UserInterface
      */
     private $updated_at;
 
+    /**
+     * @var TaskGoods
+     *
+     * @ORM\OneToMany(targetEntity="App\Entity\TaskGoods", mappedBy="user")
+     */
+    private $tasks_goods;
+
+    public function __construct()
+    {
+        $this->tasks_goods = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -281,5 +293,36 @@ class User implements UserInterface
     public function preUpdate()
     {
         $this->updated_at = new \DateTime();
+    }
+
+    /**
+     * @return Collection|TaskGoods[]
+     */
+    public function getTasksGoods(): Collection
+    {
+        return $this->tasks_goods;
+    }
+
+    public function addTasksGood(TaskGoods $task_goods): self
+    {
+        if (!$this->tasks_goods->contains($task_goods)) {
+            $this->tasks_goods[] = $task_goods;
+            $task_goods->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTasksGood(TaskGoods $task_goods): self
+    {
+        if ($this->tasks_goods->contains($task_goods)) {
+            $this->tasks_goods->removeElement($task_goods);
+            // set the owning side to null (unless already changed)
+            if ($task_goods->getUser() === $this) {
+                $task_goods->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }

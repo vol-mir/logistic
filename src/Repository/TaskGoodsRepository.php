@@ -26,11 +26,12 @@ class TaskGoodsRepository extends ServiceEntityRepository
             ->createQueryBuilder('t0')
             ->select("count(t0.id)")
             ->join('t0.organization', 't1')
+            ->join('t0.user', 't2')
             ->getQuery()
             ->getSingleScalarResult();
     }
 
-    public function getRequiredDTData($start, $length, $orders, $search, $columns, $otherConditions = null)
+    public function getRequiredDTData($start, $length, $orders, $search, $columns, $otherConditions = null, $authUser)
     {
         // Create Main Query
         $query = $this->createQueryBuilder('t0');
@@ -40,7 +41,9 @@ class TaskGoodsRepository extends ServiceEntityRepository
         $countQuery->select('COUNT(t0)');
 
         $query->join('t0.organization', 't1');
+        $query->join('t0.user', 't2');
         $countQuery->join('t0.organization', 't1');
+        $countQuery->join('t0.user', 't2');
 
         // Other conditions than the ones sent by the Ajax call ?
         if ($otherConditions === null) {
@@ -64,6 +67,10 @@ class TaskGoodsRepository extends ServiceEntityRepository
             $searchQuery .= ' or t0.weight LIKE \'%' . $searchItem . '%\'';
             $searchQuery .= ' or t1.abbreviated_name LIKE \'%' . $searchItem . '%\'';
             $searchQuery .= ' or t1.registration_number LIKE \'%' . $searchItem . '%\'';
+
+            $searchQuery .= ' or t2.first_name LIKE \'%' . $searchItem . '%\'';
+            $searchQuery .= ' or t2.last_name LIKE \'%' . $searchItem . '%\'';
+            $searchQuery .= ' or t2.middle_name LIKE \'%' . $searchItem . '%\'';
 
             $query->andWhere($searchQuery);
             $countQuery->andWhere($searchQuery);
@@ -91,6 +98,23 @@ class TaskGoodsRepository extends ServiceEntityRepository
                                     ->andWhere('t0.date_task_goods BETWEEN :from AND :to')
                                     ->setParameter('from', $startDate )
                                     ->setParameter('to', $endDate);
+                            }
+                            break;
+                        }
+
+                    case 'user':
+                        {
+                            $columnUser = $column['search'];
+                            if ($columnUser['value'] != '') {
+
+                                if ($columnUser['value'] == 1000) {
+                                    $searchQuery = 't2.id LIKE \'%' . $authUser->getId() . '%\'';
+                                } else {
+                                    $searchQuery = 't2.department LIKE \'%' . $columnUser['value'] . '%\'';
+                                }
+
+                                $query->andWhere($searchQuery);
+                                $countQuery->andWhere($searchQuery);
                             }
                             break;
                         }
@@ -146,6 +170,13 @@ class TaskGoodsRepository extends ServiceEntityRepository
                             $query->orderBy('t0.status', $order['dir']);
                             break;
                         }
+                    case 'user':
+                        {
+                            $query->orderBy('t2.last_name', $order['dir']);
+                            $query->addOrderBy('t2.first_name', $order['dir']);
+                            $query->addOrderBy('t2.middle_name', $order['dir']);
+                            break;
+                        }
                 }
             }
         }
@@ -167,6 +198,7 @@ class TaskGoodsRepository extends ServiceEntityRepository
         return $this
             ->createQueryBuilder('t0')
             ->join('t0.organization', 't1')
+            ->join('t0.user', 't2')
             ->andWhere('t0.id IN (:ids)')
             ->setParameter('ids', $ids)
             ->getQuery()

@@ -9,7 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 /**
  * Class HomeController
  * @package App\Controller
- * @Security("is_granted('IS_AUTHENTICATED_FULLY') or is_granted('ROLE_DISPATCHER') or is_granted('ROLE_OPERATOR')", statusCode=404, message="Post not found")
+ * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
  */
 class HomeController extends AbstractController
 {

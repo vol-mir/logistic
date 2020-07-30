@@ -7,6 +7,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
 
 /**
  * @ORM\Entity(repositoryClass=TaskGoodsRepository::class)
@@ -201,6 +203,14 @@ class TaskGoods
      * @ORM\JoinTable(name="task_goods_transport")
      */
     private $transports;
+
+    /**
+     * @var User
+     *
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="tasks_goods")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
+     */
+    private $user;
 
     public function __construct()
     {
@@ -470,6 +480,18 @@ class TaskGoods
         if ($this->transports->contains($transport)) {
             $this->transports->removeElement($transport);
         }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }

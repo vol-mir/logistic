@@ -25,10 +25,10 @@
             <div class="input-group">
                 <div class="input-group-prepend">
                         <span class="input-group-text">
-                          <input type="checkbox">
+                          <input type="checkbox" id="user-check">
                         </span>
                 </div>
-                <select class="form-control">
+                <select class="form-control" id="user-select">
                     <option value="1000" selected="selected">Мои</option>
                     {% for key, department in departments %}
                         <option value="{{ key }}">{{ department|trans }}</option>

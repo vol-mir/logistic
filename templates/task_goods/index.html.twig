@@ -20,6 +20,7 @@
                             <th>Дата</th>
                             <th>Наименование груза, тара, вес</th>
                             <th>Организация</th>
+                            <th>Сотрудник, отдел</th>
                             <th>Статус</th>
                             <th></th>
                             <th></th>
@@ -34,6 +35,7 @@
                             <th>Дата</th>
                             <th>Наименование груза, тара, вес</th>
                             <th>Организация</th>
+                            <th>Сотрудник, отдел</th>
                             <th>Статус</th>
                             <th></th>
                             <th></th>
@@ -62,10 +64,14 @@
         $(function () {
 
             let columnDateTaskGoods = 2;
-            let columnStatus = 5;
+            let columnUser = 5;
+            let columnStatus = 6;
+            let columnYid = 8;
 
             let statusCheck = $('#status-check');
             let statusSelect = $('#status-select');
+            let userCheck = $('#user-check');
+            let userSelect = $('#user-select');
             let dateCheck = $('#date-check');
             let dateInput = $('#date-input');
 
@@ -74,12 +80,13 @@
                     // These are the column name variables that will be sent to the server
                     { "name": "checkbox", "targets": 0, "orderable": false, "searchable": false, className: 'select-checkbox'},
                     { "name": "id", "targets": 1 },
-                    { "name": "dateTaskGoods", "targets": 2 },
+                    { "name": "dateTaskGoods", "targets": columnDateTaskGoods },
                     { "name": "goods",   "targets": 3 },
                     { "name": "organization",   "targets": 4 },
-                    { "name": "status",   "targets": 5 },
-                    { "name": "control",  "targets": 6, "orderable": false, "searchable": false },
-                    { "name": "yid", "visible": false, "targets": 7 },
+                    { "name": "user",   "targets": columnUser },
+                    { "name": "status",   "targets": columnStatus },
+                    { "name": "control",  "targets": 7, "orderable": false, "searchable": false },
+                    { "name": "yid", "visible": false, "targets": columnYid },
                 ],
                 "ajax": {
                     "url": "{{ path('task_goods_datatables') }}",
@@ -104,8 +111,8 @@
 
                 },
             }).on( 'select.dt deselect.dt',  function (evtObj) {
-                var all = table.rows().nodes().length;
-                var sel = table.rows(".selected").nodes().length;
+                let all = table.rows().nodes().length;
+                let sel = table.rows(".selected").nodes().length;
 
                 if(all === sel){
 
@@ -139,6 +146,12 @@
                 if (colStatusSearch.search) {
                     statusCheck.prop("checked", true);
                     statusSelect.val(colStatusSearch.search);
+                }
+
+                let colUserSearch = state.columns[columnUser].search;
+                if (colUserSearch.search) {
+                    userCheck.prop("checked", true);
+                    userSelect.val(colUserSearch.search);
                 }
 
                 let colDateSearch = state.columns[columnDateTaskGoods].search;
@@ -190,7 +203,7 @@
 
             $(".invoice").on("click", function() {
 
-                let tasksGoodsPint = table.rows(".selected").data().pluck(7).toArray();
+                let tasksGoodsPint = table.rows(".selected").data().pluck(columnYid).toArray();
                 let url = "{{path('task_goods_invoice') }}";
 
                 $.ajax({
@@ -256,6 +269,20 @@
 
                 if (dateCheck.is(":checked")) {
                     table.column(columnDateTaskGoods).search(JSON.stringify(period)).draw();
+                }
+            });
+
+            userCheck.on('change', function() {
+                if (this.checked) {
+                    table.column(columnUser).search(userSelect.val()).draw();
+                } else {
+                    table.column(columnUser).search('').draw();
+                }
+            });
+
+            userSelect.on('change', function() {
+                if (userCheck.is(":checked")) {
+                    table.column(columnUser).search(userSelect.val()).draw();
                 }
             });
 

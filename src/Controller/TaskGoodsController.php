@@ -20,6 +20,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
+
 /**
  * Class TaskGoodsController
  * @package App\Controller
@@ -75,8 +76,9 @@ class TaskGoodsController extends AbstractController
         // Further filtering can be done in the Repository by passing necessary arguments
         $otherConditions = null;
 
+        $authUser = $this->getUser();
         $em = $this->getDoctrine()->getManager();
-        $results = $em->getRepository(TaskGoods::class)->getRequiredDTData($start, $length, $orders, $search, $columns, $otherConditions);
+        $results = $em->getRepository(TaskGoods::class)->getRequiredDTData($start, $length, $orders, $search, $columns, $otherConditions, $authUser);
 
         // Returned objects are of type Town
         $objects = $results["results"];
@@ -119,6 +121,13 @@ class TaskGoodsController extends AbstractController
                     case 'organization':
                         {
                             $elementTemp = $task_goods->getOrganization()->getAbbreviatedName() . ', ' . $task_goods->getOrganization()->getRegistrationNumber();
+                            array_push($dataTemp, $elementTemp);
+                            break;
+                        }
+
+                    case 'user':
+                        {
+                            $elementTemp = '<small>'.$task_goods->getUser()->getFullName() . ', ' . $translator->trans(User::DEPARTMENTS[$task_goods->getUser()->getDepartment()]).'</small>';
                             array_push($dataTemp, $elementTemp);
                             break;
                         }
@@ -215,12 +224,12 @@ class TaskGoodsController extends AbstractController
 
         $task_goods = new TaskGoods();
 
-
         $organization = $this->getDoctrine()
             ->getRepository(Organization::class)
             ->find($this->getParameter('default_organization'));
 
         $task_goods->setOrganization($organization);
+        $task_goods->setUser($this->getUser());
 
         $form = $this->createForm(TaskGoodsType::class, $task_goods)->add('saveAndCreateNew', SubmitType::class);
         $form->handleRequest($request);
