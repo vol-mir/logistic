@@ -259,8 +259,29 @@ class TaskGoodsType extends AbstractType
             FormEvents::PRE_SET_DATA,
             function (FormEvent $event) use ($formModifier) {
                 $data = $event->getData();
+                $form = $event->getForm();
                 $organization = $data->getOrganization();
-                $formModifier($event->getForm(), $organization, $data->getContactPerson(), $data->getWorkingHours());
+                $formModifier($form, $organization, $data->getContactPerson(), $data->getWorkingHours());
+
+                $status = $data->getStatus()?$data->getStatus():null;
+                if ($status == null or $status == 1 or $status == 2) {
+                    $form->add('status', ChoiceType::class, [
+                        'choices' => array_flip(TaskGoods::BEGIN_STATUSES),
+                        'label' => 'label.status',
+                        'empty_data' => '1',
+                        'attr' => [
+                            'title' => 'label.status',
+                            'class' => 'form-control select2',
+                            'style' => 'width: 100%;',
+                            'name' => 'task_goods_status'
+                        ],
+                        'constraints' => [
+                            new NotBlank(),
+                            new PositiveOrZero(),
+                        ]
+                    ]);
+                }
+
             }
         );
 
@@ -271,21 +292,7 @@ class TaskGoodsType extends AbstractType
             }
         );
 
-        $builder->add('status', ChoiceType::class, [
-            'choices' => array_flip(TaskGoods::BEGIN_STATUSES),
-            'label' => 'label.status',
-            'empty_data' => '1',
-            'attr' => [
-                'title' => 'label.status',
-                'class' => 'form-control select2',
-                'style' => 'width: 100%;',
-                'name' => 'task_goods_status'
-            ],
-            'constraints' => [
-                new NotBlank(),
-                new PositiveOrZero(),
-            ]
-        ]);
+
     }
 
     public function configureOptions(OptionsResolver $resolver)

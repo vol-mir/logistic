@@ -31,6 +31,14 @@ class HomeController extends AbstractController
     }
 
     /**
+     * @Route("/faq", name="faq")
+     */
+    public function faq()
+    {
+        return $this->render('home/faq.html.twig');
+    }
+
+    /**
      * Data for datatables
      *;
      * @Route("/home/task/goods/datatables", methods="POST", name="home_task_goods_datatables")

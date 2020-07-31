@@ -130,7 +130,7 @@ class TaskGoodsController extends AbstractController
 
                     case 'user':
                         {
-                            $elementTemp = '<small>'.$task_goods->getUser()->getFullName() . ', ' . $translator->trans(User::DEPARTMENTS[$task_goods->getUser()->getDepartment()]).'</small>';
+                            $elementTemp = '<small>'.$task_goods->getUser()->getFullName() . ', ' . $translator->trans(User::DEPARTMENTS[$task_goods->getUser()->getDepartment()]).', время создания: '. $task_goods->getCreatedAt()->format('d.m.Y H:i') .'</small>';
                             array_push($dataTemp, $elementTemp);
                             break;
                         }
@@ -166,39 +166,37 @@ class TaskGoodsController extends AbstractController
 
                     case 'control':
                         {
-                            $buttonsForEdit = "<a href='" . $this->generateUrl('task_goods_edit', ['id' => $task_goods->getId()]) . "' class='btn btn-info'><i class='fas fa-edit'></i></a>";
-                            $buttonsForDelete = "<button type='button' class='btn btn-sm btn-danger float-left modal-delete-dialog' data-toggle='modal' data-id='" . $task_goods->getId() . "'><i class='fas fa-trash'></i></button>";
+                            $isOperator = in_array('ROLE_OPERATOR', $this->getUser()->getRoles(), true);
+                            $isDispatcher = in_array('ROLE_DISPATCHER', $this->getUser()->getRoles(), true);
+                            $isAdmin = in_array('ROLE_ADMIN', $this->getUser()->getRoles(), true);
 
+                            $isAuthor = $task_goods->isAuthor($this->getUser());
+                            $isOpen = $task_goods->isOpen(); // status = 1
+
+                            $buttonsForDelete = "";
+                            $buttonsForEdit = "";
+                            $buttonsForEditFull = "";
                             $buttonsForReview = "";
 
-                            if (in_array('ROLE_OPERATOR', $this->getUser()->getRoles(), true) && !$task_goods->isAuthor($this->getUser())) {
-                                $buttonsForEdit = "";
-                                $buttonsForDelete = "";
+                            $buttonsForShow = "<a href='" . $this->generateUrl('task_goods_show', ['id' => $task_goods->getId()]) . "' class='btn btn-secondary'><i class='fas fa-eye'></i></a>";
+
+                            if ($isAdmin || $isDispatcher || ($isOperator && $isAuthor && $isOpen) ) {
+                                $buttonsForDelete = "<button type='button' class='btn btn-sm btn-danger float-left modal-delete-dialog' data-toggle='modal' data-id='" . $task_goods->getId() . "'><i class='fas fa-trash'></i></button>";
                             }
-                            if (in_array('ROLE_OPERATOR', $this->getUser()->getRoles(), true) && $task_goods->isAuthor($this->getUser()) && !$task_goods->isOpen()) {
-                                $buttonsForEdit = "";
-                                $buttonsForDelete = "";
+
+                            if ($isAdmin || ($isOperator && $isAuthor && $isOpen) ) {
+                                $buttonsForEdit = "<a href='" . $this->generateUrl('task_goods_edit', ['id' => $task_goods->getId()]) . "' class='btn btn-info'><i class='fas fa-edit'></i></a>";
                             }
-                            if (   (in_array('ROLE_OPERATOR', $this->getUser()->getRoles(), true) && $task_goods->isAuthor($this->getUser()) ||
-                                    in_array('ROLE_DISPATCHER', $this->getUser()->getRoles(), true) ||
-                                    in_array('ROLE_ADMIN', $this->getUser()->getRoles(), true)) &&
-                                    $task_goods->getStatus() == 1
-                            ) {
+
+                            if (($isAdmin || $isDispatcher || ($isOperator && $isAuthor)) && $isOpen) {
                                 $buttonsForReview = "<button type='button' class='btn btn-sm btn-warning float-left modal-review-dialog' data-toggle='modal' data-id='" . $task_goods->getId() . "'><i class='fas fa-check'></i></button>";
                             }
 
-                            if (in_array('ROLE_DISPATCHER', $this->getUser()->getRoles(), true)) {
-
-                                $buttonsForEdit = "<a href='" . $this->generateUrl('task_goods_edit_full', ['id' => $task_goods->getId()]) . "' class='btn btn-outline-info'><i class='fas fa-edit'></i></a>";
-                            }
-                            if (in_array('ROLE_ADMIN', $this->getUser()->getRoles(), true)) {
-
-                                $buttonsForEdit = "<a href='" . $this->generateUrl('task_goods_edit', ['id' => $task_goods->getId()]) . "' class='btn btn-info'><i class='fas fa-edit'></i></a>" .
-                                    "<a href='" . $this->generateUrl('task_goods_edit_full', ['id' => $task_goods->getId()]) . "' class='btn btn-outline-info'><i class='fas fa-edit'></i></a>";
+                            if ($isAdmin || $isDispatcher) {
+                                $buttonsForEditFull = "<a href='" . $this->generateUrl('task_goods_edit_full', ['id' => $task_goods->getId()]) . "' class='btn btn-outline-info'><i class='fas fa-edit'></i></a>";
                             }
 
-                            $elementTemp = "<div class='btn-group btn-group-sm'>" .
-                                "<a href='" . $this->generateUrl('task_goods_show', ['id' => $task_goods->getId()]) . "' class='btn btn-secondary'><i class='fas fa-eye'></i></a>" . $buttonsForReview . $buttonsForEdit . $buttonsForDelete . "</div>";
+                            $elementTemp = "<div class='btn-group btn-group-sm'>" . $buttonsForShow . $buttonsForReview . $buttonsForEdit . $buttonsForEditFull . $buttonsForDelete . "</div>";
                             array_push($dataTemp, $elementTemp);
                             break;
                         }

@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Помощь (F.A.Q.){% endblock %}
+
+{% block body %}
+    <!-- Main row -->
+    <div class="row">
+        <!-- Left col -->
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <div id="accordion">
+                        <!-- we are adding the .class so bootstrap.js collapse plugin detects it -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                                       Как распечатать заявки?
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne" class="panel-collapse collapse in">
+                                <div class="card-body">
+                                    <p>В печатную форму заявок попадают заявки, которые имеют статус "К рассмотрению".</p>
+                                    <p>Печатать список можно несколькими способами:</p>
+                                    <ol>
+                                        <li><p>Открыть заявку и нажать кнопку "Печать".</p></li>
+                                        <li><p>В журнале заявок выделить заявки необходимые или все (в заголовке таблице в первой колонке поставить птичку), и нажать кнопку
+                                            "Печать". В список попадут лишь те заявки, которые имеют статус "К рассмотрению".</p></li>
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+                                        Как распечатать задание водителю?
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseTwo" class="panel-collapse collapse">
+                                <div class="card-body">
+                                    <p>В печатную форму задания водителю попадают заявки, которые имеют статус "Выполняется".</p>
+                                    <p>Распечатать можно из пункта меню Отчеты - Задание водителю.</p>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- /.card-body -->
+            </div>
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+{% endblock %}

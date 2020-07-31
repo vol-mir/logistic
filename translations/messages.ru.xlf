@@ -79,6 +79,10 @@
         <source>menu.task_driver</source>
         <target>Задание водителю</target>
       </trans-unit>
+      <trans-unit id="menu.faq">
+        <source>menu.faq</source>
+        <target>Помощь (F.A.Q.)</target>
+      </trans-unit>
 
       <trans-unit id="label.first_name">
         <source>label.first_name</source>
