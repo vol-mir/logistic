@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Заявки на транспорт{% endblock %}
+{% block title %}{{ 'title.page.index.task_goods'|trans }}{% endblock %}
 
 {% block body %}
     <div class="row">
@@ -79,15 +79,21 @@
             let table = $("#tasks-goods").DataTable({
                 "columnDefs": [
                     // These are the column name variables that will be sent to the server
-                    { "name": "checkbox", "targets": 0, "orderable": false, "searchable": false, className: 'select-checkbox'},
-                    { "name": "id", "targets": 1 },
-                    { "name": "dateTaskGoods", "targets": columnDateTaskGoods },
-                    { "name": "goods",   "targets": 3 },
-                    { "name": "organization",   "targets": 4 },
-                    { "name": "user",   "targets": columnUser },
-                    { "name": "status",   "targets": columnStatus },
-                    { "name": "control",  "targets": 7, "orderable": false, "searchable": false },
-                    { "name": "yid", "visible": false, "targets": columnYid },
+                    {
+                        "name": "checkbox",
+                        "targets": 0,
+                        "orderable": false,
+                        "searchable": false,
+                        className: 'select-checkbox'
+                    },
+                    {"name": "id", "targets": 1},
+                    {"name": "dateTaskGoods", "targets": columnDateTaskGoods},
+                    {"name": "goods", "targets": 3},
+                    {"name": "organization", "targets": 4},
+                    {"name": "user", "targets": columnUser},
+                    {"name": "status", "targets": columnStatus},
+                    {"name": "control", "targets": 7, "orderable": false, "searchable": false},
+                    {"name": "yid", "visible": false, "targets": columnYid},
                 ],
                 "ajax": {
                     "url": "{{ path('task_goods_datatables') }}",
@@ -98,8 +104,8 @@
                 "serverSide": true,
                 "responsive": true,
                 "autoWidth": false,
-                "paging" : true,
-                "info" : true,
+                "paging": true,
+                "info": true,
                 "searching": true,
                 "pageLength": 10,
                 "order": [[2, 'desc']],
@@ -111,27 +117,25 @@
                     "selector": "td:first-child"
 
                 },
-            }).on( 'select.dt deselect.dt',  function (evtObj) {
+            }).on('select.dt deselect.dt', function (evtObj) {
                 let all = table.rows().nodes().length;
                 let sel = table.rows(".selected").nodes().length;
 
-                if(all === sel){
+                if (all === sel) {
 
                     $(".toggle-all").closest("tr").addClass("selected");
-                }
-                else{
+                } else {
 
                     $(".toggle-all").closest("tr").removeClass("selected");
                 }
 
-            } );
+            });
 
-            $('#tasks-goods').on('click', '.toggle-all', function() {
+            $('#tasks-goods').on('click', '.toggle-all', function () {
                 $(this).closest("tr").toggleClass("selected");
-                if($(this).closest("tr").hasClass("selected")){
+                if ($(this).closest("tr").hasClass("selected")) {
                     table.rows().select();
-                }
-                else {
+                } else {
                     table.rows().deselect();
                 }
 
@@ -178,27 +182,27 @@
                 },
             });
 
-            $("#tasks-goods").on("click", ".modal-delete-dialog", function() {
+            $("#tasks-goods").on("click", ".modal-delete-dialog", function () {
                 $('#btn-modal-delete').attr("data-confirm-delete-id", $(this).attr('data-id'));
                 $('#modal-delete').modal('show');
             });
 
-            $("#tasks-goods").on("click", ".modal-review-dialog", function() {
+            $("#tasks-goods").on("click", ".modal-review-dialog", function () {
                 $('#btn-modal-review').attr("data-confirm-review-id", $(this).attr('data-id'));
                 $('#modal-review').modal('show');
             });
 
-            $("#modal-delete").on("click", "#btn-modal-delete", function() {
+            $("#modal-delete").on("click", "#btn-modal-delete", function () {
 
-                let url = "{{path('task_goods_delete', { 'id': 0 }) }}";
+                let url = "{{ path('task_goods_delete', { 'id': 0 }) }}";
                 url = url.replace("0", $(this).attr('data-confirm-delete-id'));
 
                 $.ajax({
                     type: 'post',
                     url: url,
-                    data: { '_method':'delete','_token':'{{ csrf_token('delete-item') }}' },
+                    data: {'_method': 'delete', '_token': '{{ csrf_token('delete-item') }}'},
                     dataType: 'json'
-                }).done(function(data) {
+                }).done(function (data) {
                     table.ajax.reload(null, false);
                     toastr.success(data.message);
                 });
@@ -207,17 +211,17 @@
                 $('#modal-delete').modal('hide');
             });
 
-            $("#modal-review").on("click", "#btn-modal-review", function() {
+            $("#modal-review").on("click", "#btn-modal-review", function () {
 
-                let url = "{{path('task_goods_review', { 'id': 0 }) }}";
+                let url = "{{ path('task_goods_review', { 'id': 0 }) }}";
                 url = url.replace("0", $(this).attr('data-confirm-review-id'));
 
                 $.ajax({
                     type: 'post',
                     url: url,
-                    data: { '_method':'put','_token':'{{ csrf_token('review-item') }}' },
+                    data: {'_method': 'put', '_token': '{{ csrf_token('review-item') }}'},
                     dataType: 'json'
-                }).done(function(data) {
+                }).done(function (data) {
                     table.ajax.reload(null, false);
                     toastr.success(data.message);
                 });
@@ -226,20 +230,24 @@
                 $('#modal-review').modal('hide');
             });
 
-            $(".invoice").on("click", function() {
+            $(".invoice").on("click", function () {
 
                 let tasksGoodsPint = table.rows(".selected").data().pluck(columnYid).toArray();
-                let url = "{{path('task_goods_invoice') }}";
+                let url = "{{ path('task_goods_invoice') }}";
 
                 $.ajax({
                     type: 'post',
                     url: url,
-                    data: { '_method':'post','_token':'{{ csrf_token('task-goods-invoice') }}', 'tasksGoodsPint': tasksGoodsPint },
+                    data: {
+                        '_method': 'post',
+                        '_token': '{{ csrf_token('task-goods-invoice') }}',
+                        'tasksGoodsPint': tasksGoodsPint
+                    },
                     dataType: 'json'
-                }).done(function(data) {
-                    let params  = 'width='+screen.width;
-                    params += ', height='+screen.height;
-                    params += ', top=0, left=0'
+                }).done(function (data) {
+                    let params = 'width=' + screen.width;
+                    params += ', height=' + screen.height;
+                    params += ', top=0, left=0';
                     params += ', fullscreen=yes';
                     params += ', directories=no';
                     params += ', location=no';
@@ -259,7 +267,7 @@
 
             });
 
-            statusCheck.on('change', function() {
+            statusCheck.on('change', function () {
                 if (this.checked) {
                     table.column(columnStatus).search(statusSelect.val()).draw();
                 } else {
@@ -267,13 +275,13 @@
                 }
             });
 
-            statusSelect.on('change', function() {
+            statusSelect.on('change', function () {
                 if (statusCheck.is(":checked")) {
                     table.column(columnStatus).search(statusSelect.val()).draw();
                 }
             });
 
-            dateCheck.on('change', function() {
+            dateCheck.on('change', function () {
                 let period = {
                     startDate: dateInput.data('daterangepicker').startDate,
                     endDate: dateInput.data('daterangepicker').endDate
@@ -286,7 +294,7 @@
                 }
             });
 
-            dateInput.on('change', function() {
+            dateInput.on('change', function () {
                 let period = {
                     startDate: dateInput.data('daterangepicker').startDate,
                     endDate: dateInput.data('daterangepicker').endDate
@@ -297,7 +305,7 @@
                 }
             });
 
-            userCheck.on('change', function() {
+            userCheck.on('change', function () {
                 if (this.checked) {
                     table.column(columnUser).search(userSelect.val()).draw();
                 } else {
@@ -305,7 +313,7 @@
                 }
             });
 
-            userSelect.on('change', function() {
+            userSelect.on('change', function () {
                 if (userCheck.is(":checked")) {
                     table.column(columnUser).search(userSelect.val()).draw();
                 }

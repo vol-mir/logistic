@@ -29,7 +29,7 @@ class OrganizationRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
-    public function getRequiredDTData($start, $length, $orders, $search, $columns, $otherConditions = null)
+    public function getRequiredDTData($start, $length, $orders, $search, $columns, $otherConditions = null): array
     {
         // Create Main Query
         $query = $this->createQueryBuilder('t0');
@@ -51,7 +51,7 @@ class OrganizationRepository extends ServiceEntityRepository
         }
 
         // Fields Search
-        if ($search['value'] != '') {
+        if ($search['value'] !== '') {
             // $searchItem is what we are looking for
             $searchItem = $search['value'];
             $searchQuery = 't0.abbreviated_name LIKE \'%' . $searchItem . '%\'';
@@ -68,7 +68,7 @@ class OrganizationRepository extends ServiceEntityRepository
         // Order
         foreach ($orders as $key => $order) {
             // $order['name'] is the name of the order column as sent by the JS
-            if ($order['name'] != '') {
+            if ($order['name'] !== '') {
                 $orderColumn = null;
 
                 switch ($order['name']) {
@@ -95,9 +95,9 @@ class OrganizationRepository extends ServiceEntityRepository
         $results = $query->getQuery()->getResult();
         $countResult = $countQuery->getQuery()->getSingleScalarResult();
 
-        return array(
+        return [
             "results" => $results,
             "countResult" => $countResult
-        );
+        ];
     }
 }

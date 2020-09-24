@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Задание водителю{% endblock %}
+{% block title %}{{ 'title.page.invoice.task_driver'|trans }}{% endblock %}
 
 {% block body %}
     <div class="row">
@@ -29,7 +29,8 @@
                 </form>
 
                 <div class="card-footer">
-                    <button type="button" class="btn btn-default invoice"><i class='fas fa-print'></i> {{ 'title.print'|trans }}</button>
+                    <button type="button" class="btn btn-default invoice"><i
+                                class='fas fa-print'></i> {{ 'title.shape'|trans }}</button>
                 </div>
             </div>
             <!-- /.card -->
@@ -65,7 +66,7 @@
             });
 
 
-            $(".invoice").on("click", function() {
+            $(".invoice").on("click", function () {
 
                 let period = {
                     startDate: dateInput.data('daterangepicker').startDate,
@@ -74,17 +75,22 @@
 
                 let driver = userSelect.val();
 
-                let url = "{{path('task_driver_invoice') }}";
+                let url = "{{ path('task_driver_invoice') }}";
 
                 $.ajax({
                     type: 'post',
                     url: url,
-                    data: { '_method':'post','_token':'{{ csrf_token('task_driver_invoice') }}', 'period': JSON.stringify(period), 'driver': driver },
+                    data: {
+                        '_method': 'post',
+                        '_token': '{{ csrf_token('task_driver_invoice') }}',
+                        'period': JSON.stringify(period),
+                        'driver': driver
+                    },
                     dataType: 'json'
-                }).done(function(data) {
-                    let params  = 'width='+screen.width;
-                    params += ', height='+screen.height;
-                    params += ', top=0, left=0'
+                }).done(function (data) {
+                    let params = 'width=' + screen.width;
+                    params += ', height=' + screen.height;
+                    params += ', top=0, left=0';
                     params += ', fullscreen=yes';
                     params += ', directories=no';
                     params += ', location=no';

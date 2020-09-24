@@ -5,8 +5,9 @@ namespace App\Form;
 use App\Entity\Transport;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
@@ -15,7 +16,7 @@ use Symfony\Component\Validator\Constraints\PositiveOrZero;
 
 class TransportType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('number', TextType::class, [
@@ -81,19 +82,39 @@ class TransportType extends AbstractType
                     'title' => 'label.carrying',
                     'class' => 'form-control',
                     'name' => 'transport_carrying',
-                    'min'  => 0,
-                    'max'  => 99999999.99,
+                    'min' => 0,
+                    'max' => 99999999.99,
                     'step' => 0.01,
                 ],
                 'constraints' => [
                     new NotBlank(),
                     new PositiveOrZero(),
                 ]
-            ])
-        ;
+            ]);
+
+        $builder->add('save', SubmitType::class, [
+            'label' => 'title.save',
+            'attr' => [
+                'class' => 'btn btn-primary',
+            ]
+        ]);
+
+        $builder->add('saveAndCreateNew', SubmitType::class, [
+            'label' => 'title.save_and_create_new',
+            'attr' => [
+                'class' => 'btn btn-primary',
+            ]
+        ]);
+
+        $builder->add('saveAndStay', SubmitType::class, [
+            'label' => 'title.save_and_stay',
+            'attr' => [
+                'class' => 'btn btn-primary',
+            ]
+        ]);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Transport::class,

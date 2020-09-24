@@ -4,12 +4,12 @@ namespace App\Controller;
 
 use App\Entity\TaskGoods;
 use App\Entity\User;
-use Psr\Log\LoggerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -20,9 +20,13 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class HomeController extends AbstractController
 {
     /**
+     * Index page
+     *
      * @Route("/", name="home")
+     *
+     * @return Response
      */
-    public function index()
+    public function index(): Response
     {
         return $this->render('home/index.html.twig', [
             'departments' => User::DEPARTMENTS,
@@ -31,15 +35,19 @@ class HomeController extends AbstractController
     }
 
     /**
+     * FAQ page
+     *
      * @Route("/faq", name="faq")
+     *
+     * @return Response
      */
-    public function faq()
+    public function faq(): Response
     {
         return $this->render('home/faq.html.twig');
     }
 
     /**
-     * Data for datatables
+     * Data for tables
      *;
      * @Route("/home/task/goods/datatables", methods="POST", name="home_task_goods_datatables")
      *
@@ -48,18 +56,20 @@ class HomeController extends AbstractController
      *
      * @return JsonResponse
      */
-    public function listDatatableAction(Request $request, TranslatorInterface $translator, LoggerInterface $logger): JsonResponse
+    public function listDatatableAction(Request $request, TranslatorInterface $translator): JsonResponse
     {
         // Get the parameters from DataTable Ajax Call
-        if ($request->getMethod() == 'POST') {
-            $draw = intval($request->request->get('draw'));
+        if ($request->getMethod() === 'POST') {
+            $draw = (int)$request->request->get('draw');
             $start = $request->request->get('start');
             $length = $request->request->get('length');
             $search = $request->request->get('search');
             $orders = $request->request->get('order');
             $columns = $request->request->get('columns');
         } else // If the request is not a POST one, die hard
+        {
             die;
+        }
 
         // Orders
         foreach ($orders as $key => $order) {
@@ -78,103 +88,105 @@ class HomeController extends AbstractController
         // Returned objects are of type Town
         $objects = $results["results"];
         // Get total number of objects
-        $total_objects_count = $em->getRepository(TaskGoods::class)->countTaskGoods();
+        $totalObjectsCount = $em->getRepository(TaskGoods::class)->countTaskGoods();
         // Get total number of filtered data
-        $filtered_objects_count = $results["countResult"];
+        $filteredObjectsCount = $results["countResult"];
 
         $data = [];
-        foreach ($objects as $key => $task_goods) {
+        foreach ($objects as $taskGoods) {
             $dataTemp = [];
-            foreach ($columns as $key => $column) {
+            foreach ($columns as $column) {
                 switch ($column['name']) {
                     case 'checkbox':
                         {
-                            array_push($dataTemp, "");
+                            $dataTemp[] = "";
                             break;
                         }
                     case 'id':
                         {
-                            $elementTemp = "<a href='" . $this->generateUrl('task_goods_show', ['id' => $task_goods->getId()]) . "' class='float-left'>" . $task_goods->getId() . "</a>";
-                            array_push($dataTemp, $elementTemp);
+                            $elementTemp = $this->render('default/table_href.html.twig', [
+                                'url' => $this->generateUrl('task_goods_show', ['id' => $taskGoods->getId()]),
+                                'urlName' => $taskGoods->getId()
+                            ])->getContent();
+                            $dataTemp[] = $elementTemp;
                             break;
                         }
 
                     case 'dateTaskGoods':
                         {
-                            $elementTemp = $task_goods->getDateTaskGoods()->format('d.m.Y');
-                            array_push($dataTemp, $elementTemp);
+                            $elementTemp = $taskGoods->getDateTaskGoods()->format('d.m.Y');
+                            $dataTemp[] = $elementTemp;
                             break;
                         }
 
                     case 'goods':
                         {
-                            $elementTemp = $task_goods->getGoods() . ', ' . $task_goods->getWeight() . ' ' . $translator->trans(TaskGoods::LIST_UNITS[$task_goods->getUnit()]);
-                            array_push($dataTemp, $elementTemp);
+                            $elementTemp = $taskGoods->getGoods() . ', ' . $taskGoods->getWeight() . ' ' . $translator->trans(TaskGoods::LIST_UNITS[$taskGoods->getUnit()]);
+                            $dataTemp[] = $elementTemp;
                             break;
                         }
 
                     case 'organization':
                         {
-                            $elementTemp = $task_goods->getOrganization()->getAbbreviatedName() . ', ' . $task_goods->getOrganization()->getRegistrationNumber();
-                            array_push($dataTemp, $elementTemp);
+                            $elementTemp = $taskGoods->getOrganization()->getAbbreviatedName() . ', ' . $taskGoods->getOrganization()->getRegistrationNumber();
+                            $dataTemp[] = $elementTemp;
                             break;
                         }
 
                     case 'user':
                         {
-                            $elementTemp = '<small>'.$task_goods->getUser()->getFullName() . ', ' . $translator->trans(User::DEPARTMENTS[$task_goods->getUser()->getDepartment()]).'</small>';
-                            array_push($dataTemp, $elementTemp);
+                            $elementTemp = '<small>' . $taskGoods->getUser()->getFullName() . ', ' . $translator->trans(User::DEPARTMENTS[$taskGoods->getUser()->getDepartment()]) . '</small>';
+                            $dataTemp[] = $elementTemp;
                             break;
                         }
 
                     case 'status':
                         {
-                            switch ($task_goods->getStatus()) {
+                            switch ($taskGoods->getStatus()) {
                                 case 1:
-                                    $elementTemp = "<span class='badge badge-primary'>" . $translator->trans(TaskGoods::STATUSES[$task_goods->getStatus()]) . "</span>";
+                                    $elementTemp = "<span class='badge badge-primary'>" . $translator->trans(TaskGoods::STATUSES[$taskGoods->getStatus()]) . "</span>";
                                     break;
                                 case 2:
-                                    $elementTemp = "<span class='badge badge-warning'>" . $translator->trans(TaskGoods::STATUSES[$task_goods->getStatus()]) . "</span>";
+                                    $elementTemp = "<span class='badge badge-warning'>" . $translator->trans(TaskGoods::STATUSES[$taskGoods->getStatus()]) . "</span>";
                                     break;
                                 case 3:
-                                    $elementTemp = "<span class='badge badge-light'>" . $translator->trans(TaskGoods::STATUSES[$task_goods->getStatus()]) . "</span>";
+                                    $elementTemp = "<span class='badge badge-light'>" . $translator->trans(TaskGoods::STATUSES[$taskGoods->getStatus()]) . "</span>";
                                     break;
                                 case 4:
-                                    $elementTemp = "<span class='badge badge-dark'>" . $translator->trans(TaskGoods::STATUSES[$task_goods->getStatus()]) . "</span>";
+                                    $elementTemp = "<span class='badge badge-dark'>" . $translator->trans(TaskGoods::STATUSES[$taskGoods->getStatus()]) . "</span>";
                                     break;
                                 case 5:
-                                    $elementTemp = "<span class='badge badge-success'>" . $translator->trans(TaskGoods::STATUSES[$task_goods->getStatus()]) . "</span>";
+                                    $elementTemp = "<span class='badge badge-success'>" . $translator->trans(TaskGoods::STATUSES[$taskGoods->getStatus()]) . "</span>";
                                     break;
                                 case 6:
-                                    $elementTemp = "<span class='badge badge-danger'>" . $translator->trans(TaskGoods::STATUSES[$task_goods->getStatus()]) . "</span>";
+                                    $elementTemp = "<span class='badge badge-danger'>" . $translator->trans(TaskGoods::STATUSES[$taskGoods->getStatus()]) . "</span>";
                                     break;
                                 default:
-                                    $elementTemp = "<span class='badge badge-secondary'>" . $translator->trans(TaskGoods::STATUSES[$task_goods->getStatus()]) . "</span>";
+                                    $elementTemp = "<span class='badge badge-secondary'>" . $translator->trans(TaskGoods::STATUSES[$taskGoods->getStatus()]) . "</span>";
                             }
 
-                            array_push($dataTemp, $elementTemp);
+                            $dataTemp[] = $elementTemp;
                             break;
                         }
 
                     case 'yid':
                         {
-                            $elementTemp = $task_goods->getId();
-                            array_push($dataTemp, $elementTemp);
+                            $elementTemp = $taskGoods->getId();
+                            $dataTemp[] = $elementTemp;
                             break;
                         }
                 }
             }
-            array_push($data, $dataTemp);
+            $data[] = $dataTemp;
         }
 
         // Construct response
         $response = [
             'draw' => $draw,
-            'recordsTotal' => $total_objects_count,
-            'recordsFiltered' => $filtered_objects_count,
+            'recordsTotal' => $totalObjectsCount,
+            'recordsFiltered' => $filteredObjectsCount,
             'data' => $data,
         ];
-
 
         // Send all this stuff back to DataTables
         $returnResponse = new JsonResponse();

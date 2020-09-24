@@ -31,7 +31,7 @@ class TaskGoodsRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
-    public function getRequiredDTData($start, $length, $orders, $search, $columns, $otherConditions = null, $authUser)
+    public function getRequiredDTData($start, $length, $orders, $search, $columns, $otherConditions = null, $authUser = null): array
     {
         // Create Main Query
         $query = $this->createQueryBuilder('t0');
@@ -58,7 +58,7 @@ class TaskGoodsRepository extends ServiceEntityRepository
         }
 
         // Fields Search
-        if ($search['value'] != '') {
+        if ($search['value'] !== '') {
             // $searchItem is what we are looking for
             $searchItem = $search['value'];
             $searchQuery = 't0.id LIKE \'%' . $searchItem . '%\'';
@@ -77,26 +77,26 @@ class TaskGoodsRepository extends ServiceEntityRepository
         }
 
         foreach ($columns as $key => $column) {
-            if ($column['name'] != '') {
+            if ($column['name'] !== '') {
                 switch ($column['name']) {
                     case 'dateTaskGoods':
                         {
                             $columnSearch = $column['search'];
-                            if ($columnSearch['value'] != '') {
+                            if ($columnSearch['value'] !== '') {
 
-                                $period = json_decode($columnSearch['value']);
+                                $period = json_decode($columnSearch['value'], false);
 
                                 $startDate = ($period->startDate);
                                 $endDate = ($period->endDate);
 
                                 $query
                                     ->andWhere('t0.date_task_goods BETWEEN :from AND :to')
-                                    ->setParameter('from', $startDate )
+                                    ->setParameter('from', $startDate)
                                     ->setParameter('to', $endDate);
 
                                 $countQuery
                                     ->andWhere('t0.date_task_goods BETWEEN :from AND :to')
-                                    ->setParameter('from', $startDate )
+                                    ->setParameter('from', $startDate)
                                     ->setParameter('to', $endDate);
                             }
                             break;
@@ -105,9 +105,9 @@ class TaskGoodsRepository extends ServiceEntityRepository
                     case 'user':
                         {
                             $columnUser = $column['search'];
-                            if ($columnUser['value'] != '') {
+                            if ($columnUser['value'] !== '') {
 
-                                if ($columnUser['value'] == 1000) {
+                                if ($columnUser['value'] === 1000) {
                                     $searchQuery = 't2.id = \'' . $authUser->getId() . '\'';
                                 } else {
                                     $searchQuery = 't2.department LIKE \'%' . $columnUser['value'] . '%\'';
@@ -122,7 +122,7 @@ class TaskGoodsRepository extends ServiceEntityRepository
                     case 'status':
                         {
                             $columnSearch = $column['search'];
-                            if ($columnSearch['value'] != '') {
+                            if ($columnSearch['value'] !== '') {
                                 $searchQuery = 't0.status LIKE \'%' . $columnSearch['value'] . '%\'';
 
                                 $query->andWhere($searchQuery);
@@ -141,7 +141,7 @@ class TaskGoodsRepository extends ServiceEntityRepository
         // Order
         foreach ($orders as $key => $order) {
             // $order['name'] is the name of the order column as sent by the JS
-            if ($order['name'] != '') {
+            if ($order['name'] !== '') {
                 $orderColumn = null;
 
                 switch ($order['name']) {
@@ -185,10 +185,10 @@ class TaskGoodsRepository extends ServiceEntityRepository
         $results = $query->getQuery()->getResult();
         $countResult = $countQuery->getQuery()->getSingleScalarResult();
 
-        return array(
+        return [
             "results" => $results,
             "countResult" => $countResult
-        );
+        ];
     }
 
     public function selectTasksGoods($ids)
@@ -206,9 +206,9 @@ class TaskGoodsRepository extends ServiceEntityRepository
 
     public function selectTasksGoodsForDriver($period, $driver)
     {
-        $period = json_decode($period);
-        $startDate = ($period->startDate);
-        $endDate = ($period->endDate);
+        $period = json_decode($period, false);
+        $startDate = $period->startDate;
+        $endDate = $period->endDate;
 
         return $this
             ->createQueryBuilder('t0')
@@ -218,7 +218,7 @@ class TaskGoodsRepository extends ServiceEntityRepository
             ->andWhere('t0.status = 3')
             ->andWhere("t3 IN (:driver)")->setParameter(':driver', $driver)
             ->andWhere('t0.date_task_goods BETWEEN :from AND :to')
-            ->setParameter('from', $startDate )
+            ->setParameter('from', $startDate)
             ->setParameter('to', $endDate)
             ->getQuery()
             ->getResult();

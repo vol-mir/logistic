@@ -4,15 +4,15 @@ namespace App\Controller;
 
 use App\Entity\Transport;
 use App\Form\TransportType;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Contracts\Translation\TranslatorInterface;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class TransportController
@@ -28,13 +28,13 @@ class TransportController extends AbstractController
      *
      * @return Response
      */
-    public function index() : Response
+    public function index(): Response
     {
         return $this->render('transport/index.html.twig');
     }
 
     /**
-     * Data for datatables
+     * Data for tables
      *
      * @Route("/transport/datatables", methods="POST", name="transport_datatables")
      *
@@ -42,23 +42,23 @@ class TransportController extends AbstractController
      *
      * @return JsonResponse
      */
-    public function listDatatableAction(Request $request) : JsonResponse
+    public function listDatatableAction(Request $request): JsonResponse
     {
         // Get the parameters from DataTable Ajax Call
-        if ($request->getMethod() == 'POST') {
-            $draw = intval($request->request->get('draw'));
+        if ($request->getMethod() === 'POST') {
+            $draw = (int)$request->request->get('draw');
             $start = $request->request->get('start');
             $length = $request->request->get('length');
             $search = $request->request->get('search');
             $orders = $request->request->get('order');
             $columns = $request->request->get('columns');
-        }
-        else // If the request is not a POST one, die hard
+        } else // If the request is not a POST one, die hard
+        {
             die;
+        }
 
         // Orders
-        foreach ($orders as $key => $order)
-        {
+        foreach ($orders as $key => $order) {
             // Orders does not contain the name of the column, but its number,
             // so add the name so we can handle it just like the $columns array
             $orders[$key]['name'] = $columns[$order['column']]['name'];
@@ -73,59 +73,61 @@ class TransportController extends AbstractController
         // Returned objects are of type Town
         $objects = $results["results"];
         // Get total number of objects
-        $total_objects_count = $em->getRepository(Transport::class)->countTransport();
+        $totalObjectsCount = $em->getRepository(Transport::class)->countTransport();
         // Get total number of filtered data
-        $filtered_objects_count = $results["countResult"];
+        $filteredObjectsCount = $results["countResult"];
 
         $data = [];
-        foreach ($objects as $key => $transport)
-        {
+        foreach ($objects as $transport) {
             $dataTemp = [];
-            foreach ($columns as $key => $column)
-            {
-                switch($column['name'])
-                {
+            foreach ($columns as $column) {
+                switch ($column['name']) {
                     case 'number':
                         {
-                            $elementTemp = "<a href='".$this->generateUrl('transport_edit', ['id' => $transport->getId()])."' class='float-left'>".$transport->getNumber()."</a>";
-                            array_push($dataTemp, $elementTemp);
+                            $elementTemp = $this->render('default/table_href.html.twig', [
+                                'url' => $this->generateUrl('transport_edit', ['id' => $transport->getId()]),
+                                'urlName' => $transport->getNumber()
+                            ])->getContent();
+                            $dataTemp[] = $elementTemp;
                             break;
                         }
 
                     case 'marka':
                         {
                             $elementTemp = $transport->getMarka();
-                            array_push($dataTemp, $elementTemp);
+                            $dataTemp[] = $elementTemp;
                             break;
                         }
 
                     case 'model':
                         {
                             $elementTemp = $transport->getModel();
-                            array_push($dataTemp, $elementTemp);
+                            $dataTemp[] = $elementTemp;
                             break;
                         }
 
                     case 'control':
                         {
-                            $elementTemp = "<div class='btn-group btn-group-sm'><a href='".$this->generateUrl('transport_edit', ['id' => $transport->getId()])."' class='btn btn-info'><i class='fas fa-edit'></i></a><button type='button' class='btn btn-sm btn-danger float-left modal-delete-dialog' data-toggle='modal' data-id='".$transport->getId()."'><i class='fas fa-trash'></i></button></div>";
-                            array_push($dataTemp, $elementTemp);
+                            $elementTemp = $this->render('default/table_group_btn.html.twig', [
+                                'urlEdit' => $this->generateUrl('transport_edit', ['id' => $transport->getId()]),
+                                'idDelete' => $transport->getId()
+                            ])->getContent();
+                            $dataTemp[] = $elementTemp;
                             break;
                         }
 
                 }
             }
-            array_push($data, $dataTemp);
+            $data[] = $dataTemp;
         }
 
         // Construct response
         $response = [
             'draw' => $draw,
-            'recordsTotal' => $total_objects_count,
-            'recordsFiltered' => $filtered_objects_count,
+            'recordsTotal' => $totalObjectsCount,
+            'recordsFiltered' => $filteredObjectsCount,
             'data' => $data,
         ];
-
 
         // Send all this stuff back to DataTables
         $returnResponse = new JsonResponse();
@@ -135,7 +137,7 @@ class TransportController extends AbstractController
     }
 
     /**
-     * Creates a new transport entity.
+     * Creates a new transport entity
      *
      * @Route("/transport/new", methods="GET|POST", name="transport_new")
      *
@@ -144,10 +146,10 @@ class TransportController extends AbstractController
      *
      * @return RedirectResponse|Response
      */
-    public function new(Request $request, TranslatorInterface $translator) : Response
+    public function new(Request $request, TranslatorInterface $translator): Response
     {
         $transport = new Transport();
-        $form = $this->createForm(TransportType::class, $transport)->add('saveAndCreateNew', SubmitType::class);
+        $form = $this->createForm(TransportType::class, $transport);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -157,7 +159,8 @@ class TransportController extends AbstractController
 
             $this->addFlash('success', $translator->trans('item.created_successfully'));
 
-            if ($form->get('saveAndCreateNew')->isClicked()) {
+            if ($form->getClickedButton() && 'saveAndCreateNew' === $form->getClickedButton()->getName()) {
+
                 return $this->redirectToRoute('transport_new');
             }
 
@@ -170,7 +173,7 @@ class TransportController extends AbstractController
     }
 
     /**
-     * Edit transport
+     * Edit the transport entity
      *
      * @Route("/transport/{id}/edit", methods="GET|POST", name="transport_edit", requirements={"id" = "\d+"})
      *
@@ -180,7 +183,7 @@ class TransportController extends AbstractController
      *
      * @return Response
      */
-    public function edit(Request $request, Transport $transport, TranslatorInterface $translator) : Response
+    public function edit(Request $request, Transport $transport, TranslatorInterface $translator): Response
     {
         $form = $this->createForm(TransportType::class, $transport);
         $form->handleRequest($request);
@@ -189,6 +192,12 @@ class TransportController extends AbstractController
             $this->getDoctrine()->getManager()->flush();
 
             $this->addFlash('success', $translator->trans('item.edited_successfully'));
+
+            if ($form->getClickedButton() && 'saveAndStay' === $form->getClickedButton()->getName()) {
+
+                return $this->redirectToRoute('transport_edit', ['id' => $transport->getId()]);
+            }
+
             return $this->redirectToRoute('transport_index');
         }
 
@@ -209,7 +218,7 @@ class TransportController extends AbstractController
      *
      * @return JsonResponse
      */
-    public function delete(Request $request, Transport $transport, TranslatorInterface $translator) : JsonResponse
+    public function delete(Request $request, Transport $transport, TranslatorInterface $translator): JsonResponse
     {
         if ($this->isCsrfTokenValid('delete-item', $request->request->get('_token'))) {
             $em = $this->getDoctrine()->getManager();

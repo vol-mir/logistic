@@ -9,10 +9,6 @@
         <source>title.save</source>
         <target>Сохранить</target>
       </trans-unit>
-      <trans-unit id="label.save_and_create_new">
-        <source>label.save_and_create_new</source>
-        <target>Сохранить и создать новую</target>
-      </trans-unit>
       <trans-unit id="title.delete">
         <source>title.delete</source>
         <target>Удалить</target>
@@ -37,6 +33,111 @@
         <source>title.print</source>
         <target>Печать</target>
       </trans-unit>
+      <trans-unit id="title.shape">
+        <source>title.shape</source>
+        <target>Сформировать</target>
+      </trans-unit>
+      <trans-unit id="title.save_and_stay">
+        <source>title.save_and_stay</source>
+        <target>Сохранить и остаться</target>
+      </trans-unit>
+      <trans-unit id="title.save_and_create_new">
+        <source>title.save_and_create_new</source>
+        <target>Сохранить и создать новую</target>
+      </trans-unit>
+
+      <trans-unit id="title.page.index.organization">
+        <source>title.page.index.organization</source>
+        <target>Организации</target>
+      </trans-unit>
+      <trans-unit id="title.page.edit.organization">
+        <source>title.page.edit.organization</source>
+        <target>Редактирование организации</target>
+      </trans-unit>
+      <trans-unit id="title.page.new.organization">
+        <source>title.page.new.organization</source>
+        <target>Добавление организации</target>
+      </trans-unit>
+      <trans-unit id="title.page.show.organization">
+        <source>title.page.show.organization</source>
+        <target>Информация об организации</target>
+      </trans-unit>
+
+      <trans-unit id="title.page.index.driver">
+        <source>title.page.index.driver</source>
+        <target>Водители</target>
+      </trans-unit>
+      <trans-unit id="title.page.new.driver">
+        <source>title.page.new.driver</source>
+        <target>Добавление нового водитея</target>
+      </trans-unit>
+      <trans-unit id="title.page.edit.driver">
+        <source>title.page.edit.driver</source>
+        <target>Редактирование данных о водителе</target>
+      </trans-unit>
+      <trans-unit id="title.page.new.address">
+        <source>title.page.new.address</source>
+        <target>Добавление адреса точки</target>
+      </trans-unit>
+      <trans-unit id="title.page.edit.address">
+        <source>title.page.edit.address</source>
+        <target>Редактирование адреса точки</target>
+      </trans-unit>
+      <trans-unit id="title.page.faq">
+        <source>title.page.faq</source>
+        <target>Справка</target>
+      </trans-unit>
+      <trans-unit id="title.page.main">
+        <source>title.page.main</source>
+        <target>Главная</target>
+      </trans-unit>
+      <trans-unit id="title.page.invoice.task_driver">
+        <source>title.page.invoice.task_driver</source>
+        <target>Задание водителю</target>
+      </trans-unit>
+
+     <trans-unit id="title.page.index.user">
+        <source>title.page.index.user</source>
+        <target>Пользователи</target>
+      </trans-unit>
+      <trans-unit id="title.page.new.user">
+        <source>title.page.new.user</source>
+        <target>Добавление нового пользователя</target>
+      </trans-unit>
+      <trans-unit id="title.page.edit.user">
+        <source>title.page.edit.user</source>
+        <target>Редактирование данных о пользователе</target>
+      </trans-unit>
+
+     <trans-unit id="title.page.index.transport">
+        <source>title.page.index.transport</source>
+        <target>Транспорт</target>
+      </trans-unit>
+      <trans-unit id="title.page.new.transport">
+        <source>title.page.new.transport</source>
+        <target>Добавление нового транспорта</target>
+      </trans-unit>
+      <trans-unit id="title.page.edit.transport">
+        <source>title.page.edit.transport</source>
+        <target>Редактирование данных о транспорте</target>
+      </trans-unit>
+
+     <trans-unit id="title.page.index.task_goods">
+        <source>title.page.index.task_goods</source>
+        <target>Заявки на транспорт</target>
+      </trans-unit>
+      <trans-unit id="title.page.new.task_goods">
+        <source>title.page.new.task_goods</source>
+        <target>Добавление новой заявки</target>
+      </trans-unit>
+      <trans-unit id="title.page.edit.task_goods">
+        <source>title.page.edit.task_goods</source>
+        <target>Редактирование заявки</target>
+      </trans-unit>
+      <trans-unit id="title.page.show.task_goods">
+        <source>title.page.show.task_goods</source>
+        <target>Информация о заявке</target>
+      </trans-unit>
 
       <trans-unit id="item.deleted_successfully">
         <source>item.deleted_successfully</source>
@@ -53,35 +154,6 @@
       <trans-unit id="item.deleted_use">
         <source>item.deleted_use</source>
         <target>Запись используется, удалить невозможно!</target>
-      </trans-unit>
-
-      <trans-unit id="menu.drivers">
-        <source>menu.drivers</source>
-        <target>Водители</target>
-      </trans-unit>
-      <trans-unit id="menu.transport">
-        <source>menu.transport</source>
-        <target>Транспорт</target>
-      </trans-unit>
-      <trans-unit id="menu.organizations">
-        <source>menu.organizations</source>
-        <target>Организации</target>
-      </trans-unit>
-      <trans-unit id="menu.tasks_goods">
-        <source>menu.tasks_goods</source>
-        <target>Заявки на транспорт</target>
-      </trans-unit>
-      <trans-unit id="menu.users">
-        <source>menu.users</source>
-        <target>Пользователи</target>
-      </trans-unit>
-      <trans-unit id="menu.task_driver">
-        <source>menu.task_driver</source>
-        <target>Задание водителю</target>
-      </trans-unit>
-      <trans-unit id="menu.faq">
-        <source>menu.faq</source>
-        <target>Помощь (F.A.Q.)</target>
       </trans-unit>
 
       <trans-unit id="label.first_name">
@@ -432,6 +504,15 @@
       <trans-unit id="department.ogm">
         <source>department.ogm</source>
         <target>ОГМ</target>
+      </trans-unit>
+      <trans-unit id="department.canteen">
+        <source>department.canteen</source>
+        <target>Столовая</target>
+      </trans-unit>
+
+      <trans-unit id="organization">
+        <source>organization</source>
+        <target>Организация</target>
       </trans-unit>
 
     </body>

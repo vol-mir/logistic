@@ -1,8 +1,10 @@
 <div class="row">
     <div class="col-12">
-        <a href="{{ path('task_goods_index') }}" class="btn btn-outline-secondary float-left mr-2 mb-1">{{ 'title.back'|trans }}</a>
-        {% if task_goods.status == 2%}
-            <button type="button" class="btn btn-default invoice"><i class='fas fa-print'></i> {{ 'title.print'|trans }}</button>
+        <a href="{{ path('task_goods_index') }}"
+           class="btn btn-outline-secondary float-left mr-2 mb-1">{{ 'title.back'|trans }}</a>
+        {% if taskGoods.status == 2 %}
+            <button type="button" class="btn btn-default invoice"><i class='fas fa-print'></i> {{ 'title.print'|trans }}
+            </button>
         {% endif %}
     </div>
 </div>

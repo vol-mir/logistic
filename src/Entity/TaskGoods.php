@@ -3,11 +3,11 @@
 namespace App\Entity;
 
 use App\Repository\TaskGoodsRepository;
+use DateTime;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 
 /**
@@ -135,14 +135,14 @@ class TaskGoods
     private $status = 1;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $created_at;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(type="datetime", nullable=true)
      */
@@ -180,7 +180,7 @@ class TaskGoods
     private $address_goods_yard;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(type="datetime", nullable=false)
      */
@@ -219,7 +219,7 @@ class TaskGoods
 
     public function __construct()
     {
-        $this->setDateTaskGoods(new \DateTime());
+        $this->setDateTaskGoods(new DateTime());
         $this->drivers = new ArrayCollection();
         $this->transports = new ArrayCollection();
     }
@@ -325,24 +325,12 @@ class TaskGoods
         return $this;
     }
 
-    public function getStatus(): ?int
-    {
-        return $this->status;
-    }
-
-    public function setStatus(int $status): self
-    {
-        $this->status = $status;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?DateTimeInterface
     {
         return $this->created_at;
     }
 
-    public function getUpdatedAt(): ?\DateTimeInterface
+    public function getUpdatedAt(): ?DateTimeInterface
     {
         return $this->updated_at;
     }
@@ -350,19 +338,19 @@ class TaskGoods
     /**
      * @ORM\PrePersist
      */
-    public function prePersist()
+    public function prePersist(): void
     {
-        $this->created_at = new \DateTime();
-        $this->updated_at = new \DateTime();
+        $this->created_at = new DateTime();
+        $this->updated_at = new DateTime();
         // $this->status = 1;
     }
 
     /**
      * @ORM\PreUpdate
      */
-    public function preUpdate()
+    public function preUpdate(): void
     {
-        $this->updated_at = new \DateTime();
+        $this->updated_at = new DateTime();
     }
 
     public function getOrganization(): ?Organization
@@ -413,12 +401,12 @@ class TaskGoods
         return $this;
     }
 
-    public function getDateTaskGoods(): ?\DateTimeInterface
+    public function getDateTaskGoods(): ?DateTimeInterface
     {
         return $this->date_task_goods;
     }
 
-    public function setDateTaskGoods(\DateTimeInterface $date_task_goods): self
+    public function setDateTaskGoods(DateTimeInterface $date_task_goods): self
     {
         $this->date_task_goods = $date_task_goods;
 
@@ -489,6 +477,11 @@ class TaskGoods
         return $this;
     }
 
+    public function isAuthor(User $user = null): bool
+    {
+        return $user && $user->getId() === $this->getUser()->getId();
+    }
+
     public function getUser(): ?User
     {
         return $this->user;
@@ -501,14 +494,21 @@ class TaskGoods
         return $this;
     }
 
-    public function isAuthor(User $user = null)
+    public function isOpen(): bool
     {
-        return $user && $user->getId() == $this->getUser()->getId();
+        return $this->getStatus() === 1;
     }
 
-    public function isOpen()
+    public function getStatus(): ?int
     {
-        return $this->getStatus() == 1;
+        return $this->status;
+    }
+
+    public function setStatus(int $status): self
+    {
+        $this->status = $status;
+
+        return $this;
     }
 
 

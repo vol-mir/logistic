@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Транспорт{% endblock %}
+{% block title %}{{ 'title.page.index.transport'|trans }}{% endblock %}
 
 {% block body %}
     <div class="row">
@@ -54,10 +54,10 @@
             let table = $("#transports").DataTable({
                 "columnDefs": [
                     // These are the column name variables that will be sent to the server
-                    { "name": "number",   "targets": 0 },
-                    { "name": "marka", "targets": 1 },
-                    { "name": "model",   "targets": 2 },
-                    { "name": "control",  "targets": 3, "orderable": false, "searchable": false },
+                    {"name": "number", "targets": 0},
+                    {"name": "marka", "targets": 1},
+                    {"name": "model", "targets": 2},
+                    {"name": "control", "targets": 3, "orderable": false, "searchable": false},
                 ],
                 "ajax": {
                     "url": "{{ path('transport_datatables') }}",
@@ -68,8 +68,8 @@
                 "serverSide": true,
                 "responsive": true,
                 "autoWidth": false,
-                "paging" : true,
-                "info" : true,
+                "paging": true,
+                "info": true,
                 "searching": true,
                 "pageLength": 10,
                 "order": [[0, 'asc']],
@@ -78,22 +78,22 @@
                 }
             });
 
-            $("#transports").on("click", ".modal-delete-dialog", function() {
+            $("#transports").on("click", ".modal-delete-dialog", function () {
                 $('#btn-modal-delete').attr("data-confirm-delete-id", $(this).attr('data-id'));
                 $('#modal-delete').modal('show');
             });
 
-            $("#modal-delete").on("click", "#btn-modal-delete", function() {
+            $("#modal-delete").on("click", "#btn-modal-delete", function () {
 
-                let url = "{{path('transport_delete', { 'id': 0 }) }}";
+                let url = "{{ path('transport_delete', { 'id': 0 }) }}";
                 url = url.replace("0", $(this).attr('data-confirm-delete-id'));
 
                 $.ajax({
                     type: 'post',
                     url: url,
-                    data: { '_method':'delete','_token':'{{ csrf_token('delete-item') }}' },
+                    data: {'_method': 'delete', '_token': '{{ csrf_token('delete-item') }}'},
                     dataType: 'json'
-                }).done(function(data) {
+                }).done(function (data) {
                     table.ajax.reload(null, false);
                     toastr.success(data.message);
                 });

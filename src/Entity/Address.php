@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\AddressRepository;
+use DateTime;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -80,14 +82,14 @@ class Address
     private $locality;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $created_at;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(type="datetime", nullable=true)
      */
@@ -221,12 +223,12 @@ class Address
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?DateTimeInterface
     {
         return $this->created_at;
     }
 
-    public function getUpdatedAt(): ?\DateTimeInterface
+    public function getUpdatedAt(): ?DateTimeInterface
     {
         return $this->updated_at;
     }
@@ -245,27 +247,27 @@ class Address
 
     public function getFullAddress(): ?string
     {
-        return (!empty($this->point_name)?$this->point_name.' - ':'').(!empty($this->postcode)?$this->postcode.', ':'').(!empty($this->country)?$this->country.', ':'').
-            (!empty($this->region)?$this->region.', ':'').(!empty($this->city)?$this->city.', ':'').
-            (!empty($this->locality)?$this->locality.', ':'').(!empty($this->street)?$this->street.'':'');
+        return (!empty($this->point_name) ? $this->point_name . ' - ' : '') . (!empty($this->postcode) ? $this->postcode . ', ' : '') . (!empty($this->country) ? $this->country . ', ' : '') .
+            (!empty($this->region) ? $this->region . ', ' : '') . (!empty($this->city) ? $this->city . ', ' : '') .
+            (!empty($this->locality) ? $this->locality . ', ' : '') . (!empty($this->street) ? $this->street . '' : '');
     }
 
 
     /**
      * @ORM\PrePersist
      */
-    public function prePersist()
+    public function prePersist(): void
     {
-        $this->created_at = new \DateTime();
-        $this->updated_at = new \DateTime();
+        $this->created_at = new DateTime();
+        $this->updated_at = new DateTime();
     }
 
     /**
      * @ORM\PreUpdate
      */
-    public function preUpdate()
+    public function preUpdate(): void
     {
-        $this->updated_at = new \DateTime();
+        $this->updated_at = new DateTime();
     }
 
     /**

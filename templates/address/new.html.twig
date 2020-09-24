@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Добавление точки{% endblock %}
+{% block title %}{{ 'title.page.new.address'|trans }}{% endblock %}
 
 {% block body %}
     <div class="row">
@@ -8,16 +8,19 @@
             <!-- jquery validation -->
             <div class="card card-default">
                 <div class="card-header">
-                    Организация: <a href="{{ path('organization_show', {'id': organization.id }) }}">{{ organization.abbreviatedName }}</a>
+                    {{ 'organization'|trans }}: <a
+                            href="{{ path('organization_show', {'id': organization.id }) }}">{{ organization.abbreviatedName }}</a>
                 </div>
                 <div class="card-body">
                     <!-- form start -->
-                    <form id="addressForm" action="{{ path('address_new', {'organization_id': organization.id }) }}" method="POST">
+                    <form id="addressForm" action="{{ path('address_new', {'organization_id': organization.id }) }}"
+                          method="POST">
                         {% include 'address/_form.html.twig' with {'form': form} only %}
                         <div class="card-footer">
-                            <button type="submit" class="btn btn-primary">{{ 'title.save'|trans }}</button>
-                            {{ form_widget(form.saveAndCreateNew, {label: 'label.save_and_create_new', attr: {class: 'btn btn-primary'}}) }}
-                            <a href="{{ path('organization_show', {'id': organization.id }) }}" class="btn btn-default float-right">{{ 'title.cancel'|trans }}</a>
+                            {{ form_widget(form.save) }}
+                            {{ form_widget(form.saveAndCreateNew) }}
+                            <a href="{{ path('organization_show', {'id': organization.id }) }}"
+                               class="btn btn-default float-right">{{ 'title.cancel'|trans }}</a>
                         </div>
                     </form>
                 </div>

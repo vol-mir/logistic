@@ -3,11 +3,13 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
-use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
+use DateTime;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
@@ -24,19 +26,25 @@ class User implements UserInterface
     ];
 
     public const DEPARTMENTS = [
-        15 => 'department.oit',
-        29 => 'department.op',
-        40 => 'department.om',
-        27 => 'department.omtsvk',
-        19 => 'department.ogt',
-        18 => 'department.ogk',
         12 => 'department.oge',
+        15 => 'department.oit',
+        18 => 'department.ogk',
+        19 => 'department.ogt',
+        21 => 'department.ogm',
+        27 => 'department.omtsvk',
+        29 => 'department.op',
         30 => 'department.rsmy',
+        40 => 'department.om',
         45 => 'department.atc',
         48 => 'department.cil',
-        21 => 'department.ogm'
+        57 => 'department.canteen'
     ];
-
+    /**
+     * Plain password. Used for model validation. Must not be persisted.
+     *
+     * @var string
+     */
+    protected $plainPassword;
     /**
      * @var int
      *
@@ -45,36 +53,24 @@ class User implements UserInterface
      * @ORM\Column(type="integer")
      */
     private $id;
-
     /**
      * @var string
      *
      * @ORM\Column(type="string", length=180, unique=true)
      */
     private $username;
-
     /**
      * @var array
      *
      * @ORM\Column(type="json")
      */
     private $roles = [];
-
     /**
      * @var string The hashed password
      *
      * @ORM\Column(type="string")
      */
     private $password;
-
-
-    /**
-     * Plain password. Used for model validation. Must not be persisted.
-     *
-     * @var string
-     */
-    protected $plainPassword;
-
     /**
      * @var string
      *
@@ -104,14 +100,14 @@ class User implements UserInterface
     private $department;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $created_at;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(type="datetime", nullable=true)
      */
@@ -139,9 +135,9 @@ class User implements UserInterface
      *
      * @see UserInterface
      */
-    public function getUsername(): string
+    public function getUsername(): ?string
     {
-        return (string) $this->username;
+        return $this->username;
     }
 
     public function setUsername(string $username): self
@@ -175,7 +171,7 @@ class User implements UserInterface
      */
     public function getPassword(): string
     {
-        return (string) $this->password;
+        return $this->password;
     }
 
     public function setPassword(string $password): self
@@ -196,7 +192,7 @@ class User implements UserInterface
     /**
      * @see UserInterface
      */
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
         // If you store any temporary, sensitive data on the user, clear it here
         $this->plainPassword = null;
@@ -240,7 +236,7 @@ class User implements UserInterface
 
     public function getFullName(): ?string
     {
-        return $this->last_name.' '.mb_substr($this->first_name,0,1,"UTF-8").'. '.mb_substr($this->middle_name,0,1,"UTF-8").'.';
+        return $this->last_name . ' ' . mb_substr($this->first_name, 0, 1, "UTF-8") . '. ' . mb_substr($this->middle_name, 0, 1, "UTF-8") . '.';
     }
 
 
@@ -256,22 +252,22 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?DateTimeInterface
     {
         return $this->created_at;
     }
 
-    public function getUpdatedAt(): ?\DateTimeInterface
+    public function getUpdatedAt(): ?DateTimeInterface
     {
         return $this->updated_at;
     }
 
-    public function getPlainPassword()
+    public function getPlainPassword(): ?string
     {
         return $this->plainPassword;
     }
 
-    public function setPlainPassword($password)
+    public function setPlainPassword($password): self
     {
         $this->plainPassword = $password;
 
@@ -281,18 +277,18 @@ class User implements UserInterface
     /**
      * @ORM\PrePersist
      */
-    public function prePersist()
+    public function prePersist(): void
     {
-        $this->created_at = new \DateTime();
-        $this->updated_at = new \DateTime();
+        $this->created_at = new DateTime();
+        $this->updated_at = new DateTime();
     }
 
     /**
      * @ORM\PreUpdate
      */
-    public function preUpdate()
+    public function preUpdate(): void
     {
-        $this->updated_at = new \DateTime();
+        $this->updated_at = new DateTime();
     }
 
     /**

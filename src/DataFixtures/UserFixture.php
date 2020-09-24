@@ -16,21 +16,17 @@ class UserFixture extends Fixture
         $this->passwordEncoder = $passwordEncoder;
     }
 
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         $user = new User();
-
         $user->setUsername('admin');
         $user->setPassword($this->passwordEncoder->encodePassword($user, 'admin'));
         $user->setRoles(['ROLE_ADMIN']);
         $user->setUsername('Admin');
         $user->setLastName('Admin');
         $user->setMiddleName('Admin');
-
         $user->setDepartment(15);
-
         $manager->persist($user);
-
         $manager->flush();
     }
 }

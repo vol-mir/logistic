@@ -3,30 +3,30 @@
 namespace App\Form;
 
 use App\Entity\Address;
-use Psr\Log\LoggerInterface;
-use App\Entity\TaskGoods;
 use App\Entity\Organization;
+use App\Entity\TaskGoods;
 use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\DateTime;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\DateTime;
 use Symfony\Component\Validator\Constraints\PositiveOrZero;
-use Symfony\Component\Form\FormInterface;
 
 class TaskGoodsType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('date_task_goods', DateType::class, [
@@ -74,8 +74,8 @@ class TaskGoodsType extends AbstractType
                     'title' => 'label.weight',
                     'class' => 'form-control',
                     'name' => 'task_goods_weight',
-                    'min'  => 0,
-                    'max'  => 99999999,
+                    'min' => 0,
+                    'max' => 99999999,
                     'step' => 0.01,
                 ],
                 'constraints' => [
@@ -86,7 +86,7 @@ class TaskGoodsType extends AbstractType
             ->add('unit', ChoiceType::class, [
                 'choices' => array_flip(TaskGoods::LIST_UNITS),
                 'label' => 'label.unit',
-                'required'   => false,
+                'required' => false,
                 'empty_data' => '1',
                 'attr' => [
                     'placeholder' => 'label.unit',
@@ -123,8 +123,8 @@ class TaskGoodsType extends AbstractType
                     'title' => 'label.number_of_packages',
                     'class' => 'form-control',
                     'name' => 'task_goods_number_of_packages',
-                    'min'  => 0,
-                    'max'  => 99999999,
+                    'min' => 0,
+                    'max' => 99999999,
                     'step' => 1,
                 ],
                 'constraints' => [
@@ -150,7 +150,7 @@ class TaskGoodsType extends AbstractType
             ->add('organization', EntityType::class, [
                 'class' => Organization::class,
                 'label' => 'label.organization',
-                'query_builder' => function (EntityRepository $er) {
+                'query_builder' => static function (EntityRepository $er) {
                     return $er->createQueryBuilder('o')
                         ->orderBy('o.abbreviated_name', 'ASC');
                 },
@@ -166,16 +166,15 @@ class TaskGoodsType extends AbstractType
                 'constraints' => [
                     new NotBlank(),
                 ]
-            ])
-        ;
+            ]);
 
-        $formModifier = function (FormInterface $form, Organization $organization = null, $dataContactPerson = null, $dataWorkingHours = null) {
+        $formModifier = static function (FormInterface $form, Organization $organization = null, $dataContactPerson = null, $dataWorkingHours = null) {
             $form->add('address_office', EntityType::class, [
                 'class' => Address::class,
                 'label' => 'label.address_office',
                 'required' => false,
                 'placeholder' => 'placeholder.not_specified',
-                'query_builder' => function (EntityRepository $er) use ($organization) {
+                'query_builder' => static function (EntityRepository $er) use ($organization) {
                     return $er->createQueryBuilder('a')
                         ->where('a.organization = :organization')
                         ->orderBy('a.point_name', 'ASC')
@@ -200,7 +199,7 @@ class TaskGoodsType extends AbstractType
             $form->add('address_goods_yard', EntityType::class, [
                 'class' => Address::class,
                 'label' => 'label.address_goods_yard',
-                'query_builder' => function (EntityRepository $er) use ($organization) {
+                'query_builder' => static function (EntityRepository $er) use ($organization) {
                     return $er->createQueryBuilder('a')
                         ->where('a.organization = :organization')
                         ->orderBy('a.point_name', 'ASC')
@@ -228,7 +227,7 @@ class TaskGoodsType extends AbstractType
 
             $form->add('contact_person', TextareaType::class, [
                 'label' => 'label.contact_person',
-                'data' => $dataContactPerson ? $dataContactPerson : ($organization ? $organization->getBaseContactPerson() : null),
+                'data' => $dataContactPerson ?: ($organization ? $organization->getBaseContactPerson() : null),
                 'attr' => [
                     'placeholder' => 'label.contact_person',
                     'title' => 'label.contact_person',
@@ -242,7 +241,7 @@ class TaskGoodsType extends AbstractType
 
             $form->add('working_hours', TextareaType::class, [
                 'label' => 'label.working_hours',
-                'data' => $dataWorkingHours ? $dataWorkingHours : ($organization ? $organization->getBaseWorkingHours() : null),
+                'data' => $dataWorkingHours ?: ($organization ? $organization->getBaseWorkingHours() : null),
                 'attr' => [
                     'placeholder' => 'label.working_hours',
                     'title' => 'label.working_hours',
@@ -257,14 +256,14 @@ class TaskGoodsType extends AbstractType
 
         $builder->addEventListener(
             FormEvents::PRE_SET_DATA,
-            function (FormEvent $event) use ($formModifier) {
+            static function (FormEvent $event) use ($formModifier) {
                 $data = $event->getData();
                 $form = $event->getForm();
                 $organization = $data->getOrganization();
                 $formModifier($form, $organization, $data->getContactPerson(), $data->getWorkingHours());
 
-                $status = $data->getStatus()?$data->getStatus():null;
-                if ($status == null or $status == 1 or $status == 2) {
+                $status = $data->getStatus() ?: null;
+                if ($status === null || $status === 1 || $status === 2) {
                     $form->add('status', ChoiceType::class, [
                         'choices' => array_flip(TaskGoods::BEGIN_STATUSES),
                         'label' => 'label.status',
@@ -286,16 +285,35 @@ class TaskGoodsType extends AbstractType
         );
 
         $builder->get('organization')->addEventListener(FormEvents::POST_SUBMIT,
-            function (FormEvent $event) use ($formModifier) {
+            static function (FormEvent $event) use ($formModifier) {
                 $organization = $event->getForm()->getData();
                 $formModifier($event->getForm()->getParent(), $organization);
             }
         );
 
+        $builder->add('save', SubmitType::class, [
+            'label' => 'title.save',
+            'attr' => [
+                'class' => 'btn btn-primary',
+            ]
+        ]);
 
+        $builder->add('saveAndCreateNew', SubmitType::class, [
+            'label' => 'title.save_and_create_new',
+            'attr' => [
+                'class' => 'btn btn-primary',
+            ]
+        ]);
+
+        $builder->add('saveAndStay', SubmitType::class, [
+            'label' => 'title.save_and_stay',
+            'attr' => [
+                'class' => 'btn btn-primary',
+            ]
+        ]);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => TaskGoods::class,

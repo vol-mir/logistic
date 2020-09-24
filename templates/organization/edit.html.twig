@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Редактирование организации{% endblock %}
+{% block title %}{{ 'title.page.edit.organization'|trans }}{% endblock %}
 
 {% block body %}
     <div class="row">
@@ -8,11 +8,14 @@
             <!-- jquery validation -->
             <div class="card card-default">
                 <!-- form start -->
-                <form id="organizationForm" action="{{ path('organization_edit', {'id': organization.id}) }}" method="POST">
+                <form id="organizationForm" action="{{ path('organization_edit', {'id': organization.id}) }}"
+                      method="POST">
                     {% include 'organization/_form.html.twig' with {'form': form} only %}
                     <div class="card-footer">
-                        <button type="submit" class="btn btn-primary">{{ 'title.save'|trans }}</button>
-                        <a href="{{ path('organization_index') }}" class="btn btn-default float-right">{{ 'title.cancel'|trans }}</a>
+                        {{ form_widget(form.save) }}
+                        {{ form_widget(form.saveAndStay) }}
+                        <a href="{{ path('organization_index') }}"
+                           class="btn btn-default float-right">{{ 'title.cancel'|trans }}</a>
                     </div>
                 </form>
             </div>

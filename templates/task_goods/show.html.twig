@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Информация о заявке{% endblock %}
+{% block title %}{{ 'title.page.show.task_goods'|trans }}{% endblock %}
 
 {% block body %}
     <div class="row">
@@ -13,101 +13,101 @@
                 <div class="card-body">
                     <dl class="row">
                         <dt class="col-sm-4">{{ 'label.task_goods_id'|trans }}</dt>
-                        <dd class="col-sm-8">{{ task_goods.id }}</dd>
+                        <dd class="col-sm-8">{{ taskGoods.id }}</dd>
 
                         <dt class="col-sm-4">{{ 'label.date_task_goods'|trans }}</dt>
-                        <dd class="col-sm-8">{{ task_goods.dateTaskGoods|date("d.m.Y") }}</dd>
+                        <dd class="col-sm-8">{{ taskGoods.dateTaskGoods|date("d.m.Y") }}</dd>
 
                         <dt class="col-sm-4">{{ 'label.goods'|trans }}</dt>
-                        <dd class="col-sm-8">{{ task_goods.goods }}</dd>
+                        <dd class="col-sm-8">{{ taskGoods.goods }}</dd>
 
-                        {% if task_goods.note %}
+                        {% if taskGoods.note %}
                             <dt class="col-sm-4">{{ 'label.note'|trans }}</dt>
-                            <dd class="col-sm-8">{{ task_goods.note }}</dd>
+                            <dd class="col-sm-8">{{ taskGoods.note }}</dd>
                         {% endif %}
 
                         <dt class="col-sm-4">{{ 'label.weight'|trans }}</dt>
-                        <dd class="col-sm-8">{{ task_goods.weight }} {{ units[task_goods.unit]|trans }}</dd>
+                        <dd class="col-sm-8">{{ taskGoods.weight }} {{ units[taskGoods.unit]|trans }}</dd>
 
-                        {% if task_goods.dimensions %}
+                        {% if taskGoods.dimensions %}
                             <dt class="col-sm-4">{{ 'label.dimensions'|trans }}</dt>
-                            <dd class="col-sm-8">{{ task_goods.dimensions }}</dd>
+                            <dd class="col-sm-8">{{ taskGoods.dimensions }}</dd>
                         {% endif %}
 
                         <dt class="col-sm-4">{{ 'label.number_of_packages'|trans }}</dt>
-                        <dd class="col-sm-8">{{ task_goods.numberOfPackages }}</dd>
+                        <dd class="col-sm-8">{{ taskGoods.numberOfPackages }}</dd>
 
                         <dt class="col-sm-4">{{ 'label.loading_nature'|trans }}</dt>
-                        <dd class="col-sm-8">{{ loading_natures[task_goods.loadingNature]|trans }}</dd>
+                        <dd class="col-sm-8">{{ loadingNatures[taskGoods.loadingNature]|trans }}</dd>
 
                         <dt class="col-sm-4">{{ 'label.organization'|trans }}</dt>
-                        <dd class="col-sm-8">{{ task_goods.organization }}</dd>
+                        <dd class="col-sm-8">{{ taskGoods.organization }}</dd>
 
-                        {% if task_goods.addressOffice %}
+                        {% if taskGoods.addressOffice %}
                             <dt class="col-sm-4">{{ 'label.address_office'|trans }}</dt>
-                            <dd class="col-sm-8">{{ task_goods.addressOffice.fullAddress }}</dd>
+                            <dd class="col-sm-8">{{ taskGoods.addressOffice.fullAddress }}</dd>
                         {% endif %}
 
                         <dt class="col-sm-4">{{ 'label.address_goods_yard'|trans }}</dt>
-                        <dd class="col-sm-8">{{ task_goods.addressGoodsYard.fullAddress }}</dd>
+                        <dd class="col-sm-8">{{ taskGoods.addressGoodsYard.fullAddress }}</dd>
 
                         <dt class="col-sm-4">{{ 'label.contact_person'|trans }}</dt>
-                        <dd class="col-sm-8">{{ task_goods.contactPerson }}</dd>
+                        <dd class="col-sm-8">{{ taskGoods.contactPerson }}</dd>
 
                         <dt class="col-sm-4">{{ 'label.working_hours'|trans }}</dt>
-                        <dd class="col-sm-8">{{ task_goods.workingHours }}</dd>
+                        <dd class="col-sm-8">{{ taskGoods.workingHours }}</dd>
 
                         <dt class="col-sm-4">{{ 'label.created_at'|trans }}</dt>
-                        <dd class="col-sm-8">{{ task_goods.createdAt|date("d.m.Y H:i") }}</dd>
+                        <dd class="col-sm-8">{{ taskGoods.createdAt|date("d.m.Y H:i") }}</dd>
 
                         <dt class="col-sm-4">{{ 'label.status'|trans }}</dt>
                         <dd class="col-sm-8">
-                            {% if task_goods.status == 1 %}
-                                <span class='badge badge-primary'>{{ statuses[task_goods.status]|trans }}</span>
+                            {% if taskGoods.status == 1 %}
+                                <span class='badge badge-primary'>{{ statuses[taskGoods.status]|trans }}</span>
 
-                            {% elseif task_goods.status == 2 %}
-                                <span class='badge badge-warning'>{{ statuses[task_goods.status]|trans }}</span>
+                            {% elseif taskGoods.status == 2 %}
+                                <span class='badge badge-warning'>{{ statuses[taskGoods.status]|trans }}</span>
 
-                            {% elseif task_goods.status == 3 %}
-                                <span class='badge badge-light'>{{ statuses[task_goods.status]|trans }}</span>
+                            {% elseif taskGoods.status == 3 %}
+                                <span class='badge badge-light'>{{ statuses[taskGoods.status]|trans }}</span>
 
-                            {% elseif task_goods.status == 4 %}
-                                <span class='badge badge-dark'>{{ statuses[task_goods.status]|trans }}</span>
+                            {% elseif taskGoods.status == 4 %}
+                                <span class='badge badge-dark'>{{ statuses[taskGoods.status]|trans }}</span>
 
-                            {% elseif task_goods.status == 5 %}
-                                <span class='badge badge-success'>{{ statuses[task_goods.status]|trans }}</span>
+                            {% elseif taskGoods.status == 5 %}
+                                <span class='badge badge-success'>{{ statuses[taskGoods.status]|trans }}</span>
 
-                            {% elseif task_goods.status == 6 %}
-                                <span class='badge badge-danger'>{{ statuses[task_goods.status]|trans }}</span>
+                            {% elseif taskGoods.status == 6 %}
+                                <span class='badge badge-danger'>{{ statuses[taskGoods.status]|trans }}</span>
 
                             {% else %}
-                                <span class='badge badge-secondary'>{{ statuses[task_goods.status]|trans }}</span>
+                                <span class='badge badge-secondary'>{{ statuses[taskGoods.status]|trans }}</span>
 
                             {% endif %}
 
                         </dd>
 
-                        {% if task_goods.drivers.count > 0  %}
+                        {% if taskGoods.drivers.count > 0 %}
                             <dt class="col-sm-4 pt-2 pb-2">{{ 'label.drivers'|trans }}</dt>
                             <dd class="col-sm-8 pt-2 pb-2">
-                                {% for v in task_goods.drivers %}
+                                {% for v in taskGoods.drivers %}
                                     <span class='callout callout-success p-2'>{{ v.fullName }} - {{ v.phone }}</span>
                                 {% endfor %}
                             </dd>
                         {% endif %}
 
-                        {% if task_goods.transports.count > 0 %}
+                        {% if taskGoods.transports.count > 0 %}
                             <dt class="col-sm-4 pt-2 pb-2">{{ 'label.transports'|trans }}</dt>
                             <dd class="col-sm-8 pt-2 pb-2">
-                                {% for v in task_goods.transports %}
+                                {% for v in taskGoods.transports %}
                                     <span class='callout callout-info p-2'>{{ v.fullName }}</span>
                                 {% endfor %}
                             </dd>
                         {% endif %}
 
-                        {% if task_goods.report %}
+                        {% if taskGoods.report %}
                             <dt class="col-sm-4">{{ 'label.report'|trans }}</dt>
-                            <dd class="col-sm-8">{{ task_goods.report }}</dd>
+                            <dd class="col-sm-8">{{ taskGoods.report }}</dd>
                         {% endif %}
                     </dl>
                 </div>
@@ -125,20 +125,24 @@
     <script>
         $(function () {
 
-            $(".invoice").on("click", function() {
+            $(".invoice").on("click", function () {
 
-                let tasksGoodsPint = [{{ task_goods.id }}];
-                let url = "{{path('task_goods_invoice') }}";
+                let tasksGoodsPint = [{{ taskGoods.id }}];
+                let url = "{{ path('task_goods_invoice') }}";
 
                 $.ajax({
                     type: 'post',
                     url: url,
-                    data: { '_method':'post','_token':'{{ csrf_token('task-goods-invoice') }}', 'tasksGoodsPint': tasksGoodsPint },
+                    data: {
+                        '_method': 'post',
+                        '_token': '{{ csrf_token('task-goods-invoice') }}',
+                        'tasksGoodsPint': tasksGoodsPint
+                    },
                     dataType: 'json'
-                }).done(function(data) {
-                    let params  = 'width='+screen.width;
-                    params += ', height='+screen.height;
-                    params += ', top=0, left=0'
+                }).done(function (data) {
+                    let params = 'width=' + screen.width;
+                    params += ', height=' + screen.height;
+                    params += ', top=0, left=0';
                     params += ', fullscreen=yes';
                     params += ', directories=no';
                     params += ', location=no';

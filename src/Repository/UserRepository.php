@@ -8,6 +8,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use function get_class;
 
 /**
  * @method User|null find($id, $lockMode = null, $lockVersion = null)
@@ -28,7 +29,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     public function upgradePassword(UserInterface $user, string $newEncodedPassword): void
     {
         if (!$user instanceof User) {
-            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', \get_class($user)));
+            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', get_class($user)));
         }
 
         $user->setPassword($newEncodedPassword);
@@ -68,7 +69,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         }
 
         // Fields Search
-        if ($search['value'] != '') {
+        if ($search['value'] !== '') {
             // $searchItem is what we are looking for
             $searchItem = $search['value'];
             $searchQuery = 't0.first_name LIKE \'%' . $searchItem . '%\'';
@@ -86,7 +87,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         // Order
         foreach ($orders as $key => $order) {
             // $order['name'] is the name of the order column as sent by the JS
-            if ($order['name'] != '') {
+            if ($order['name'] !== '') {
                 $orderColumn = null;
 
                 switch ($order['name']) {

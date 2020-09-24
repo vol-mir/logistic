@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Редактирование заявки{% endblock %}
+{% block title %}{{ 'title.page.edit.task_goods'|trans }}{% endblock %}
 
 {% block body %}
     <div class="row">
@@ -8,11 +8,14 @@
             <!-- jquery validation -->
             <div class="card card-default">
                 <!-- form start -->
-                <form id="taskGoodsForm" action="{{ path('task_goods_edit_full', {'id': task_goods.id}) }}" method="POST">
+                <form id="taskGoodsForm" action="{{ path('task_goods_edit_full', {'id': taskGoods.id}) }}"
+                      method="POST">
                     {% include 'task_goods/_form.html.twig' with {'form': form} only %}
                     <div class="card-footer">
-                        <button type="submit" class="btn btn-primary">{{ 'title.save'|trans }}</button>
-                        <a href="{{ path('task_goods_index') }}" class="btn btn-default float-right">{{ 'title.cancel'|trans }}</a>
+                        {{ form_widget(form.save) }}
+                        {{ form_widget(form.saveAndStay) }}
+                        <a href="{{ path('task_goods_index') }}"
+                           class="btn btn-default float-right">{{ 'title.cancel'|trans }}</a>
                     </div>
                 </form>
             </div>
@@ -22,11 +25,14 @@
             <!-- jquery validation -->
             <div class="card card-default">
                 <!-- form start -->
-                <form id="taskGoodsManagementForm" action="{{ path('task_goods_edit_full', {'id': task_goods.id}) }}" method="POST">
+                <form id="taskGoodsManagementForm" action="{{ path('task_goods_edit_full', {'id': taskGoods.id}) }}"
+                      method="POST">
                     {% include 'task_goods/_form_full.html.twig' with {'form': formManagement} only %}
                     <div class="card-footer">
-                        <button type="submit" class="btn btn-primary">{{ 'title.save'|trans }}</button>
-                        <a href="{{ path('task_goods_index') }}" class="btn btn-default float-right">{{ 'title.cancel'|trans }}</a>
+                        {{ form_widget(formManagement.save) }}
+                        {{ form_widget(formManagement.saveAndStay) }}
+                        <a href="{{ path('task_goods_index') }}"
+                           class="btn btn-default float-right">{{ 'title.cancel'|trans }}</a>
                     </div>
                 </form>
             </div>
@@ -47,27 +53,29 @@
         $(document).ready(function () {
 
             let $taskGoodsOrganization = $('#task_goods_organization');
-            $taskGoodsOrganization.change(function() {
+            $taskGoodsOrganization.change(function () {
 
                 let url = "{{ path('organization_data_base_dynamic', {'id': 'organizationId'}) }}";
                 url = url.replace('organizationId', $taskGoodsOrganization.val());
                 $.ajax({
                     type: 'post',
                     url: url,
-                    data: { '_method':'post','_token':'{{ csrf_token('dynamic-data-organization') }}' },
+                    data: {'_method': 'post', '_token': '{{ csrf_token('dynamic-data-organization') }}'},
                     dataType: 'json'
-                }).done(function(data) {
+                }).done(function (data) {
 
                     let $taskGoodsAddressOffice = $('#task_goods_address_office');
                     $taskGoodsAddressOffice.empty().trigger("change");
-                    $taskGoodsAddressOffice.select2({ data:[
+                    $taskGoodsAddressOffice.select2({
+                        data: [
                             {id: '', text: '{{ 'placeholder.not_specified'|trans }}'}
-                        ]});
-                    $taskGoodsAddressOffice.select2({ data: data["addressesOrganization"]});
+                        ]
+                    });
+                    $taskGoodsAddressOffice.select2({data: data["addressesOrganization"]});
 
                     let $taskGoodsAddressGoodsYard = $('#task_goods_address_goods_yard');
                     $taskGoodsAddressGoodsYard.empty().trigger("change");
-                    $taskGoodsAddressGoodsYard.select2({ data: data["addressesOrganization"]});
+                    $taskGoodsAddressGoodsYard.select2({data: data["addressesOrganization"]});
 
                     $('#task_goods_contact_person').val(data["baseContactPerson"]);
                     $('#task_goods_working_hours').val(data["baseWorkingHours"]);

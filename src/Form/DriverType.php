@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Driver;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -12,7 +13,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class DriverType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('last_name', TextType::class, [
@@ -67,10 +68,30 @@ class DriverType extends AbstractType
                     new Length(['max' => 190]),
                 ]
             ]);
-        ;
+
+        $builder->add('save', SubmitType::class, [
+            'label' => 'title.save',
+            'attr' => [
+                'class' => 'btn btn-primary',
+            ]
+        ]);
+
+        $builder->add('saveAndCreateNew', SubmitType::class, [
+            'label' => 'title.save_and_create_new',
+            'attr' => [
+                'class' => 'btn btn-primary',
+            ]
+        ]);
+
+        $builder->add('saveAndStay', SubmitType::class, [
+            'label' => 'title.save_and_stay',
+            'attr' => [
+                'class' => 'btn btn-primary',
+            ]
+        ]);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Driver::class,

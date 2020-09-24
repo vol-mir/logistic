@@ -4,20 +4,17 @@ namespace App\Controller;
 
 use App\Entity\Address;
 use App\Entity\Organization;
-use App\Entity\TaskGoods;
 use App\Form\OrganizationType;
-use App\Form\TaskGoodsType;
-use Doctrine\ORM\EntityRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Contracts\Translation\TranslatorInterface;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class OrganizationController
@@ -33,13 +30,13 @@ class OrganizationController extends AbstractController
      *
      * @return Response
      */
-    public function index() : Response
+    public function index(): Response
     {
         return $this->render('organization/index.html.twig');
     }
 
     /**
-     * Dynamic data for organization
+     * Data for tables
      *
      * @Route("/organization/{id}/data", methods="POST", name="organization_data_base_dynamic")
      * @ParamConverter("organization", options={"id" = "id"})
@@ -49,37 +46,37 @@ class OrganizationController extends AbstractController
      *
      * @return JsonResponse
      */
-    public function dataBaseOrganizationDynamic(Request $request, Organization $organization) : JsonResponse
+    public function dataBaseOrganizationDynamic(Request $request, Organization $organization): JsonResponse
     {
-        if ($request->getMethod() == 'POST' && $this->isCsrfTokenValid('dynamic-data-organization', $request->request->get('_token'))) {
-
-            $em = $this->getDoctrine()->getManager();
-            $addressesOrganization = $em->getRepository(Address::class)->getAddressesOrganization($organization->getId());
-
-            $listAddressesOrganization = [];
-
-            foreach($addressesOrganization as $address) {
-                $temp = ['id'=>$address->getId(), 'text' => $address->getFullAddress()];
-                $listAddressesOrganization[] = $temp;
-            }
-
-            $response = [
-                'baseContactPerson' => $organization->getBaseContactPerson(),
-                'baseWorkingHours' => $organization->getBaseWorkingHours(),
-                'addressesOrganization' => $listAddressesOrganization
-            ];
-
-            $returnResponse = new JsonResponse();
-            $returnResponse->setData($response);
-
-            return $returnResponse;
-        } else
+        if (!$request->getMethod() === 'POST' && !$this->isCsrfTokenValid('dynamic-data-organization', $request->request->get('_token'))) {
             die;
+        }
+        $em = $this->getDoctrine()->getManager();
+        $addressesOrganization = $em->getRepository(Address::class)->getAddressesOrganization($organization->getId());
+
+        $listAddressesOrganization = [];
+
+        foreach ($addressesOrganization as $address) {
+            $temp = ['id' => $address->getId(), 'text' => $address->getFullAddress()];
+            $listAddressesOrganization[] = $temp;
+        }
+
+        $response = [
+            'baseContactPerson' => $organization->getBaseContactPerson(),
+            'baseWorkingHours' => $organization->getBaseWorkingHours(),
+            'addressesOrganization' => $listAddressesOrganization
+        ];
+
+
+        $returnResponse = new JsonResponse();
+        $returnResponse->setData($response);
+
+        return $returnResponse;
 
     }
 
     /**
-     * Data for datatables
+     * Data for tables
      *
      * @Route("/organization/datatables", methods="POST", name="organization_datatables")
      *
@@ -87,23 +84,23 @@ class OrganizationController extends AbstractController
      *
      * @return JsonResponse
      */
-    public function listDatatableAction(Request $request) : JsonResponse
+    public function listDatatableAction(Request $request): JsonResponse
     {
         // Get the parameters from DataTable Ajax Call
-        if ($request->getMethod() == 'POST') {
-            $draw = intval($request->request->get('draw'));
+        if ($request->getMethod() === 'POST') {
+            $draw = (int)$request->request->get('draw');
             $start = $request->request->get('start');
             $length = $request->request->get('length');
             $search = $request->request->get('search');
             $orders = $request->request->get('order');
             $columns = $request->request->get('columns');
-        }
-        else // If the request is not a POST one, die hard
+        } else // If the request is not a POST one, die hard
+        {
             die;
+        }
 
         // Orders
-        foreach ($orders as $key => $order)
-        {
+        foreach ($orders as $key => $order) {
             // Orders does not contain the name of the column, but its number,
             // so add the name so we can handle it just like the $columns array
             $orders[$key]['name'] = $columns[$order['column']]['name'];
@@ -118,56 +115,53 @@ class OrganizationController extends AbstractController
         // Returned objects are of type Town
         $objects = $results["results"];
         // Get total number of objects
-        $total_objects_count = $em->getRepository(Organization::class)->countOrganization();
+        $totalObjectsCount = $em->getRepository(Organization::class)->countOrganization();
         // Get total number of filtered data
-        $filtered_objects_count = $results["countResult"];
+        $filteredObjectsCount = $results["countResult"];
 
         $data = [];
-        foreach ($objects as $key => $organization)
-        {
+        foreach ($objects as $organization) {
             $dataTemp = [];
-            foreach ($columns as $key => $column)
-            {
-                switch($column['name'])
-                {
+            foreach ($columns as $column) {
+                switch ($column['name']) {
                     case 'abbreviatedName':
                         {
-                            $elementTemp = "<a href='".$this->generateUrl('organization_show', ['id' => $organization->getId()])."' class='float-left'>".$organization->getAbbreviatedName()."</a>";
-                            array_push($dataTemp, $elementTemp);
+                            $elementTemp = "<a href='" . $this->generateUrl('organization_show', ['id' => $organization->getId()]) . "' class='float-left'>" . $organization->getAbbreviatedName() . "</a>";
+                            $dataTemp[] = $elementTemp;
                             break;
                         }
 
                     case 'registrationNumber':
                         {
                             $elementTemp = $organization->getRegistrationNumber();
-                            array_push($dataTemp, $elementTemp);
+                            $dataTemp[] = $elementTemp;
                             break;
                         }
 
                     case 'fullName':
                         {
                             $elementTemp = $organization->getFullName();
-                            array_push($dataTemp, $elementTemp);
+                            $dataTemp[] = $elementTemp;
                             break;
                         }
 
                     case 'control':
                         {
-                            $elementTemp = "<div class='btn-group btn-group-sm'><a href='".$this->generateUrl('organization_show', ['id' => $organization->getId()])."' class='btn btn-secondary'><i class='fas fa-eye'></i></a><a href='".$this->generateUrl('organization_edit', ['id' => $organization->getId()])."' class='btn btn-info'><i class='fas fa-edit'></i></a><button type='button' class='btn btn-sm btn-danger float-left modal-delete-dialog' data-toggle='modal' data-id='".$organization->getId()."'><i class='fas fa-trash'></i></button></div>";
-                            array_push($dataTemp, $elementTemp);
+                            $elementTemp = "<div class='btn-group btn-group-sm'><a href='" . $this->generateUrl('organization_show', ['id' => $organization->getId()]) . "' class='btn btn-secondary'><i class='fas fa-eye'></i></a><a href='" . $this->generateUrl('organization_edit', ['id' => $organization->getId()]) . "' class='btn btn-info'><i class='fas fa-edit'></i></a><button type='button' class='btn btn-sm btn-danger float-left modal-delete-dialog' data-toggle='modal' data-id='" . $organization->getId() . "'><i class='fas fa-trash'></i></button></div>";
+                            $dataTemp[] = $elementTemp;
                             break;
                         }
 
                 }
             }
-            array_push($data, $dataTemp);
+            $data[] = $dataTemp;
         }
 
         // Construct response
         $response = [
             'draw' => $draw,
-            'recordsTotal' => $total_objects_count,
-            'recordsFiltered' => $filtered_objects_count,
+            'recordsTotal' => $totalObjectsCount,
+            'recordsFiltered' => $filteredObjectsCount,
             'data' => $data,
         ];
 
@@ -180,7 +174,7 @@ class OrganizationController extends AbstractController
     }
 
     /**
-     * Creates a new organization entity.
+     * Creates a new organization entity
      *
      * @Route("/organization/new", methods="GET|POST", name="organization_new")
      *
@@ -189,10 +183,10 @@ class OrganizationController extends AbstractController
      *
      * @return RedirectResponse|Response
      */
-    public function new(Request $request, TranslatorInterface $translator) : Response
+    public function new(Request $request, TranslatorInterface $translator): Response
     {
         $organization = new Organization();
-        $form = $this->createForm(OrganizationType::class, $organization)->add('saveAndCreateNew', SubmitType::class);
+        $form = $this->createForm(OrganizationType::class, $organization);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -202,7 +196,8 @@ class OrganizationController extends AbstractController
 
             $this->addFlash('success', $translator->trans('item.created_successfully'));
 
-            if ($form->get('saveAndCreateNew')->isClicked()) {
+            if ($form->getClickedButton() && 'saveAndCreateNew' === $form->getClickedButton()->getName()) {
+
                 return $this->redirectToRoute('organization_new');
             }
 
@@ -223,7 +218,7 @@ class OrganizationController extends AbstractController
      *
      * @return Response
      */
-    public function show(Organization $organization) : Response
+    public function show(Organization $organization): Response
     {
         return $this->render('organization/show.html.twig', [
             'organization' => $organization
@@ -232,7 +227,7 @@ class OrganizationController extends AbstractController
 
 
     /**
-     * Edit organization
+     * Edit the organization entity
      *
      * @Route("/organization/{id}/edit", methods="GET|POST", name="organization_edit", requirements={"id" = "\d+"})
      *
@@ -242,7 +237,7 @@ class OrganizationController extends AbstractController
      *
      * @return Response
      */
-    public function edit(Request $request, Organization $organization, TranslatorInterface $translator) : Response
+    public function edit(Request $request, Organization $organization, TranslatorInterface $translator): Response
     {
         $form = $this->createForm(OrganizationType::class, $organization);
         $form->handleRequest($request);
@@ -251,6 +246,12 @@ class OrganizationController extends AbstractController
             $this->getDoctrine()->getManager()->flush();
 
             $this->addFlash('success', $translator->trans('item.edited_successfully'));
+
+            if ($form->getClickedButton() && 'saveAndStay' === $form->getClickedButton()->getName()) {
+
+                return $this->redirectToRoute('organization_edit', ['id' => $organization->getId()]);
+            }
+
             return $this->redirectToRoute('organization_index');
         }
 
@@ -271,7 +272,7 @@ class OrganizationController extends AbstractController
      *
      * @return JsonResponse
      */
-    public function delete(Request $request, Organization $organization, TranslatorInterface $translator) : JsonResponse
+    public function delete(Request $request, Organization $organization, TranslatorInterface $translator): JsonResponse
     {
         if ($this->isCsrfTokenValid('delete-item', $request->request->get('_token'))) {
 

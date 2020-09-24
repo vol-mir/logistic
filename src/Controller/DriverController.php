@@ -4,15 +4,15 @@ namespace App\Controller;
 
 use App\Entity\Driver;
 use App\Form\DriverType;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Contracts\Translation\TranslatorInterface;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class DriverController
@@ -28,13 +28,13 @@ class DriverController extends AbstractController
      *
      * @return Response
      */
-    public function index() : Response
+    public function index(): Response
     {
         return $this->render('driver/index.html.twig');
     }
 
     /**
-     * Data for datatables
+     * Data for tables
      *
      * @Route("/driver/datatables", methods="POST", name="driver_datatables")
      *
@@ -42,23 +42,23 @@ class DriverController extends AbstractController
      *
      * @return JsonResponse
      */
-    public function listDatatableAction(Request $request) : JsonResponse
+    public function listDatatableAction(Request $request): JsonResponse
     {
         // Get the parameters from DataTable Ajax Call
-        if ($request->getMethod() == 'POST') {
-            $draw = intval($request->request->get('draw'));
+        if ($request->getMethod() === 'POST') {
+            $draw = (int)$request->request->get('draw');
             $start = $request->request->get('start');
             $length = $request->request->get('length');
             $search = $request->request->get('search');
             $orders = $request->request->get('order');
             $columns = $request->request->get('columns');
-        }
-        else // If the request is not a POST one, die hard
+        } else // If the request is not a POST one, die hard
+        {
             die;
+        }
 
         // Orders
-        foreach ($orders as $key => $order)
-        {
+        foreach ($orders as $key => $order) {
             // Orders does not contain the name of the column, but its number,
             // so add the name so we can handle it just like the $columns array
             $orders[$key]['name'] = $columns[$order['column']]['name'];
@@ -73,48 +73,53 @@ class DriverController extends AbstractController
         // Returned objects are of type Town
         $objects = $results["results"];
         // Get total number of objects
-        $total_objects_count = $em->getRepository(Driver::class)->countDriver();
+        $totalObjectsCount = $em->getRepository(Driver::class)->countDriver();
         // Get total number of filtered data
-        $filtered_objects_count = $results["countResult"];
+        $filteredObjectsCount = $results["countResult"];
 
         $data = [];
-        foreach ($objects as $key => $driver)
-        {
+        foreach ($objects as $driver) {
             $dataTemp = [];
-            foreach ($columns as $key => $column)
-            {
-                switch($column['name'])
-                {
+            foreach ($columns as $column) {
+                switch ($column['name']) {
                     case 'fullName':
                         {
-                            $elementTemp = "<a href='".$this->generateUrl('driver_edit', ['id' => $driver->getId()])."' class='float-left'>".$driver->getFullName()."</a>";
-                            array_push($dataTemp, $elementTemp);
+                            $elementTemp = $this->render('default/table_href.html.twig', [
+                                'url' => $this->generateUrl('driver_edit', ['id' => $driver->getId()]),
+                                'urlName' => $driver->getFullName()
+                            ])->getContent();
+
+                            $dataTemp[] = $elementTemp;
                             break;
                         }
 
                     case 'phone':
                         {
                             $elementTemp = $driver->getPhone();
-                            array_push($dataTemp, $elementTemp);
+                            $dataTemp[] = $elementTemp;
                             break;
                         }
 
                     case 'control':
                         {
-                            $elementTemp = "<div class='btn-group btn-group-sm'><a href='".$this->generateUrl('driver_edit', ['id' => $driver->getId()])."' class='btn btn-info'><i class='fas fa-edit'></i></a><button type='button' class='btn btn-sm btn-danger float-left modal-delete-dialog' data-toggle='modal' data-id='".$driver->getId()."'><i class='fas fa-trash'></i></button></div>";
-                            array_push($dataTemp, $elementTemp);
+                            $elementTemp = $this->render('default/table_group_btn.html.twig', [
+                                'urlEdit' => $this->generateUrl('driver_edit', ['id' => $driver->getId()]),
+                                'idDelete' => $driver->getId()
+                            ])->getContent();
+
+                            $dataTemp[] = $elementTemp;
                             break;
                         }
                 }
             }
-            array_push($data, $dataTemp);
+            $data[] = $dataTemp;
         }
 
         // Construct response
         $response = [
             'draw' => $draw,
-            'recordsTotal' => $total_objects_count,
-            'recordsFiltered' => $filtered_objects_count,
+            'recordsTotal' => $totalObjectsCount,
+            'recordsFiltered' => $filteredObjectsCount,
             'data' => $data,
         ];
 
@@ -127,7 +132,7 @@ class DriverController extends AbstractController
     }
 
     /**
-     * Creates a new driver entity.
+     * Creates a new driver entity
      *
      * @Route("/driver/new", methods="GET|POST", name="driver_new")
      *
@@ -136,10 +141,10 @@ class DriverController extends AbstractController
      *
      * @return RedirectResponse|Response
      */
-    public function new(Request $request, TranslatorInterface $translator) : Response
+    public function new(Request $request, TranslatorInterface $translator): Response
     {
         $driver = new Driver();
-        $form = $this->createForm(DriverType::class, $driver)->add('saveAndCreateNew', SubmitType::class);
+        $form = $this->createForm(DriverType::class, $driver);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -149,7 +154,8 @@ class DriverController extends AbstractController
 
             $this->addFlash('success', $translator->trans('item.created_successfully'));
 
-            if ($form->get('saveAndCreateNew')->isClicked()) {
+            if ($form->getClickedButton() && 'saveAndCreateNew' === $form->getClickedButton()->getName()) {
+
                 return $this->redirectToRoute('driver_new');
             }
 
@@ -162,7 +168,7 @@ class DriverController extends AbstractController
     }
 
     /**
-     * Edit driver
+     * Edit the driver entity
      *
      * @Route("/driver/{id}/edit", methods="GET|POST", name="driver_edit", requirements={"id" = "\d+"})
      *
@@ -172,7 +178,7 @@ class DriverController extends AbstractController
      *
      * @return Response
      */
-    public function edit(Request $request, Driver $driver, TranslatorInterface $translator) : Response
+    public function edit(Request $request, Driver $driver, TranslatorInterface $translator): Response
     {
         $form = $this->createForm(DriverType::class, $driver);
         $form->handleRequest($request);
@@ -181,6 +187,12 @@ class DriverController extends AbstractController
             $this->getDoctrine()->getManager()->flush();
 
             $this->addFlash('success', $translator->trans('item.edited_successfully'));
+
+            if ($form->getClickedButton() && 'saveAndStay' === $form->getClickedButton()->getName()) {
+
+                return $this->redirectToRoute('driver_edit', ['id' => $driver->getId()]);
+            }
+
             return $this->redirectToRoute('driver_index');
         }
 
@@ -201,7 +213,7 @@ class DriverController extends AbstractController
      *
      * @return JsonResponse
      */
-    public function delete(Request $request, Driver $driver, TranslatorInterface $translator) : JsonResponse
+    public function delete(Request $request, Driver $driver, TranslatorInterface $translator): JsonResponse
     {
         if ($this->isCsrfTokenValid('delete-item', $request->request->get('_token'))) {
             $em = $this->getDoctrine()->getManager();

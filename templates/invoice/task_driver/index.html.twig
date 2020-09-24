@@ -11,8 +11,8 @@
         }
 
         body {
-            margin:0;
-            padding:0;
+            margin: 0;
+            padding: 0;
             font-family: Georgia, 'Times New Roman', Times, serif;
         }
 
@@ -22,14 +22,14 @@
         }
 
         table {
-            page-break-inside:avoid;
+            page-break-inside: avoid;
             border-collapse: collapse;
             margin-bottom: 15px;
         }
 
         tr {
-            page-break-inside:avoid;
-            page-break-after:auto;
+            page-break-inside: avoid;
+            page-break-after: auto;
             border: 1px solid grey;
         }
 
@@ -38,15 +38,15 @@
             padding: 2px;
         }
 
-        .text-right{
+        .text-right {
             text-align: right;
         }
 
-        .text-center{
+        .text-center {
             text-align: center;
         }
 
-        .text-justify{
+        .text-justify {
             text-align: justify;
         }
 
@@ -71,69 +71,72 @@
         <div>Задание к<br>путевому листу №_______ от _________<br>Водитель: <u>{{ driver.fullName }}</u></div>
     </div>
 
-    {% for task_goods in tasks_goods %}
+    {% for taskGoods in tasksGoods %}
         <table class="table page-break">
             <tr>
                 <td class="font-weight-bold" colspan="8">
-                    <strong>{{ loop.index }})</strong> <strong><u>{{ task_goods.dateTaskGoods|date("d.m.Y") }}</u></strong>; код заявки: <strong>{{ task_goods.id }}</strong>; cтатус
-                    заявки: {{ statuses[task_goods.status]|trans }}
+                    <strong>{{ loop.index }})</strong>
+                    <strong><u>{{ taskGoods.dateTaskGoods|date("d.m.Y") }}</u></strong>; код заявки:
+                    <strong>{{ taskGoods.id }}</strong>; cтатус
+                    заявки: {{ statuses[taskGoods.status]|trans }}
                 </td>
             </tr>
 
             <tr>
                 <td colspan="3">1. Наименование груза, тара, примечание</td>
-                <td colspan="5">{{ task_goods.goods }}{% if task_goods.note %}, {{ task_goods.note }}{% endif %}</td>
+                <td colspan="5">{{ taskGoods.goods }}{% if taskGoods.note %}, {{ taskGoods.note }}{% endif %}</td>
             </tr>
 
             <tr>
                 <td colspan="1">2. Вес</td>
-                <td colspan="2" width="25%">{{ task_goods.weight }} {{ units[task_goods.unit]|trans }}</td>
+                <td colspan="2" width="25%">{{ taskGoods.weight }} {{ units[taskGoods.unit]|trans }}</td>
                 <td colspan="3">3. Размеры (Д х Ш х В)/ объем</td>
-                <td colspan="2" width="25%">{{ task_goods.dimensions }}</td>
+                <td colspan="2" width="25%">{{ taskGoods.dimensions }}</td>
             </tr>
 
             <tr>
                 <td colspan="1">4. Количество грузовых мест</td>
-                <td colspan="1">{{ task_goods.numberOfPackages }}</td>
+                <td colspan="1">{{ taskGoods.numberOfPackages }}</td>
                 <td colspan="4">5. Характер погрузки / выгрузки</td>
-                <td colspan="2">{{ loading_natures[task_goods.loadingNature]|trans }}</td>
+                <td colspan="2">{{ loadingNatures[taskGoods.loadingNature]|trans }}</td>
             </tr>
 
             <tr width="100%">
                 <td colspan="3">6. Наименование предприятия, учреждения, организации</td>
-                <td colspan="5">{{ task_goods.organization }}</td>
+                <td colspan="5">{{ taskGoods.organization }}</td>
             </tr>
 
             <tr>
                 <td colspan="2">7. Адрес офиса</td>
                 <td colspan="6">
-                    {% if task_goods.addressOffice %}
-                        {{ task_goods.addressOffice.fullAddress }}
+                    {% if taskGoods.addressOffice %}
+                        {{ taskGoods.addressOffice.fullAddress }}
                     {% endif %}
                 </td>
             </tr>
 
             <tr>
                 <td colspan="2">8. Адрес погрузки (выгрузки)</td>
-                <td colspan="6">{{ task_goods.addressGoodsYard.fullAddress }}</td>
+                <td colspan="6">{{ taskGoods.addressGoodsYard.fullAddress }}</td>
             </tr>
 
             <tr>
                 <td colspan="2" width="30%">9. Контактное лицо на зугрузке / выгрузке - телефон</td>
-                <td colspan="2" width="25%">{{ task_goods.contactPerson }}</td>
+                <td colspan="2" width="25%">{{ taskGoods.contactPerson }}</td>
                 <td colspan="2" width="20%">10. Время работы</td>
-                <td colspan="2" width="25%">{{ task_goods.workingHours}}</td>
+                <td colspan="2" width="25%">{{ taskGoods.workingHours }}</td>
             </tr>
 
             <tr>
                 <td colspan="2" width="30%">11. Исполнитель в отделе:</td>
-                <td colspan="6" width="70%">{{ task_goods.user.fullName }}, {{ departments[task_goods.user.department]|trans }}</td>
+                <td colspan="6" width="70%">{{ taskGoods.user.fullName }}
+                    , {{ departments[taskGoods.user.department]|trans }}</td>
             </tr>
 
             <tr>
                 <td colspan="2" width="30%">12.1. Водитель:</td>
                 <td colspan="6" width="70%">
-                    {% for item_driver in task_goods.drivers %}
+                    {% for item_driver in taskGoods.drivers %}
                         {{ item_driver.fullName }};
                     {% endfor %}
                 </td>
@@ -142,7 +145,7 @@
             <tr>
                 <td colspan="2" width="30%">12.2. Транспорт:</td>
                 <td colspan="6" width="70%">
-                    {% for item_transport in task_goods.transports %}
+                    {% for item_transport in taskGoods.transports %}
                         {{ item_transport.fullName }};
                     {% endfor %}
                 </td>
@@ -151,8 +154,16 @@
     {% endfor %}
 
     <div class="row">
-        <div class="column"><p class="text-center">_____________________<br><small>(Подпись)</small></p></div>
-        <div class="column"><p class="text-center">_____________________<br><small>(Должность, ФИО)</small></p></div>
+        <div class="column">
+            <p class="text-center">_____________________<br>
+                <small>(Подпись)</small>
+            </p>
+        </div>
+        <div class="column">
+            <p class="text-center">_____________________<br>
+                <small>(Должность, ФИО)</small>
+            </p>
+        </div>
     </div>
 
 </div>

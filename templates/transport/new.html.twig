@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Добавление транспорта{% endblock %}
+{% block title %}{{ 'title.page.new.transport'|trans }}{% endblock %}
 
 {% block body %}
     <div class="row">
@@ -11,9 +11,10 @@
                 <form id="transportForm" action="{{ path('transport_new') }}" method="POST">
                     {% include 'transport/_form.html.twig' with {'form': form} only %}
                     <div class="card-footer">
-                        <button type="submit" class="btn btn-primary">{{ 'title.save'|trans }}</button>
-                        {{ form_widget(form.saveAndCreateNew, {label: 'label.save_and_create_new', attr: {class: 'btn btn-primary'}}) }}
-                        <a href="{{ path('transport_index') }}" class="btn btn-default float-right">{{ 'title.cancel'|trans }}</a>
+                        {{ form_widget(form.save) }}
+                        {{ form_widget(form.saveAndCreateNew) }}
+                        <a href="{{ path('transport_index') }}"
+                           class="btn btn-default float-right">{{ 'title.cancel'|trans }}</a>
                     </div>
                 </form>
             </div>

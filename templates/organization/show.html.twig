@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Информация об организации{% endblock %}
+{% block title %}{{ 'title.page.show.organization'|trans }}{% endblock %}
 
 {% block body %}
     <div class="row">
@@ -81,9 +81,9 @@
             let table = $("#addresses").DataTable({
                 "columnDefs": [
                     // These are the column name variables that will be sent to the server
-                    { "name": "pointName", "targets": 0 },
-                    { "name": "fullAddress",   "targets": 1 },
-                    { "name": "control",  "targets": 2, "orderable": false, "searchable": false },
+                    {"name": "pointName", "targets": 0},
+                    {"name": "fullAddress", "targets": 1},
+                    {"name": "control", "targets": 2, "orderable": false, "searchable": false},
                 ],
                 "ajax": {
                     "url": "{{ path('address_datatables', {'organization_id': organization.id}) }}",
@@ -94,8 +94,8 @@
                 "serverSide": true,
                 "responsive": true,
                 "autoWidth": false,
-                "paging" : true,
-                "info" : true,
+                "paging": true,
+                "info": true,
                 "searching": true,
                 "pageLength": 10,
                 "order": [[0, 'asc']],
@@ -104,26 +104,26 @@
                 }
             });
 
-            $("#addresses").on("click", ".modal-delete-dialog", function() {
+            $("#addresses").on("click", ".modal-delete-dialog", function () {
                 $('#btn-modal-delete').attr("data-confirm-delete-id", $(this).attr('data-id'));
                 $('#modal-delete').modal('show');
             });
 
-            $("#modal-delete").on("click", "#btn-modal-delete", function() {
+            $("#modal-delete").on("click", "#btn-modal-delete", function () {
 
-                let url = "{{path('address_delete', { 'organization_id': organization.id, 'id': 0 }) }}";
+                let url = "{{ path('address_delete', { 'organization_id': organization.id, 'id': 0 }) }}";
                 url = url.replace("0", $(this).attr('data-confirm-delete-id'));
 
                 $.ajax({
                     type: 'post',
                     url: url,
-                    data: { '_method':'delete','_token':'{{ csrf_token('delete-item') }}' },
+                    data: {'_method': 'delete', '_token': '{{ csrf_token('delete-item') }}'},
                     dataType: 'json'
-                }).done(function(data) {
+                }).done(function (data) {
                     table.ajax.reload(null, false);
                     if (data.messageError) {
                         toastr.error(data.messageError);
-                    } else if(data.messageSuccess) {
+                    } else if (data.messageSuccess) {
                         toastr.success(data.messageSuccess);
                     }
                 });
