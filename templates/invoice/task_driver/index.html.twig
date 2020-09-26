@@ -14,6 +14,7 @@
             margin: 0;
             padding: 0;
             font-family: Georgia, 'Times New Roman', Times, serif;
+            font-size: 12px;
         }
 
         .block-right {
@@ -55,6 +56,10 @@
             width: 50%;
         }
 
+        .text-large {
+            font-size: 16px;
+        }
+
         /* Clear floats after the columns */
         .row:after {
             content: "";
@@ -84,12 +89,12 @@
 
             <tr>
                 <td colspan="3">1. Наименование груза, тара, примечание</td>
-                <td colspan="5">{{ taskGoods.goods }}{% if taskGoods.note %}, {{ taskGoods.note }}{% endif %}</td>
+                <td colspan="5" class="text-large">{{ taskGoods.goods }}{% if taskGoods.note %}, {{ taskGoods.note }}{% endif %}</td>
             </tr>
 
             <tr>
                 <td colspan="1">2. Вес</td>
-                <td colspan="2" width="25%">{{ taskGoods.weight }} {{ units[taskGoods.unit]|trans }}</td>
+                <td colspan="2" width="25%" class="text-large">{{ taskGoods.weight }} {{ units[taskGoods.unit]|trans }}</td>
                 <td colspan="3">3. Размеры (Д х Ш х В)/ объем</td>
                 <td colspan="2" width="25%">{{ taskGoods.dimensions }}</td>
             </tr>
@@ -103,7 +108,7 @@
 
             <tr width="100%">
                 <td colspan="3">6. Наименование предприятия, учреждения, организации</td>
-                <td colspan="5">{{ taskGoods.organization }}</td>
+                <td colspan="5" class="text-large">{{ taskGoods.organization }}</td>
             </tr>
 
             <tr>
@@ -117,7 +122,7 @@
 
             <tr>
                 <td colspan="2">8. Адрес погрузки (выгрузки)</td>
-                <td colspan="6">{{ taskGoods.addressGoodsYard.fullAddress }}</td>
+                <td colspan="6" class="text-large">{{ taskGoods.addressGoodsYard.fullAddress }}</td>
             </tr>
 
             <tr>
