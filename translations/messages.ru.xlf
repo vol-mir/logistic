@@ -45,6 +45,10 @@
         <source>title.save_and_create_new</source>
         <target>Сохранить и создать новую</target>
       </trans-unit>
+      <trans-unit id="title.edit_selected">
+        <source>title.edit_selected</source>
+        <target>Редактировать выделенные</target>
+      </trans-unit>
 
       <trans-unit id="title.page.index.organization">
         <source>title.page.index.organization</source>
@@ -154,6 +158,10 @@
       <trans-unit id="item.deleted_use">
         <source>item.deleted_use</source>
         <target>Запись используется, удалить невозможно!</target>
+      </trans-unit>
+      <trans-unit id="items.edited_successfully">
+        <source>items.edited_successfully</source>
+        <target>Записи успешно изменены!</target>
       </trans-unit>
 
       <trans-unit id="label.first_name">

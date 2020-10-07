@@ -98,4 +98,15 @@ class DriverRepository extends ServiceEntityRepository
             "countResult" => $countResult
         ];
     }
+
+    public function getAllDrivers()
+    {
+        return $this
+            ->createQueryBuilder('t0')
+            ->orderBy('t0.last_name', 'ASC')
+            ->addOrderBy('t0.first_name', 'ASC')
+            ->addOrderBy('t0.middle_name', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }

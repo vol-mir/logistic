@@ -2,15 +2,15 @@
 
 namespace App\Controller;
 
+use App\Entity\Driver;
 use App\Entity\Organization;
 use App\Entity\TaskGoods;
+use App\Entity\Transport;
 use App\Entity\User;
 use App\Form\TaskGoodsManagementType;
 use App\Form\TaskGoodsType;
-use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,9 +35,13 @@ class TaskGoodsController extends AbstractController
      */
     public function index(): Response
     {
+        $em = $this->getDoctrine()->getManager();
+
         return $this->render('task_goods/index.html.twig', [
             'departments' => User::DEPARTMENTS,
-            'statuses' => TaskGoods::STATUSES
+            'statuses' => TaskGoods::STATUSES,
+            'transports' => $em->getRepository(Transport::class)->getAllTransports(),
+            'drivers' => $em->getRepository(Driver::class)->getAllDrivers()
         ]);
     }
 
@@ -322,7 +326,7 @@ class TaskGoodsController extends AbstractController
      *
      * @return Response
      */
-    public function editFull(Request $request, TaskGoods $taskGoods, TranslatorInterface $translator, LoggerInterface $logger): Response
+    public function editFull(Request $request, TaskGoods $taskGoods, TranslatorInterface $translator): Response
     {
         $form = $this->createForm(TaskGoodsType::class, $taskGoods);
         $form->handleRequest($request);
@@ -444,5 +448,71 @@ class TaskGoodsController extends AbstractController
             'departments' => User::DEPARTMENTS,
             'user' => $this->getUser()
         ])->getContent()]);
+    }
+
+    /**
+     * Tasks goods select edit
+     *
+     * @Route("/tasks/goods/list/edit",  methods="POST", name="tasks_goods_list_edit")
+     *
+     * @param Request $request
+     * @param TranslatorInterface $translator
+     *
+     * @return JsonResponse
+     */
+    public function editList(Request $request, TranslatorInterface $translator): JsonResponse
+    {
+        if (!$this->isCsrfTokenValid('tasks-goods-list-edit', $request->request->get('_token'))) {
+            die;
+        }
+
+        $tasksGoodsEdit = json_decode($request->request->get('tasksGoodsEdit'), true);
+        $formData = json_decode($request->request->get('formData'), false);
+
+        foreach ($tasksGoodsEdit as $taskId) {
+            $em = $this->getDoctrine()->getManager();
+
+            $taskGoods = $em->getRepository(TaskGoods::class)->find($taskId);
+
+            if (!$taskGoods) {
+                continue;
+            }
+
+            if (property_exists($formData, 'statusSelect')) {
+                $taskGoods->setStatus($formData->statusSelect);
+            }
+
+            if (property_exists($formData, 'driversSelect')) {
+                foreach ($formData->driversSelect as $driverId) {
+                    $driver = $em->getRepository(Driver::class)->find($driverId);
+
+                    if (!$driver) {
+                        continue;
+                    }
+
+                    $taskGoods->addDriver($driver);
+                }
+            }
+
+            if (property_exists($formData, 'transportsSelect')) {
+                foreach ($formData->transportsSelect as $transportId) {
+                    $transport = $em->getRepository(Transport::class)->find($transportId);
+
+                    if (!$transport) {
+                        continue;
+                    }
+
+                    $taskGoods->addTransport($transport);
+                }
+            }
+
+            if (property_exists($formData, 'reportTextarea')) {
+                $taskGoods->setReport($formData->reportTextarea);
+            }
+
+            $em->flush();
+        }
+
+        return new JsonResponse(['message' => $translator->trans('items.edited_successfully')]);
     }
 }

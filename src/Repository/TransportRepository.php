@@ -101,4 +101,15 @@ class TransportRepository extends ServiceEntityRepository
             "countResult" => $countResult
         );
     }
+
+    public function getAllTransports()
+    {
+        return $this
+            ->createQueryBuilder('t0')
+            ->orderBy('t0.marka', 'ASC')
+            ->addOrderBy('t0.model', 'ASC')
+            ->addOrderBy('t0.number', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }

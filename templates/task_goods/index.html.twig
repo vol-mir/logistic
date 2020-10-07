@@ -57,6 +57,7 @@
 
     {% include 'modals/delete.html.twig' %}
     {% include 'modals/review.html.twig' %}
+    {% include 'modals/edit_group.html.twig' %}
 {% endblock %}
 
 
@@ -317,6 +318,63 @@
                 if (userCheck.is(":checked")) {
                     table.column(columnUser).search(userSelect.val()).draw();
                 }
+            });
+
+            let tasksGoodsEdit = [];
+
+            $(".edit-group").on("click", function () {
+                tasksGoodsEdit = table.rows(".selected").data().pluck(columnYid).toArray();
+                if (tasksGoodsEdit.length > 0) {
+                    $('#modal-edit-group').modal('show');
+                }
+            });
+
+            $("#modal-edit-group").on("click", "#btn-modal-edit", function () {
+
+                if (tasksGoodsEdit.length === 0) {
+                    $('#modal-edit-group').modal('hide');
+                    return;
+                }
+
+                let formData = {};
+
+                if ($("#edit-form #edit-status").is(':checked')) {
+                    formData.statusSelect = $("#edit-form #status-select").val();
+                }
+                if ($("#edit-form #edit-drivers").is(':checked')) {
+                    formData.driversSelect = $("#edit-form #drivers-select").val();
+                }
+                if ($("#edit-form #edit-transports").is(':checked')) {
+                    formData.transportsSelect = $("#edit-form #transports-select").val();
+                }
+                if ($("#edit-form #edit-report").is(':checked')) {
+                    formData.reportTextarea = $("#edit-form #report-textarea").val();
+                }
+
+                if ($.isEmptyObject(formData)) {
+                    $('#modal-edit-group').modal('hide');
+                    return;
+                }
+
+                let url = "{{ path('tasks_goods_list_edit') }}";
+
+                $.ajax({
+                    type: 'post',
+                    url: url,
+                    data: {
+                        '_method': 'post',
+                        '_token': '{{ csrf_token('tasks-goods-list-edit') }}',
+                        'tasksGoodsEdit': JSON.stringify(tasksGoodsEdit),
+                        'formData': JSON.stringify(formData)
+                    },
+                    dataType: 'json'
+                }).done(function (data) {
+                    table.ajax.reload(null, false);
+                    toastr.success(data.message);
+                });
+
+
+                $('#modal-edit-group').modal('hide');
             });
 
         });

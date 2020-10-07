@@ -1,0 +1,71 @@
+<div class="modal fade" id="modal-edit-group">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Редактирование записей</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="edit-form">
+                <div class="form-group">
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" name="editStatus" id="edit-status" checked="checked">
+                        <label class="custom-control-label" for="edit-status">{{ 'label.status'|trans }}</label>
+                    </div>
+                    <select class="form-control" id="status-select" name="statusSelect">
+                        {% for key, status in statuses %}
+                            <option value="{{ key }}">{{ status|trans }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" name="editDrivers" id="edit-drivers" checked="checked">
+                        <label class="custom-control-label" for="edit-drivers">{{ 'label.drivers'|trans }}</label>
+                    </div>
+
+                    <select class="form-control select2" multiple="multiple" data-placeholder="{{ 'label.drivers'|trans }}"
+                            style="width: 100%;" id="drivers-select" name="driversSelect">
+                        {% for driver in drivers %}
+                            <option value="{{ driver.id }}">{{ driver.fullName }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" id="edit-transports" name="editTransports" checked="checked">
+                        <label class="custom-control-label" for="edit-transports">{{ 'label.transports'|trans }}</label>
+                    </div>
+
+                    <select class="form-control select2" multiple="multiple" data-placeholder="{{ 'label.transports'|trans }}"
+                            style="width: 100%;" id="transports-select" name="transportsSelect" >
+                        {% for transport in transports %}
+                            <option value="{{ transport.id }}">{{ transport.fullName }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" name="editReport" id="edit-report">
+                        <label class="custom-control-label" for="edit-report">{{ 'label.report'|trans }}</label>
+                    </div>
+                    <textarea class="form-control" rows="3" placeholder="{{ 'label.report'|trans }}" name="reportTextarea" id="report-textarea"></textarea>
+                </div>
+
+                </form>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-light" data-dismiss="modal">Отмена</button>
+                <button type="button" id="btn-modal-edit" class="btn btn-primary">Сохранить</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->

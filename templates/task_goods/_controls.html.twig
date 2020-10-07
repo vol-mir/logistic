@@ -4,5 +4,9 @@
            class="btn btn-sm btn-success float-left mr-2 mb-1">{{ 'title.add'|trans }}</a>
         <button type="button" class="btn btn-sm btn-default invoice"><i
                     class='fas fa-print'></i> {{ 'title.print'|trans }}</button>
+        {% if is_granted("ROLE_ADMIN") or is_granted("ROLE_DISPATCHER") %}
+            <button type="button" class="btn btn-sm btn-default edit-group"><i
+                        class='fas fa-edit'></i> {{ 'title.edit_selected'|trans }}</button>
+        {% endif %}
     </div>
 </div>
