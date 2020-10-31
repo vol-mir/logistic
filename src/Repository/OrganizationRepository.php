@@ -100,4 +100,13 @@ class OrganizationRepository extends ServiceEntityRepository
             "countResult" => $countResult
         ];
     }
+
+    public function findOneOrganizationRandom()
+    {
+        return $this->createQueryBuilder('entity')
+            ->orderBy('RAND()')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

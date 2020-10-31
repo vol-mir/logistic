@@ -126,4 +126,15 @@ class AddressRepository extends ServiceEntityRepository
             "countResult" => $countResult
         ];
     }
+
+    public function findOneAddressForOrganizationRandom(int $organizationId = null)
+    {
+        return $this->createQueryBuilder('entity')
+            ->where('entity.organization = :organizationId')
+            ->orderBy('RAND()')
+            ->setParameter('organizationId', $organizationId)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }
