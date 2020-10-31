@@ -22,6 +22,6 @@ $ sh makefixtures.sh
 **Password:** admin
 
 ## Screen
-![Alt text](public/dist/img/demo.png "Tasks Goods")
+![Alt text](public/dist/img/demo.png?raw=true "Tasks Goods")
 
 [1]: https://symfony.com/doc/current/reference/requirements.html
