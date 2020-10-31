@@ -8,8 +8,6 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\NotBlank;
 
 class AddressType extends AbstractType
 {
@@ -23,10 +21,6 @@ class AddressType extends AbstractType
                     'title' => 'label.point_name',
                     'class' => 'form-control',
                     'name' => 'address_point_name'
-                ],
-                'constraints' => [
-                    new NotBlank(),
-                    new Length(['max' => 190]),
                 ]
             ])
             ->add('postcode', TextType::class, [
@@ -36,10 +30,6 @@ class AddressType extends AbstractType
                     'title' => 'label.postcode',
                     'class' => 'form-control',
                     'name' => 'address_postcode'
-                ],
-                'constraints' => [
-                    new NotBlank(),
-                    new Length(['max' => 190]),
                 ]
             ])
             ->add('country', TextType::class, [
@@ -49,10 +39,6 @@ class AddressType extends AbstractType
                     'title' => 'label.country',
                     'class' => 'form-control',
                     'name' => 'address_country'
-                ],
-                'constraints' => [
-                    new NotBlank(),
-                    new Length(['max' => 190]),
                 ]
             ])
             ->add('region', TextType::class, [
@@ -63,9 +49,6 @@ class AddressType extends AbstractType
                     'title' => 'label.region',
                     'class' => 'form-control',
                     'name' => 'address_region'
-                ],
-                'constraints' => [
-                    new Length(['max' => 190]),
                 ]
             ])
             ->add('city', TextType::class, [
@@ -75,10 +58,6 @@ class AddressType extends AbstractType
                     'title' => 'label.city',
                     'class' => 'form-control',
                     'name' => 'address_city'
-                ],
-                'constraints' => [
-                    new NotBlank(),
-                    new Length(['max' => 190]),
                 ]
             ])
             ->add('locality', TextType::class, [
@@ -89,9 +68,6 @@ class AddressType extends AbstractType
                     'title' => 'label.locality',
                     'class' => 'form-control',
                     'name' => 'address_locality'
-                ],
-                'constraints' => [
-                    new Length(['max' => 190]),
                 ]
             ])
             ->add('street', TextType::class, [
@@ -101,10 +77,6 @@ class AddressType extends AbstractType
                     'title' => 'label.street',
                     'class' => 'form-control',
                     'name' => 'address_street'
-                ],
-                'constraints' => [
-                    new NotBlank(),
-                    new Length(['max' => 190]),
                 ]
             ]);
 

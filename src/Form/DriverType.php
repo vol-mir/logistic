@@ -8,8 +8,6 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\NotBlank;
 
 class DriverType extends AbstractType
 {
@@ -23,10 +21,6 @@ class DriverType extends AbstractType
                     'title' => 'label.last_name',
                     'class' => 'form-control',
                     'name' => 'driver_last_name'
-                ],
-                'constraints' => [
-                    new NotBlank(),
-                    new Length(['max' => 190]),
                 ]
             ])
             ->add('first_name', TextType::class, [
@@ -36,10 +30,6 @@ class DriverType extends AbstractType
                     'title' => 'label.first_name',
                     'class' => 'form-control',
                     'name' => 'driver_first_name'
-                ],
-                'constraints' => [
-                    new NotBlank(),
-                    new Length(['max' => 190]),
                 ]
             ])
             ->add('middle_name', TextType::class, [
@@ -49,10 +39,6 @@ class DriverType extends AbstractType
                     'title' => 'label.middle_name',
                     'class' => 'form-control',
                     'name' => 'driver_middle_name'
-                ],
-                'constraints' => [
-                    new NotBlank(),
-                    new Length(['max' => 190]),
                 ]
             ])
             ->add('phone', TextType::class, [
@@ -62,10 +48,6 @@ class DriverType extends AbstractType
                     'placeholder' => 'label.phone',
                     'title' => 'label.phone',
                     'class' => 'form-control'
-                ],
-                'constraints' => [
-                    new NotBlank(),
-                    new Length(['max' => 190]),
                 ]
             ]);
 

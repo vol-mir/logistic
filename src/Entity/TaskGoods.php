@@ -8,6 +8,7 @@ use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 /**
@@ -75,6 +76,7 @@ class TaskGoods
      * @var string
      *
      * @ORM\Column(type="text", nullable=false)
+     * @Assert\NotBlank
      */
     private $goods;
 
@@ -82,6 +84,8 @@ class TaskGoods
      * @var float
      *
      * @ORM\Column(type="float", nullable=false, options={"default": 0})
+     * @Assert\NotBlank
+     * @Assert\PositiveOrZero
      */
     private $weight = 0;
 
@@ -89,6 +93,8 @@ class TaskGoods
      * @var integer
      *
      * @ORM\Column(type="integer", nullable=false, options={"default": 1, "unsigned"=true})
+     * @Assert\NotBlank
+     * @Assert\PositiveOrZero
      */
     private $unit = 1;
 
@@ -96,20 +102,25 @@ class TaskGoods
      * @var string
      *
      * @ORM\Column(type="string", length=190, nullable=true)
+     * @Assert\Length(max=190)
      */
     private $dimensions;
 
     /**
-     * @var string
+     * @var integer
      *
      * @ORM\Column(type="integer", nullable=false, options={"default": 1, "unsigned"=true})
+     * @Assert\NotBlank
+     * @Assert\PositiveOrZero
      */
     private $number_of_packages = 1;
 
     /**
-     * @var string
+     * @var integer
      *
      * @ORM\Column(type="integer", nullable=false, options={"default": 1, "unsigned"=true})
+     * @Assert\NotBlank
+     * @Assert\PositiveOrZero
      */
     private $loading_nature = 1;
 
@@ -117,6 +128,7 @@ class TaskGoods
      * @var string
      *
      * @ORM\Column(type="text", nullable=false)
+     * @Assert\NotBlank
      */
     private $contact_person;
 
@@ -124,6 +136,7 @@ class TaskGoods
      * @var string
      *
      * @ORM\Column(type="text", nullable=false)
+     * @Assert\NotBlank
      */
     private $working_hours;
 
@@ -131,6 +144,8 @@ class TaskGoods
      * @var integer
      *
      * @ORM\Column(type="integer", nullable=false, options={"default": 1, "unsigned"=true})
+     * @Assert\NotBlank
+     * @Assert\PositiveOrZero
      */
     private $status = 1;
 
@@ -153,6 +168,7 @@ class TaskGoods
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Organization", inversedBy="tasks_goods")
      * @ORM\JoinColumn(name="organization_id", referencedColumnName="id", nullable=false)
+     * @Assert\NotBlank
      */
     private $organization;
 
@@ -176,6 +192,7 @@ class TaskGoods
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Address", inversedBy="tasks_goods_address_goods_yard")
      * @ORM\JoinColumn(name="address_goods_yard_id", referencedColumnName="id", nullable=false)
+     *
      */
     private $address_goods_yard;
 
@@ -183,6 +200,8 @@ class TaskGoods
      * @var DateTime
      *
      * @ORM\Column(type="datetime", nullable=false)
+     * @Assert\Type("datetime")
+     * @Assert\NotBlank
      */
     private $date_task_goods;
 
@@ -451,6 +470,15 @@ class TaskGoods
         return $this;
     }
 
+    public function removeAllDrivers(): self
+    {
+        foreach($this->drivers as $driver) {
+            $this->drivers->removeElement($driver);
+        }
+
+        return $this;
+    }
+
     /**
      * @return Collection|Transport[]
      */
@@ -471,6 +499,15 @@ class TaskGoods
     public function removeTransport(Transport $transport): self
     {
         if ($this->transports->contains($transport)) {
+            $this->transports->removeElement($transport);
+        }
+
+        return $this;
+    }
+
+    public function removeAllTransports(): self
+    {
+        foreach($this->transports as $transport) {
             $this->transports->removeElement($transport);
         }
 

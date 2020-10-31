@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=OrganizationRepository::class)
@@ -31,6 +32,8 @@ class Organization
      * @var string
      *
      * @ORM\Column(type="string", length=190, nullable=false, unique=true)
+     * @Assert\NotBlank
+     * @Assert\Length(max=190)
      */
     private $registration_number;
 
@@ -38,6 +41,8 @@ class Organization
      * @var string
      *
      * @ORM\Column(type="string", length=190, nullable=false)
+     * @Assert\NotBlank
+     * @Assert\Length(max=190)
      */
     private $abbreviated_name;
 
@@ -45,6 +50,8 @@ class Organization
      * @var string
      *
      * @ORM\Column(type="string", length=190, nullable=false)
+     * @Assert\NotBlank
+     * @Assert\Length(max=190)
      */
     private $full_name;
 

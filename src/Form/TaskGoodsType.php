@@ -19,10 +19,6 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\DateTime;
-use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\PositiveOrZero;
 
 class TaskGoodsType extends AbstractType
 {
@@ -37,10 +33,6 @@ class TaskGoodsType extends AbstractType
                     'title' => 'label.date_task_goods',
                     'class' => 'form-control',
                     'name' => 'date_task_goods'
-                ],
-                'constraints' => [
-                    new NotBlank(),
-                    new DateTime(),
                 ]
             ])
             ->add('goods', TextareaType::class, [
@@ -50,9 +42,6 @@ class TaskGoodsType extends AbstractType
                     'title' => 'label.goods',
                     'class' => 'form-control',
                     'name' => 'task_goods_goods'
-                ],
-                'constraints' => [
-                    new NotBlank(),
                 ]
             ])
             ->add('note', TextareaType::class, [
@@ -77,10 +66,6 @@ class TaskGoodsType extends AbstractType
                     'min' => 0,
                     'max' => 99999999,
                     'step' => 0.01,
-                ],
-                'constraints' => [
-                    new NotBlank(),
-                    new PositiveOrZero(),
                 ]
             ])
             ->add('unit', ChoiceType::class, [
@@ -93,10 +78,6 @@ class TaskGoodsType extends AbstractType
                     'title' => 'label.unit',
                     'class' => 'form-control',
                     'name' => 'task_goods_unit'
-                ],
-                'constraints' => [
-                    new NotBlank(),
-                    new PositiveOrZero(),
                 ]
             ])
             ->add('dimensions', TextType::class, [
@@ -108,11 +89,7 @@ class TaskGoodsType extends AbstractType
                     'title' => 'label.dimensions',
                     'class' => 'form-control',
                     'name' => 'task_goods_dimensions'
-                ],
-                'constraints' => [
-                    new Length(['max' => 190]),
                 ]
-
             ])
             ->add('number_of_packages', NumberType::class, [
                 'label' => 'label.number_of_packages',
@@ -126,10 +103,6 @@ class TaskGoodsType extends AbstractType
                     'min' => 0,
                     'max' => 99999999,
                     'step' => 1,
-                ],
-                'constraints' => [
-                    new NotBlank(),
-                    new PositiveOrZero(),
                 ]
             ])
             ->add('loading_nature', ChoiceType::class, [
@@ -141,10 +114,6 @@ class TaskGoodsType extends AbstractType
                     'class' => 'form-control select2',
                     'style' => 'width: 100%;',
                     'name' => 'task_goods_loading_nature'
-                ],
-                'constraints' => [
-                    new NotBlank(),
-                    new PositiveOrZero(),
                 ]
             ])
             ->add('organization', EntityType::class, [
@@ -162,9 +131,6 @@ class TaskGoodsType extends AbstractType
                     'class' => 'form-control select2',
                     'style' => 'width: 100%;',
                     'name' => 'task_goods_organization'
-                ],
-                'constraints' => [
-                    new NotBlank(),
                 ]
             ]);
 
@@ -219,9 +185,6 @@ class TaskGoodsType extends AbstractType
                     'class' => 'form-control select2',
                     'style' => 'width: 100%;',
                     'name' => 'task_goods_address_goods_yard'
-                ],
-                'constraints' => [
-                    new NotBlank(),
                 ]
             ]);
 
@@ -233,9 +196,6 @@ class TaskGoodsType extends AbstractType
                     'title' => 'label.contact_person',
                     'class' => 'form-control',
                     'name' => 'task_goods_contact_person',
-                ],
-                'constraints' => [
-                    new NotBlank(),
                 ]
             ]);
 
@@ -247,9 +207,6 @@ class TaskGoodsType extends AbstractType
                     'title' => 'label.working_hours',
                     'class' => 'form-control',
                     'name' => 'task_goods_working_hours',
-                ],
-                'constraints' => [
-                    new NotBlank(),
                 ]
             ]);
         };
@@ -273,10 +230,6 @@ class TaskGoodsType extends AbstractType
                             'class' => 'form-control select2',
                             'style' => 'width: 100%;',
                             'name' => 'task_goods_status'
-                        ],
-                        'constraints' => [
-                            new NotBlank(),
-                            new PositiveOrZero(),
                         ]
                     ]);
                 }

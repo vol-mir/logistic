@@ -4,6 +4,7 @@
     <meta charset=" utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <title>Логистика</title>
+<link rel="shortcut icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
 <!-- Tell the browser to be responsive to screen width -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- Font Awesome -->
@@ -35,12 +36,10 @@
 <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 <!-- Custom style -->
 <link rel="stylesheet" href="{{ asset('dist/css/style.css') }}">
-
 {% block stylesheets %}{% endblock %}
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
-
     <!-- Navbar -->
     <nav class="main-header navbar navbar-expand navbar-white navbar-light">
         <!-- Left navbar links -->
@@ -52,7 +51,6 @@
                 <a href="{{ path('home') }}" class="nav-link">Главная</a>
             </li>
         </ul>
-
         <!-- Right navbar links -->
         <ul class="navbar-nav ml-auto">
             {% if app.user %}
@@ -67,7 +65,6 @@
         </ul>
     </nav>
     <!-- /.navbar -->
-
     <!-- Main Sidebar Container -->
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
         <!-- Brand Logo -->
@@ -77,7 +74,6 @@
                  style="opacity: .8">
             <span class="brand-text font-weight-light">Логистика</span>
         </a>
-
         <!-- Sidebar -->
         <div class="sidebar">
             <!-- Sidebar user panel (optional) -->
@@ -88,12 +84,10 @@
                     </div>
                 </div>
             {% endif %}
-
             <!-- Sidebar Menu -->
             <nav class="mt-2">
                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                     data-accordion="false">
-
                     <li class="nav-item">
                         <a href="{{ path('home') }}"
                            class="nav-link {% if app.request.get('_route') == 'home' %} active {% endif %}">
@@ -103,10 +97,8 @@
                             </p>
                         </a>
                     </li>
-
                     {% if is_granted("ROLE_ADMIN") or is_granted("ROLE_DISPATCHER") or is_granted("ROLE_OPERATOR") %}
                         <li class="nav-header">СПРАВОЧНИКИ</li>
-
                         <li class="nav-item">
                             <a href="{{ path('organization_index') }}"
                                class="nav-link {% if app.request.get('_route') == 'organization_index' %} active {% endif %}">
@@ -117,9 +109,7 @@
                             </a>
                         </li>
                     {% endif %}
-
                     {% if is_granted("ROLE_ADMIN") or is_granted("ROLE_DISPATCHER") %}
-
                         <li class="nav-item">
                             <a href="{{ path('driver_index') }}"
                                class="nav-link {% if app.request.get('_route') == 'driver_index' %} active {% endif %}">
@@ -130,7 +120,6 @@
                             </a>
                         </li>
                     {% endif %}
-
                     {% if is_granted("ROLE_ADMIN") or is_granted("ROLE_DISPATCHER") %}
                         <li class="nav-item">
                             <a href="{{ path('transport_index') }}"
@@ -142,27 +131,22 @@
                             </a>
                         </li>
                     {% endif %}
-
                     {% if is_granted("ROLE_ADMIN") or is_granted("ROLE_DISPATCHER") or is_granted("ROLE_OPERATOR") %}
                         <li class="nav-header">ЖУРНАЛЫ</li>
-
                         <li class="nav-item">
                             <a href="{{ path('task_goods_index') }}"
                                class="nav-link {% if app.request.get('_route') == 'task_goods_index' %} active {% endif %}">
-
                                 <i class="fas fa-book nav-icon"></i>
                                 <p>
                                     {{ 'title.page.index.task_goods'|trans }}
                                 </p>
                             </a>
                         </li>
-
                         {% if is_granted("ROLE_ADMIN") or is_granted("ROLE_DISPATCHER") %}
                             <li class="nav-header">ОТЧЕТЫ</li>
                             <li class="nav-item">
                                 <a href="{{ path('generation_task_driver_invoice') }}"
                                    class="nav-link {% if app.request.get('_route') == 'generation_task_driver_invoice' %} active {% endif %}">
-
                                     <i class="fas fa-circle nav-icon"></i>
                                     <p>
                                         {{ 'title.page.invoice.task_driver'|trans }}
@@ -171,15 +155,11 @@
                             </li>
                         {% endif %}
                     {% endif %}
-
                     {% if is_granted("ROLE_ADMIN") %}
-
                         <li class="nav-header">АДМИНИСТРИРОВАНИЕ</li>
-
                         <li class="nav-item">
                             <a href="{{ path('user_index') }}"
                                class="nav-link {% if app.request.get('_route') == 'user_index' %} active {% endif %}">
-
                                 <i class="fas fa-users nav-icon"></i>
                                 <p>
                                     {{ 'title.page.index.user'|trans }}
@@ -187,9 +167,7 @@
                             </a>
                         </li>
                     {% endif %}
-
                     <li class="nav-header">ЕЩЕ</li>
-
                     <li class="nav-item">
                         <a href="{{ path('faq') }}"
                            class="nav-link {% if app.request.get('_route') == 'faq' %} active {% endif %}">
@@ -199,15 +177,12 @@
                             </p>
                         </a>
                     </li>
-
-
                 </ul>
             </nav>
             <!-- /.sidebar-menu -->
         </div>
         <!-- /.sidebar -->
     </aside>
-
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
@@ -221,7 +196,6 @@
             </div><!-- /.container-fluid -->
         </div>
         <!-- /.content-header -->
-
         <!-- Main content -->
         <section class="content">
             <div class="container-fluid">
@@ -239,7 +213,6 @@
             <b>Версия</b> 2.1
         </div>
     </footer>
-
     <!-- Control Sidebar -->
     <aside class="control-sidebar control-sidebar-dark">
         <!-- Control sidebar content goes here -->
@@ -247,7 +220,6 @@
     <!-- /.control-sidebar -->
 </div>
 <!-- ./wrapper -->
-
 <!-- jQuery -->
 <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
 <!-- jQuery UI 1.11.4 -->
@@ -276,7 +248,6 @@
 <!-- Select2 -->
 <script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
 <script src="{{ asset('plugins/select2/js/i18n/ru.js') }}"></script>
-
 <!-- AdminLTE App -->
 <script src="{{ asset('dist/js/adminlte.js') }}"></script>
 <!-- AdminLTE for demo purposes -->
@@ -290,8 +261,6 @@
 <script src="{{ asset('plugins/datatables-select/js/select.bootstrap4.min.js') }}"></script>
 <!-- Toastr -->
 <script src="{{ asset('plugins/toastr/toastr.min.js') }}"></script>
-
 {% block javascripts %}{% endblock %}
 </body>
 </html>
-

@@ -8,6 +8,7 @@ use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=DriverRepository::class)
@@ -29,6 +30,8 @@ class Driver
      * @var string
      *
      * @ORM\Column(type="string", length=190, nullable=false)
+     * @Assert\NotBlank
+     * @Assert\Length(max=190)
      */
     private $first_name;
 
@@ -36,6 +39,8 @@ class Driver
      * @var string
      *
      * @ORM\Column(type="string", length=190, nullable=false)
+     * @Assert\NotBlank
+     * @Assert\Length(max=190)
      */
     private $last_name;
 
@@ -43,6 +48,8 @@ class Driver
      * @var string
      *
      * @ORM\Column(type="string", length=190, nullable=false)
+     * @Assert\NotBlank
+     * @Assert\Length(max=190)
      */
     private $middle_name;
 
@@ -50,6 +57,8 @@ class Driver
      * @var string
      *
      * @ORM\Column(type="string", length=190, nullable=false)
+     * @Assert\NotBlank
+     * @Assert\Length(max=190)
      */
     private $phone;
 

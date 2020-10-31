@@ -8,6 +8,7 @@ use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=AddressRepository::class)
@@ -29,6 +30,8 @@ class Address
      * @var string
      *
      * @ORM\Column(type="string", length=190, nullable=false)
+     * @Assert\NotBlank
+     * @Assert\Length(max=190)
      */
     private $street;
 
@@ -36,6 +39,7 @@ class Address
      * @var string
      *
      * @ORM\Column(type="string", length=190, nullable=true)
+     * @Assert\Length(max=190)
      */
     private $district;
 
@@ -43,6 +47,8 @@ class Address
      * @var string
      *
      * @ORM\Column(type="string", length=190, nullable=false)
+     * @Assert\NotBlank
+     * @Assert\Length(max=190)
      */
     private $city;
 
@@ -50,6 +56,8 @@ class Address
      * @var string
      *
      * @ORM\Column(type="string", length=190, nullable=false)
+     * @Assert\NotBlank
+     * @Assert\Length(max=190)
      */
     private $country;
 
@@ -57,6 +65,8 @@ class Address
      * @var string
      *
      * @ORM\Column(type="string", length=190, nullable=false)
+     * @Assert\NotBlank
+     * @Assert\Length(max=190)
      */
     private $postcode;
 
@@ -64,6 +74,8 @@ class Address
      * @var string
      *
      * @ORM\Column(type="string", length=190, nullable=false)
+     * @Assert\NotBlank
+     * @Assert\Length(max=190)
      */
     private $point_name;
 
@@ -71,6 +83,7 @@ class Address
      * @var string
      *
      * @ORM\Column(type="string", length=190, nullable=true)
+     * @Assert\Length(max=190)
      */
     private $region;
 
@@ -78,6 +91,7 @@ class Address
      * @var string
      *
      * @ORM\Column(type="string", length=190, nullable=true)
+     * @Assert\Length(max=190)
      */
     private $locality;
 

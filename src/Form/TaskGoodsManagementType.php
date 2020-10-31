@@ -13,8 +13,6 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\PositiveOrZero;
 
 class TaskGoodsManagementType extends AbstractType
 {
@@ -29,10 +27,6 @@ class TaskGoodsManagementType extends AbstractType
                 'class' => 'form-control select2',
                 'style' => 'width: 100%;',
                 'name' => 'task_goods_status'
-            ],
-            'constraints' => [
-                new NotBlank(),
-                new PositiveOrZero(),
             ]
         ]);
 
@@ -46,7 +40,6 @@ class TaskGoodsManagementType extends AbstractType
                     ->addOrderBy('d.middle_name', 'ASC');
             },
             'choice_label' => 'full_name',
-            'choice_value' => 'id',
             'multiple' => true,
             'required' => false,
             'attr' => [
@@ -67,7 +60,6 @@ class TaskGoodsManagementType extends AbstractType
                     ->addOrderBy('t.number', 'ASC');
             },
             'choice_label' => 'full_name',
-            'choice_value' => 'id',
             'multiple' => true,
             'required' => false,
             'attr' => [

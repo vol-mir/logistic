@@ -10,9 +10,6 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\PositiveOrZero;
 
 class TransportType extends AbstractType
 {
@@ -26,10 +23,6 @@ class TransportType extends AbstractType
                     'title' => 'label.number',
                     'class' => 'form-control',
                     'name' => 'transport_number'
-                ],
-                'constraints' => [
-                    new NotBlank(),
-                    new Length(['max' => 190]),
                 ]
             ])
             ->add('marka', TextType::class, [
@@ -39,10 +32,6 @@ class TransportType extends AbstractType
                     'title' => 'label.marka',
                     'class' => 'form-control',
                     'name' => 'transport_marka'
-                ],
-                'constraints' => [
-                    new NotBlank(),
-                    new Length(['max' => 190]),
                 ]
             ])
             ->add('model', TextType::class, [
@@ -52,10 +41,6 @@ class TransportType extends AbstractType
                     'title' => 'label.model',
                     'class' => 'form-control',
                     'name' => 'transport_model'
-                ],
-                'constraints' => [
-                    new NotBlank(),
-                    new Length(['max' => 190]),
                 ]
             ])
             ->add('kind', ChoiceType::class, [
@@ -66,10 +51,6 @@ class TransportType extends AbstractType
                     'title' => 'label.kind',
                     'class' => 'form-control',
                     'name' => 'transport_kind'
-                ],
-                'constraints' => [
-                    new NotBlank(),
-                    new PositiveOrZero(),
                 ]
             ])
             ->add('carrying', NumberType::class, [
@@ -85,10 +66,6 @@ class TransportType extends AbstractType
                     'min' => 0,
                     'max' => 99999999.99,
                     'step' => 0.01,
-                ],
-                'constraints' => [
-                    new NotBlank(),
-                    new PositiveOrZero(),
                 ]
             ]);
 

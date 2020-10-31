@@ -10,10 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\PositiveOrZero;
-
+use Symfony\Component\Validator\Constraints as Assert;
 class UserType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -26,10 +23,6 @@ class UserType extends AbstractType
                     'title' => 'label.username',
                     'class' => 'form-control',
                     'name' => 'user_username'
-                ],
-                'constraints' => [
-                    new NotBlank(),
-                    new Length(['max' => 190]),
                 ]
             ])
             ->add('roles', ChoiceType::class, [
@@ -55,7 +48,7 @@ class UserType extends AbstractType
                     'name' => 'user_plain_password'
                 ],
                 'constraints' => [
-                    new Length(['max' => 190]),
+                    new Assert\Length(['max' => 190]),
                 ]
             ])
             ->add('first_name', TextType::class, [
@@ -66,9 +59,6 @@ class UserType extends AbstractType
                     'title' => 'label.first_name',
                     'class' => 'form-control',
                     'name' => 'user_first_name'
-                ],
-                'constraints' => [
-                    new Length(['max' => 190]),
                 ]
             ])
             ->add('last_name', TextType::class, [
@@ -79,9 +69,6 @@ class UserType extends AbstractType
                     'title' => 'label.last_name',
                     'class' => 'form-control',
                     'name' => 'user_last_name'
-                ],
-                'constraints' => [
-                    new Length(['max' => 190]),
                 ]
             ])
             ->add('middle_name', TextType::class, [
@@ -92,9 +79,6 @@ class UserType extends AbstractType
                     'title' => 'label.middle_name',
                     'class' => 'form-control',
                     'name' => 'user_middle_name'
-                ],
-                'constraints' => [
-                    new Length(['max' => 190]),
                 ]
             ])
             ->add('department', ChoiceType::class, [
@@ -105,10 +89,6 @@ class UserType extends AbstractType
                     'title' => 'label.department',
                     'class' => 'form-control',
                     'name' => 'user_department'
-                ],
-                'constraints' => [
-                    new NotBlank(),
-                    new PositiveOrZero(),
                 ]
             ]);
 

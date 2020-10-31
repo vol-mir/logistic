@@ -17,6 +17,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Psr\Log\LoggerInterface;
+
 
 
 /**
@@ -460,7 +462,7 @@ class TaskGoodsController extends AbstractController
      *
      * @return JsonResponse
      */
-    public function editList(Request $request, TranslatorInterface $translator): JsonResponse
+    public function editList(Request $request, TranslatorInterface $translator, LoggerInterface $logger): JsonResponse
     {
         if (!$this->isCsrfTokenValid('tasks-goods-list-edit', $request->request->get('_token'))) {
             die;
@@ -483,6 +485,8 @@ class TaskGoodsController extends AbstractController
             }
 
             if (property_exists($formData, 'driversSelect')) {
+                $taskGoods->removeAllDrivers();
+
                 foreach ($formData->driversSelect as $driverId) {
                     $driver = $em->getRepository(Driver::class)->find($driverId);
 
@@ -495,6 +499,8 @@ class TaskGoodsController extends AbstractController
             }
 
             if (property_exists($formData, 'transportsSelect')) {
+                $taskGoods->removeAllTransports();
+
                 foreach ($formData->transportsSelect as $transportId) {
                     $transport = $em->getRepository(Transport::class)->find($transportId);
 

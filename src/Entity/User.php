@@ -8,6 +8,7 @@ use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -57,6 +58,8 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Assert\NotBlank
+     * @Assert\Length(max=180)
      */
     private $username;
     /**
@@ -75,6 +78,7 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(type="string", length=190, nullable=true)
+     * @Assert\Length(max=190)
      */
     private $first_name;
 
@@ -82,6 +86,7 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(type="string", length=190, nullable=true)
+     * @Assert\Length(max=190)
      */
     private $last_name;
 
@@ -89,6 +94,7 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(type="string", length=190, nullable=true)
+     * @Assert\Length(max=190)
      */
     private $middle_name;
 
@@ -96,6 +102,8 @@ class User implements UserInterface
      * @var integer
      *
      * @ORM\Column(type="integer", nullable=true, options={"unsigned"=true})
+     * @Assert\NotBlank
+     * @Assert\PositiveOrZero
      */
     private $department;
 

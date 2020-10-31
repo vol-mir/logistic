@@ -9,8 +9,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\NotBlank;
 
 class OrganizationType extends AbstractType
 {
@@ -24,10 +22,6 @@ class OrganizationType extends AbstractType
                     'title' => 'label.registration_number',
                     'class' => 'form-control',
                     'name' => 'organization_registration_number'
-                ],
-                'constraints' => [
-                    new NotBlank(),
-                    new Length(['max' => 190]),
                 ]
             ])
             ->add('abbreviated_name', TextType::class, [
@@ -38,10 +32,6 @@ class OrganizationType extends AbstractType
                     'title' => 'label.abbreviated_name',
                     'class' => 'form-control',
                     'name' => 'organization_abbreviated_name'
-                ],
-                'constraints' => [
-                    new NotBlank(),
-                    new Length(['max' => 190]),
                 ]
             ])
             ->add('full_name', TextType::class, [
@@ -52,10 +42,6 @@ class OrganizationType extends AbstractType
                     'title' => 'label.full_name',
                     'class' => 'form-control',
                     'name' => 'organization_full_name'
-                ],
-                'constraints' => [
-                    new NotBlank(),
-                    new Length(['max' => 190]),
                 ]
             ])
             ->add('base_contact_person', TextareaType::class, [
