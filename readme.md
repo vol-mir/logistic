@@ -4,7 +4,7 @@
 The Symfony application is an application created for the logistics department that allows you to keep a log of transport requests and form a task for drivers.
 
 ## Requirements
-  * PHP 7.2.9 or higher;
+  * PHP 7.2.5 or higher;
   * and the [usual Symfony application requirements][1].
 
 ## Quick Start
