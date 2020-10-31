@@ -28,9 +28,15 @@ class HomeController extends AbstractController
      */
     public function index(): Response
     {
+        $em = $this->getDoctrine()->getManager();
+
         return $this->render('home/index.html.twig', [
             'departments' => User::DEPARTMENTS,
-            'statuses' => TaskGoods::STATUSES
+            'statuses' => TaskGoods::STATUSES,
+            'countToReview' => $em->getRepository(TaskGoods::class)->countTaskGoodsOnStatus(TaskGoods::TO_REVIEW),
+            'countPerformed' => $em->getRepository(TaskGoods::class)->countTaskGoodsOnStatus(TaskGoods::PERFORMED),
+            'countDone' => $em->getRepository(TaskGoods::class)->countTaskGoodsOnStatus(TaskGoods::DONE),
+            'countRejected' => $em->getRepository(TaskGoods::class)->countTaskGoodsOnStatus(TaskGoods::REJECTED)
         ]);
     }
 

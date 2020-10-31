@@ -3,6 +3,70 @@
 {% block title %}{{ 'title.page.main'|trans }}{% endblock %}
 
 {% block body %}
+    <!-- Info boxes -->
+    <div class="row">
+        <div class="col-12 col-sm-6 col-md-3">
+            <div class="info-box mb-3">
+                <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-hourglass-half"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">{{ 'status.to_review'|trans }}</span>
+                    <span class="info-box-number">{{ countToReview }}</span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+
+        <div class="col-12 col-sm-6 col-md-3">
+            <div class="info-box">
+                <span class="info-box-icon bg-info elevation-1"><i class="fas fa-car-side"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">{{ 'status.performed'|trans }}</span>
+                    <span class="info-box-number">{{ countPerformed }}</span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+
+        <!-- fix for small devices only -->
+        <div class="clearfix hidden-md-up"></div>
+
+        <div class="col-12 col-sm-6 col-md-3">
+            <div class="info-box mb-3">
+                <span class="info-box-icon bg-success elevation-1"><i class="fas fa-check"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">{{ 'status.done'|trans }}</span>
+                    <span class="info-box-number">{{ countDone }}</span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+
+        <div class="col-12 col-sm-6 col-md-3">
+            <div class="info-box mb-3">
+                <span class="info-box-icon bg-dark elevation-1"><i class="fas fa-ban"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">{{ 'status.rejected'|trans }}</span>
+                    <span class="info-box-number">{{ countRejected }}</span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+
+    </div>
+    <!-- /.row -->
+
     <!-- Main row -->
     <div class="row">
         <!-- Left col -->

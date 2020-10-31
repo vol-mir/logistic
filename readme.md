@@ -5,7 +5,7 @@
 This project with Symfony.
 
 ## Stack
-- Symfony 4.4
+- Symfony 5.1
 - AdminLTE 3.0.4
 
 ## Quick Start

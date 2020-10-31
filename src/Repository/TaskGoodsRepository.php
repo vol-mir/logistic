@@ -31,6 +31,16 @@ class TaskGoodsRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
+    public function countTaskGoodsOnStatus($status)
+    {
+        return $this
+            ->createQueryBuilder('t0')
+            ->select("count(t0.id)")
+            ->where('t0.status=' . $status)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
     public function getRequiredDTData($start, $length, $orders, $search, $columns, $otherConditions = null, $authUser = null): array
     {
         // Create Main Query
